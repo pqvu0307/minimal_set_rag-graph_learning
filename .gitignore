@@ -1,0 +1,44 @@
+# LUU Y: git KHONG ho tro comment cuoi dong.
+#   "build/tools/   # 50 MB"   ->  pattern thanh ca cum do, khong khop gi
+# Nen moi ghi chu phai nam o DONG RIENG.
+
+# ── nhi phan lon, tai lai duoc ──────────────────────────────────────
+# tectonic.exe ~50 MB
+build/tools/
+# backup truoc moi lan ghi pptx
+build/user-backup.pptx
+
+# ── hien vat tai ve / sinh ra ───────────────────────────────────────
+# do thi · checkpoint · raw data (hang GB)
+stage0/artifacts/
+# dau ra moi lan chay 0.A-0.J
+stage0/reports/
+# cache judge
+stage0/cache/
+stage0.zip
+
+# ── latex trung gian ────────────────────────────────────────────────
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# ── python ──────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# ── he thong ────────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store
+~$*.pptx
+~$*.docx
+
+# GIU LAI co y:
+#   *.pdf   la ban giao cho giao su, va tectonic bi gitignore nen
+#           khong phai luc nao cung dung lai duoc
+#   *.pptx  ban SUA TAY, khong sinh lai tu deck.py duoc

@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Quy gán RAG hai tầng</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'none',
+    macros: {
+      argmin: ['\\mathop{\\mathrm{arg\\,min}}\\limits', 0],
+      argmax: ['\\mathop{\\mathrm{arg\\,max}}\\limits', 0],
+      spanop: ['\\operatorname{span}', 0],
+      Msg: ['\\operatorname{Msg}', 0],
+      Upd: ['\\operatorname{Upd}', 0],
+      BCE: ['\\operatorname{BCE}', 0],
+      emb: ['\\operatorname{emb}', 0],
+      suff: ['\\operatorname{suff}', 0],
+      nec: ['\\operatorname{nec}', 0],
+      depth: ['\\operatorname{depth}', 0],
+      best: ['\\mathrm{best}', 0]
+    }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+  chtml: { scale: 0.95 }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+
+  :root {
+    --ink: #16181d;
+    --muted: #5b6270;
+    --rule: #d4d8e0;
+    --soft: #f4f5f8;
+    --accent: #1e4d8c;
+  }
+
+  /* KHÔNG dùng Georgia: nó thiếu khối Latin Extended Additional (U+1EA0–1EF9)
+     nên dấu tiếng Việt bị tách rời ("tâ`ng" thay vì "tầng").
+     Palatino Linotype / Book Antiqua / Cambria đều phủ đủ và nhạt hơn Georgia. */
+  html { font-size: 10.5pt; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: "Palatino Linotype", "Book Antiqua", "Cambria", "Times New Roman", serif;
+    font-feature-settings: "lnum" 1;
+    line-height: 1.6;
+  }
+  .page { max-width: 185mm; margin: 0 auto; padding: 0 2mm; }
+
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 .2em; letter-spacing: -.01em; }
+  .subtitle { color: var(--muted); font-size: 1.02rem; margin: 0 0 1.6em; }
+
+  h2 {
+    font-size: 1.3rem; margin: 2.1em 0 .6em; padding-bottom: .22em;
+    border-bottom: 1.5px solid var(--rule);
+    break-after: avoid; page-break-after: avoid;
+  }
+  h3 {
+    font-size: 1.05rem; margin: 1.5em 0 .45em; color: var(--accent);
+    break-after: avoid; page-break-after: avoid;
+  }
+  h4 { font-size: .98rem; margin: 1.2em 0 .35em; font-style: italic; font-weight: 600; }
+
+  p { margin: .55em 0; }
+  ul, ol { margin: .5em 0; padding-left: 1.5em; }
+  li { margin: .22em 0; }
+
+  pre {
+    font-family: "Consolas", "DejaVu Sans Mono", "Cascadia Mono", monospace;
+    font-size: 8.6pt; line-height: 1.42;
+    background: var(--soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 8px 11px; margin: .8em 0;
+    overflow-x: auto; white-space: pre;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  code {
+    font-family: "Consolas", "DejaVu Sans Mono", monospace;
+    font-size: .9em; background: var(--soft);
+    padding: .08em .3em; border-radius: 2px;
+  }
+
+  table {
+    border-collapse: collapse; width: 100%;
+    margin: .85em 0; font-size: .94rem;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  th { text-align: left; font-weight: 600; }
+  thead th { border-bottom: 1.2px solid var(--ink); padding: .3em .55em; }
+  tbody td { border-bottom: .5px solid var(--rule); padding: .3em .55em; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 1.2px solid var(--ink); }
+
+  blockquote {
+    margin: .9em 0; padding: .5em .95em;
+    border-left: 3px solid var(--accent);
+    background: #f7f9fc; color: #2a3140;
+  }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  .inv {
+    border: 1.3px solid var(--ink); border-radius: 3px;
+    padding: .25em .8em; margin: .9em 0; background: #fff;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .inv .lab { font-variant: small-caps; font-weight: 700; font-size: .85rem; letter-spacing: .03em; }
+
+  .toc { background: var(--soft); border: 1px solid var(--rule); border-radius: 4px;
+         padding: .7em 1.2em; margin: 1.4em 0 2em; font-size: .95rem; }
+  .toc ol { margin: .2em 0; padding-left: 1.4em; }
+  .toc li { margin: .1em 0; }
+  .toc a { color: var(--ink); text-decoration: none; }
+
+  .flow { margin: 1.1em auto; width: fit-content; text-align: center;
+          break-inside: avoid; page-break-inside: avoid; }
+  .flow .n { border: 1px solid #9aa3b2; border-radius: 3px; padding: .34em 1.1em;
+             display: inline-block; background: #fff; font-size: .93rem; line-height: 1.4; }
+  .flow .n.hi { background: #eef2f8; border-color: #5d79a8; }
+  .flow .n.on { background: #1f2630; color: #fff; border-color: #1f2630; }
+  .flow .n .k { font-weight: 700; letter-spacing: .02em; }
+  .flow .n .d { font-family: "Consolas","Cascadia Mono",monospace; font-size: .83em; color: #4a5160; }
+  .flow .n.on .d { color: #c8d2e2; }
+  .flow .a { height: 15px; width: 1px; background: #9aa3b2; margin: 0 auto; position: relative; }
+  .flow .a::after { content: ""; position: absolute; bottom: -1px; left: -3.5px;
+    border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 6px solid #9aa3b2; }
+  .flow .a span { position: absolute; left: 10px; top: 0; white-space: nowrap;
+    font-size: .78rem; font-style: italic; color: var(--muted); }
+
+  mjx-container[display="true"] { margin: .75em 0 !important; }
+  .brk { break-before: page; page-break-before: page; }
+  a { color: var(--accent); }
+  .note { color: var(--muted); font-size: .92rem; }
+  .new { background: #fff6d9; padding: 0 .25em; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Quy gán RAG hai tầng</h1>
+<p class="subtitle">Shapley (tầng sinh) + Integrated Gradients trên đồ thị (tầng truy hồi)</p>
+
+<div class="toc">
+<ol>
+<li><a href="#s1">Tổng quan</a></li>
+<li><a href="#s2">Ký hiệu</a></li>
+<li><a href="#s3">Tầng A — Tìm tập đích</a></li>
+<li><a href="#s4">Tầng B — Tìm đường trên đồ thị</a></li>
+<li><a href="#s5">Nhiều đích và quan hệ phụ thuộc</a></li>
+<li><a href="#s6">Nối hai tầng và train</a></li>
+<li><a href="#s7">Chi phí</a></li>
+<li><a href="#s8">Bất biến phải kiểm</a></li>
+<li><a href="#s9">Những chỗ dễ sai</a></li>
+<li><a href="#s10">Thứ tự triển khai</a></li>
+</ol>
+</div>
+
+<!-- =============================================================== -->
+<h2 id="s1">1. Tổng quan</h2>
+
+<table>
+<thead><tr><th></th><th>Câu hỏi</th><th>Công cụ</th><th>Đầu ra</th></tr></thead>
+<tbody>
+<tr><td><b>Tầng A</b> — sinh</td><td>“đoạn nào thật sự tạo ra câu trả lời?”</td><td>Shapley + greedy</td><td>tập đích \(T\)</td></tr>
+<tr><td><b>Tầng B</b> — truy hồi</td><td>“đáng lẽ phải đi lối nào tới đó?”</td><td>IG trên gate cạnh + QHĐ trên DAG</td><td>cây đường đi \(\Pi\)</td></tr>
+</tbody>
+</table>
+
+<div class="flow">
+  <div class="n">truy vấn</div>
+  <div class="a"></div>
+  <div class="n">truy hồi rộng &nbsp;<span class="d">K = 100, đa nguồn</span></div>
+  <div class="a"></div>
+  <div class="n hi"><span class="k">TẦNG A</span> — Shapley<br><span class="d">gom cụm → φ_c → cắt cụm → greedy trong cụm</span></div>
+  <div class="a"></div>
+  <div class="n">tập đích &nbsp;<span class="d">T = { D₂, D₇, D₁₅ }</span></div>
+  <div class="a"><span>làm đích cho tầng B</span></div>
+  <div class="n hi"><span class="k">TẦNG B</span> — IG trên đồ thị<br><span class="d">gate cạnh → điểm cạnh → QHĐ trên DAG</span></div>
+  <div class="a"></div>
+  <div class="n">kiểm chứng bằng ablation</div>
+  <div class="a"></div>
+  <div class="n">nhãn train &nbsp;<span class="d">( q , T , Π , depth , w )</span></div>
+  <div class="a"></div>
+  <div class="n">train GFM</div>
+  <div class="a"></div>
+  <div class="n on"><span class="k">ONLINE</span> &nbsp;<span class="d">truy vấn → GFM giỏi hơn → đoạn → LLM → câu trả lời</span></div>
+</div>
+
+<h4>Vì sao cần cả hai</h4>
+<p>Shapley là công cụ duy nhất xử lý đúng <i>dư thừa</i> (hai cụm trùng ý thì chia nhau công) và <i>bổ sung</i> (hai cụm chỉ có giá trị khi đi cùng — chính là multi-hop). IG có tính chất riêng: chi phí của nó <b>không phụ thuộc số đơn vị cần chấm</b>, nên nó là lựa chọn duy nhất chạy nổi trên hàng nghìn cạnh đồ thị.</p>
+
+<h4>Vai của graph foundation model</h4>
+
+<table>
+<tbody>
+<tr><td><b>LLM</b> &nbsp;<span class="note">hàng tỷ tham số</span></td><td>biết ngôn ngữ + tri thức</td><td>→ tầng A</td></tr>
+<tr><td><b>GFM</b> &nbsp;<span class="note">34M</span></td><td>biết <i>cách đi</i></td><td>→ tầng B</td></tr>
+<tr><td><b>Đồ thị</b> &nbsp;<span class="note">dữ liệu</span></td><td>chứa tri thức cụ thể</td><td>→ thay trí nhớ tham số</td></tr>
+</tbody>
+</table>
+
+<p>GFM không nhớ thực thể nào. Khởi tạo của nó là \(h_v^{(0)}=\mathrm{MLP}(\emb(v),\emb(q))\) cho seed và \(\emb(v)\) cho phần còn lại — \(\emb(v)\) là embedding <b>văn bản</b>, không phải tham số gắn với ID. Nhờ vậy nó chạy được trên đồ thị mới, thực thể mới, không cần train lại. Đó là nghĩa của chữ “foundation” ở đây.</p>
+
+<p>Hệ quả: 34M tham số là đủ, nên tầng B gần như miễn phí so với tầng A — và IG chạy nổi trên hàng nghìn cạnh.</p>
+
+<!-- =============================================================== -->
+<h2 id="s2">2. Ký hiệu</h2>
+
+<table>
+<tbody>
+<tr><td>\(n\)</td><td>số token của prompt</td><td>\(n_q\)</td><td>số token truy vấn</td></tr>
+<tr><td>\(d\)</td><td>chiều ẩn của mô hình</td><td>\(K\)</td><td>số đoạn ứng viên</td></tr>
+<tr><td>\(C\)</td><td>số cụm</td><td>\(L\)</td><td>số tầng GNN</td></tr>
+<tr><td>\(M\)</td><td>số bước nội suy IG</td><td>\(T\)</td><td><b>tập đích</b> (đầu ra tầng A)</td></tr>
+<tr><td>\(\Pi\)</td><td>cây đường đi (đầu ra tầng B)</td><td>\(\rho\)</td><td>phần dư do cắt cụm</td></tr>
+<tr><td>\(V_q\)</td><td>tập node seed</td><td>\(\hat g\)</td><td>giá trị gate đã học</td></tr>
+</tbody>
+</table>
+
+<p class="note">Lưu ý: \(T\) là <i>tập đích</i>, không phải số token.</p>
+
+<!-- =============================================================== -->
+<h2 id="s3">3. Tầng A — Tìm tập đích</h2>
+
+<h3>3.1 Thiết lập</h3>
+
+\[ x=[\,q,D_1,\dots,D_K\,],\qquad E\in\mathbb{R}^{n\times d},\qquad F(E)=\log P\!\left(y \mid q,D_1,\dots,D_K\right) \]
+
+\[ E'[t]=\begin{cases} E[t] & t\le n_q \quad\text{(giữ truy vấn)}\\[2pt] 0 & t> n_q \quad\text{(xóa mọi đoạn)}\end{cases} \]
+
+<p>Hiệu \(F(E)-F(E')\) là <b>cái bánh</b>: toàn bộ phần mà truy hồi đóng góp. Mọi thứ phía sau chia cái này.</p>
+
+<h3>3.2 Gom cụm</h3>
+
+\[ \kappa(k)=\argmin_{c\in\{1,\dots,C\}}\big\lVert \emb(D_k)-\mu_c\big\rVert_2, \qquad \mu_c=\frac{1}{|\mathcal{C}_c|}\sum_{k\in\mathcal{C}_c}\emb(D_k) \]
+
+<p>Kéo chi phí Shapley từ \(2^K\) xuống \(2^C\), và gom đoạn trùng ý vào một chỗ. Chọn \(C\in[4,8]\).</p>
+
+<h3>3.3 Trò chơi hợp tác</h3>
+
+\[ v(S)=F(E_S),\qquad (E_S)[t]=\begin{cases} E[t] & t\le n_q\\ E[t] & t\in\spanop(\mathcal{C}_c),\ c \in S\\ 0 & \text{ngược lại} \end{cases} \qquad \begin{aligned} v(\emptyset)&=F(E')\\ v(\{1,\dots,C\})&=F(E) \end{aligned} \]
+
+<h3>3.4 Shapley mức cụm</h3>
+
+\[ \phi_c=\sum_{S\subseteq\{1,\dots,C\}\setminus\{c\}} \frac{|S|!\,(C-|S|-1)!}{C!}\Big[\,v(S\cup\{c\})-v(S)\,\Big] \]
+
+<table>
+<tbody>
+<tr><td>\(\phi_c\) lớn dương</td><td>cụm đóng góp thật</td></tr>
+<tr><td>\(\phi_c\approx 0\)</td><td>mô hình bỏ qua cụm này</td></tr>
+<tr><td>\(\phi_c &lt; 0\)</td><td>cụm <i>đẩy ngược</i> câu trả lời</td></tr>
+</tbody>
+</table>
+
+<div class="inv"><span class="lab">Kiểm tra 1</span> \[ \sum_{c=1}^{C}\phi_c = F(E)-F(E') \]</div>
+
+<h3>3.5 Cắt cụm</h3>
+
+\[ C^*=\{c:\phi_c>\tau\},\qquad C^-=\{1,\dots,C\}\setminus C^*,\qquad \rho=\sum_{c\in C^-}\phi_c \]
+
+<h3 id="greedy">3.6 Greedy trong cụm</h3>
+
+<p>Hàm giá trị là <b>cụm chạy riêng</b> — dư thừa chéo cụm thì Shapley đã xử lý:</p>
+
+\[ v_c(R)=F\big(q+\text{các đoạn trong } R\big) \]
+
+<pre>
+với mỗi c thuộc C*:
+    full_c = v_c(C_c)
+    R_c &lt;- rỗng
+    lặp:
+        k* = argmax  [ v_c(R_c + {k}) - v_c(R_c) ]
+             k thuộc C_c \ R_c
+        R_c &lt;- R_c + {k*}
+        dừng khi  v_c(R_c) &gt;= theta * full_c        theta = 0.95
+</pre>
+
+<p><b>Chọn dần từ rỗng, không cắt dần từ đủ</b> — xem <a href="#prune">§9.2</a>.</p>
+
+<p>Ví dụ, cụm \(\mathcal{C}_1\) có 4 đoạn, \(\phi_1=2{,}40\), mục tiêu \(2{,}28\):</p>
+
+<pre>
+vòng 1   v(a)=1.90   v(b)=1.85   v(c)=1.20   v(d)=0.30   → chọn a (79%)
+vòng 2   v(ab)=1.95  v(ac)=2.30  v(ad)=2.00
+         gain: +0.05       +0.40       +0.10            → chọn c (96%) ĐẠT
+
+giữ {a, c}    bỏ {b, d}    chi phí 7 lượt
+</pre>
+
+<p>\(b\) mạnh hơn \(c\) khi đứng một mình nhưng là bản sao của \(a\). Chỉ phép thử phản thực mới thấy.</p>
+
+<h3 id="alloc">3.7 Chia \(\phi_c\) cho các đoạn sống sót</h3>
+
+<p>\(|R_c|\) chỉ 2–3 nên Shapley chính xác được, và mọi \(v_c(\cdot)\) đã tính ở <a href="#greedy">§3.6</a> — <b>không tốn thêm lượt nào</b>:</p>
+
+\[ \psi_k=\sum_{S\subseteq R_c\setminus\{k\}} \frac{|S|!\,(|R_c|-|S|-1)!}{|R_c|!}\Big[\,v_c(S\cup\{k\})-v_c(S)\,\Big] \]
+
+\[ S^{\text{final}}_{D_k}= \begin{cases} \displaystyle \phi_c\cdot\frac{\psi_k}{\sum_{j\in R_c}\psi_j} & k\in R_c\\[14pt] 0 & k\notin R_c \end{cases} \]
+
+<p>Phải chuẩn hóa vì \(\sum_k\psi_k = v_c(R_c)\) là giá trị cụm chạy riêng, còn \(\phi_c\) là đóng góp biên <i>giữa các cụm khác</i>.</p>
+
+<div class="inv"><span class="lab">Kiểm tra 2</span> \[ \sum_{k\in R_c} S^{\text{final}}_{D_k}=\phi_c \qquad \text{mọi } c\in C^* \]</div>
+
+<div class="inv"><span class="lab">Kiểm tra 3</span> \[ \sum_{k=1}^{K} S^{\text{final}}_{D_k}=\big[F(E)-F(E')\big]-\rho \]</div>
+
+<h3>3.8 Đầu ra</h3>
+
+\[ T=\bigcup_{c\in C^*} R_c \]
+
+<!-- =============================================================== -->
+<h2 id="s4" class="brk">4. Tầng B — Tìm đường trên đồ thị</h2>
+
+<p>Viết theo G-reasoner (<a href="https://arxiv.org/abs/2509.24276">arXiv:2509.24276</a>): QuadGraph bốn tầng node (attribute / entity / document / community), GNN phụ thuộc truy vấn, 34M tham số.</p>
+
+<h3 id="gate">4.1 Gate trên cạnh — hai chế độ</h3>
+
+<p>G-reasoner <b>không có trọng số cạnh nào</b> (DistMult rồi cộng tổng, không attention). Ta chèn một gate:</p>
+
+\[ m_e^{(l)} = g_e^{(l)}\cdot\Msg\big(h_v^{(l-1)},h_r^{(l)},h_{v'}^{(l-1)}\big), \qquad h_v^{(l)}=\Upd\Big(h_v^{(l-1)},\ \textstyle\sum_{e=(v',r,v)} m_e^{(l)}\Big) \]
+
+<table>
+<thead><tr><th>Chế độ</th><th>Gate</th><th>Vai trò</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>\(g_e^{(l)}=1\) &nbsp;<span class="note">hằng số</span></td><td>công cụ phân tích, model không đổi hành vi gì</td></tr>
+<tr><td><b>2</b></td><td>\(\hat g_e^{(l)}=\sigma\big(\mathrm{MLP}(h_v^{(l-1)},h_r^{(l)},h_{v'}^{(l-1)},h_q)\big)\)</td><td>bộ phận của model, <b>phụ thuộc truy vấn</b></td></tr>
+</tbody>
+</table>
+
+<p>Chế độ 2 vá một lỗ hổng thật: ở bản gốc truy vấn chỉ tác động lúc khởi tạo, sau đó \(L\) tầng lan truyền chạy giống hệt nhau bất kể hỏi gì. Có gate phụ thuộc truy vấn thì model <b>định tuyến khác nhau theo từng câu hỏi</b>.</p>
+
+<p><b>Vẫn giữ tính inductive:</b> mọi đầu vào của MLP (\(h_v, h_r, h_{v'}, h_q\)) đều là đại lượng suy từ văn bản hoặc quan hệ, không có ID node nào. Model vẫn chưa bao giờ “nhớ” thực thể cụ thể.</p>
+
+<h3>4.2 Gate phải riêng từng tầng</h3>
+
+<p>Một cạnh vật lý được dùng \(L\) lần, mỗi tầng một lần — và các lần đó <b>không tương đương</b>:</p>
+
+<pre>
+X --sinh_ở--> C --thuộc--> D          seed = {X}
+
+tầng 1   X→C nổ  →  C NHẬN tín hiệu truy vấn        ✓ hữu ích
+         C→D nổ  →  C còn trống, D nhận đồ vô nghĩa ✗ vô dụng
+
+tầng 2   C→D nổ  →  C đã có tín hiệu, D NHẬN được   ✓ hữu ích
+         X→C nổ  →  C đã có rồi, thừa               ✗ gần vô dụng
+</pre>
+
+<p>Gate chung sẽ trộn hai vai trò đó lại và <b>mất thông tin thứ tự</b> — tức mất đúng cái quan trọng nhất của multi-hop. Nên số gate là \(|\mathcal{E}|\times L\).</p>
+
+<h3>4.3 Điểm mục tiêu</h3>
+
+\[ p(v)=\mathrm{Predictor}_{\mathrm{type}(v)}\big(h_v^{(L)},\emb(v),\emb(q)\big), \qquad F_B(g)=\log p(v_D)\quad\text{với mỗi } D\in T,\ \text{chạy riêng} \]
+
+<p>\(F_B\) là hàm của <b>vector gate</b> \(g\), không phải của embedding. Đó là khác biệt cốt lõi so với tầng A.</p>
+
+<h3>4.4 IG trên gate</h3>
+
+\[ g(\alpha)=\alpha\cdot\hat g,\quad \alpha\in[0,1] \qquad\Longrightarrow\qquad \mathrm{IG}_e^{(l)}=\underbrace{\hat g_e^{(l)}}_{\text{đầu vào}-\text{baseline}}\cdot\ \frac1M\sum_{m=1}^{M} \frac{\partial F_B\big(\alpha_m\hat g\big)}{\partial g_e^{(l)}} \]
+
+<p>Tại \(g=0\) không thông điệp nào chảy, mọi node giữ nguyên \(h^{(0)}\).</p>
+
+<div class="inv"><span class="lab">Kiểm tra 4</span> \[ \sum_{e,l}\mathrm{IG}_e^{(l)}=F_B(\hat g)-F_B(0) \]</div>
+
+<p>Ở chế độ 2 hệ số \(\hat g\) quay lại, và nó mang một ý nghĩa đẹp: <b>cạnh mà chính model đã tắt (\(\hat g\approx 0\)) tự động nhận \(\mathrm{IG}\approx 0\)</b>. Quy gán và quyết định định tuyến của model khớp nhau.</p>
+
+<h4>Lọc trước khi chạy IG</h4>
+<p>Gate cho sẵn một prior miễn phí:</p>
+
+\[ \mathcal{E}_{\text{act}}=\big\{(e,l) : \hat g_e^{(l)}>\varepsilon_g\big\}, \qquad \varepsilon_g\approx 0{,}05 \]
+
+<p>Chỉ chạy QHĐ trên \(\mathcal{E}_{\text{act}}\) — thường còn vài phần trăm số cạnh. Ở chế độ 1 không có prior này, phải quét tất.</p>
+
+<h3 id="split">4.5 Tính chất chia đều — kiểm tra nội bộ miễn phí</h3>
+
+<p>Vì mọi gate cùng scale theo \(\alpha\), một đường dài \(h\) hop đóng góp theo \(\alpha^h\). Số hạng của đường trong \(F_B\) là \(c\prod_i (g_i/\hat g_i)\), tại \(g=\alpha\hat g\) thành \(c\,\alpha^h\), nên:</p>
+
+\[ \mathrm{IG}_i=\hat g_i\int_0^1 \frac{c\,\alpha^{h-1}}{\hat g_i}\,d\alpha = c\left[\frac{\alpha^h}{h}\right]_0^1=\frac{c}{h} \]
+
+<div class="inv"><span class="lab">Kiểm tra 5</span> \[ \text{đường } h \text{ hop, tổng giá trị } c \;\Longrightarrow\; \text{mỗi hop nhận } c/h \]</div>
+
+<p>Nếu các hop trên cùng một đường lệch nhau nhiều, nhiều khả năng bạn đang nhìn <b>hai đường khác nhau</b> chứ không phải một.</p>
+
+<h3>4.6 Đồ thị trải phẳng theo tầng</h3>
+
+\[ \widehat V=V\times\{0,1,\dots,L\}, \qquad \widehat{\mathcal{E}}= \underbrace{\big\{((v',l{-}1),(v,l))\big\}}_{\text{cạnh thật, trọng số } \mathrm{IG}_e^{(l)}} \ \cup\ \underbrace{\big\{((v,l{-}1),(v,l))\big\}}_{\text{cạnh đứng yên, trọng số } 0} \]
+
+<p>Hình dung là một <b>bảng</b>: hàng là node, cột là tầng. Ô \((v,l)\) = trạng thái của \(v\) sau \(l\) vòng truyền tin.</p>
+
+<pre>
+             tầng 0     tầng 1     tầng 2     tầng 3
+    X          ●          ○          ○          ○
+    C          ○          ○          ○          ○
+    D          ○          ○          ○          ★
+             ● seed                            ★ đích
+</pre>
+
+<p>Cạnh đứng yên trọng số 0 <b>không phải lựa chọn thiết kế</b> — gate chỉ gắn trên thông điệp, mà đứng yên thì không có thông điệp, nên không có IG để tính. Nó tồn tại để đường dài 2 hop vẫn sống tới cột \(L\).</p>
+
+<p>Mọi cạnh đi sang phải đúng một cột → <b>không có chu trình</b> → quét một lượt theo thứ tự cột là xong. Không cần Dijkstra: thứ tự đã do kiến trúc \(L\) tầng áp đặt sẵn. Đích là ô \((D,L)\), <b>không phải</b> \((D,\text{bất kỳ})\) — vì \(p(D)\) tính từ \(h_D^{(L)}\).</p>
+
+<h3 id="dp">4.7 Quy hoạch động</h3>
+
+\[ \best[(v,0)]=\begin{cases} 0 & v\in V_q \quad\text{(MỌI seed, không chỉ một)}\\ -\infty & \text{ngược lại}\end{cases} \]
+
+\[ \best[(v,l)]=\max\left\{ \underbrace{\best[(v,l-1)]}_{\text{đứng yên},\ +0}, \quad \max_{e=(v',r,v)}\ \underbrace{\best[(v',l-1)]+\mathrm{IG}_e^{(l)}}_{\text{đi chéo}} \right\} \]
+
+<p>Lưu kèm \(\mathrm{back}[(v,l)]\) = cách nào thắng, để truy ngược. Giá trị \(-\infty\) nghĩa là chưa có tín hiệu nào tới được ô này; cộng gì vào \(-\infty\) cũng vẫn \(-\infty\) — đó là cơ chế tự động chặn các cạnh nổ quá sớm.</p>
+
+<p><b>Nhiều seed chỉ đổi dòng khởi tạo.</b> QHĐ đa nguồn tự tìm đường tốt nhất xuất phát từ bất kỳ seed nào, và truy ngược cho biết nó từ seed nào. Chi phí \(O\big((|V|+|\mathcal{E}|)\times L\big)\), một lượt quét.</p>
+
+<h4>Chạy tay</h4>
+
+<pre>
+X --e1--> C --e2--> D₇ --e3--> B --e4--> D₁₅       V_q={X}, L=4
+
+bảng IG cho đích D₁₅:
+cạnh          tầng1   tầng2   tầng3   tầng4
+e1  X→C        0.11    0.01    0.00    0.00
+e2  C→D₇       0.00    0.14    0.01    0.00
+e3  D₇→B       0.00    0.00    0.17    0.01
+e4  B→D₁₅      0.00    0.00    0.00    0.21
+</pre>
+
+<p>Để ý <b>hình chéo</b>: mỗi cạnh chỉ có giá trị ở đúng một tầng. Đó là chữ ký của một chuỗi sạch, và nó đọc ra luôn thứ tự hop.</p>
+
+<pre>
+cột 1   C    đứng yên −∞ | e1: best[(X,0)]+0.11 = 0.11        → 0.11 từ (X,0)
+        D₇   đứng yên −∞ | e2: best[(C,0)]+0.00 = −∞          → −∞
+                                        ↑ C chưa nhận gì ở cột 0
+
+cột 2   C    đứng yên 0.11 ← thắng | e1 tầng2: 0+0.01 = 0.01   → 0.11
+        D₇   đứng yên −∞   | e2: best[(C,1)]+0.14 = 0.25       → 0.25 từ (C,1)
+
+cột 3   D₇   đứng yên 0.25 ← thắng | e2 tầng3: 0.11+0.01 = 0.12 → 0.25
+        B    đứng yên −∞   | e3: best[(D₇,2)]+0.17 = 0.42      → 0.42 từ (D₇,2)
+
+cột 4   B    đứng yên 0.42 ← thắng | e3 tầng4: 0.25+0.01 = 0.26 → 0.42
+        D₁₅  đứng yên −∞   | e4: best[(B,3)]+0.21 = 0.63       → 0.63 từ (B,3)
+</pre>
+
+<pre>
+          tầng0   tầng1   tầng2   tầng3   tầng4
+  X         0       0       0       0       0
+  C        −∞     0.11    0.11    0.11    0.11
+  D₇       −∞      −∞     0.25    0.25    0.25   ★
+  B        −∞      −∞      −∞     0.42    0.42
+  D₁₅      −∞      −∞      −∞      −∞     0.63   ★
+</pre>
+
+<p>Ranh giới giữa \(-\infty\) và số hữu hạn chạy chéo xuống — đó là <b>mặt sóng thông tin</b>, cho thấy tín hiệu lan tới đâu sau mỗi tầng.</p>
+
+<h3 id="maxsum">4.8 Trích đường — max-sum, không phải min-cost</h3>
+
+\[ \pi^*_D=\argmax_{\pi:\,(V_q,0)\to(D,L)}\ \sum_{(e,l)\in\pi}\mathrm{IG}_e^{(l)} \;=\; \text{truy ngược } \mathrm{back}[\cdot] \text{ từ ô } (D,L) \]
+
+<p><b>Không dùng</b> \(\mathrm{cost}=-\log w\) rồi tìm đường rẻ nhất. Lý do:</p>
+
+<pre>
+−log rồi cộng  ⟺  NHÂN các trọng số    ← xem w như xác suất
+IG thì CỘNG                             ← completeness: Σ IG = tổng
+</pre>
+
+<p>Ba hệ quả của việc dùng đúng max-sum:</p>
+
+<ol>
+<li>không cần ReLU bỏ cạnh âm — max-sum tự né, và giữ được thông tin “cạnh này đẩy ngược”;</li>
+<li>hết thiên vị đường ngắn. Công thức \(-\log\) phạt đường dài <b>hai lần</b>: nhiều cạnh hơn, <i>và</i> mỗi cạnh nhẹ hơn do chia \(c/h\) ở <a href="#split">§4.5</a>;</li>
+<li>giá trị đường đọc thẳng ra phần trăm, so trực tiếp được với ngưỡng \(\suff\).</li>
+</ol>
+
+<p>Max-sum trên DAG vẫn tuyến tính — longest-path chỉ khó trên đồ thị có chu trình. Truy ngược ví dụ trên:</p>
+
+<pre>
+(D₁₅,4) ← e4 tầng4 ← (B,3) ← e3 tầng3 ← (D₇,2) ← e2 tầng2 ← (C,1) ← e1 tầng1 ← (X,0)
+
+giá trị  0.11 + 0.14 + 0.17 + 0.21 = 0.63      khớp ô ★  ✓
+</pre>
+
+<h3>4.9 Nhiều đích</h3>
+
+<p>\(F_B\) khác nhau theo đích nên <b>không gộp được</b> — gộp thành \(\sum_D \log p(D)\) thì rẻ hơn nhưng mất khả năng biết cạnh nào phục vụ đích nào. Tiết kiệm bằng cách dùng chung forward:</p>
+
+<pre>
+tại mỗi α:   1 forward  →  |T| lần backward trên cùng đồ thị đó
+
+M=20, |T|=6:   20 forward + 120 backward
+     thay vì   120 forward + 120 backward
+</pre>
+
+<h3>4.10 Kiểm chứng (bắt buộc)</h3>
+
+\[ \suff(\Pi)=F_B\big(g=\hat g \text{ chỉ trên } \Pi,\ 0 \text{ chỗ khác}\big), \qquad \nec(\Pi)=F_B\big(g=0 \text{ trên } \Pi,\ \hat g \text{ chỗ khác}\big) \]
+
+\[ \text{nhận } \Pi \iff \suff(\Pi)\ge\theta_s\cdot F_B(\hat g),\qquad \theta_s=0{,}95 \]
+
+<p>Nếu \(\nec(\Pi)\approx F_B(\hat g)\) thì có <i>đường song song</i> — không phải lỗi, mà là phát hiện: đồ thị có nhiều lối độc lập tới cùng bằng chứng. IG là bộ <b>sàng</b>, không phải bằng chứng; bước này không bỏ được.</p>
+
+<h3 id="confluence">4.11 Hội tụ nhiều seed — greedy xóa cạnh</h3>
+
+<p>Khi một đích cần nhiều seed hội tụ, một đường không đủ. Không cần Steiner tree — vòng greedy tự xử lý:</p>
+
+<pre>
+Π_D &lt;- rỗng
+lặp tối đa n lần:
+    pi = truy ngược back[] từ (D,L)
+    Π_D &lt;- Π_D + pi
+    nếu suff(Π_D) &gt;= theta_s * F_B(ghat)  →  nhận, dừng
+    đặt IG_e^(l) = 0 cho mọi (e,l) thuộc Π_D      # ĐÃ TRẢ TIỀN RỒI
+    chạy lại QHĐ §4.7
+</pre>
+
+<p>Mẹo nằm ở dòng áp chót: cạnh <b>mới</b> vẫn có giá trị nên đường kế tiếp được thưởng vì mang thêm cái mới; cạnh <b>đã có</b> giá trị 0 nên dùng lại miễn phí, không bị tính hai lần.</p>
+
+<pre>
+IG:  X→F2 tầng1 = 0.22,  Y→F2 tầng1 = 0.19,  F2→D₇ tầng2 = 0.33,  tổng 0.81
+
+vòng 1   best[(F2,1)] = max(0.22 từ X, 0.19 từ Y) = 0.22
+         best[(D₇,2)] = 0.22 + 0.33 = 0.55              → π₁ qua X, 68%
+         suff = 0.61  &lt;  0.95      CHƯA ĐỦ
+
+vòng 2   xóa (X→F2,1) và (F2→D₇,2)
+         best[(F2,1)] = 0.19 từ Y
+         best[(D₇,2)] = 0.19 + 0.00 = 0.19              → π₂ qua Y
+                                      ↑ cạnh dùng chung giờ miễn phí
+
+         Π = {π₁, π₂}   hợp cạnh: 0.22+0.19+0.33 = 0.74 / 0.81 = 91%
+         suff = 0.97    ✓ ĐỦ
+</pre>
+
+<p>Kết quả là một <b>cây hội tụ</b>, tìm ra bằng đúng vòng lặp đường đi:</p>
+
+<pre>
+   X --0.22--+
+             +--→ F2 --0.33--→ D₇
+   Y --0.19--+
+   tầng1          tầng2
+</pre>
+
+<p>Dùng <b>tổng IG để xếp hạng</b> ứng viên (miễn phí), dùng <b>ablation thật để quyết định dừng</b>. Đúng mô-típ sàng-rồi-xác-minh.</p>
+
+<blockquote><p><b>Thay thế:</b> giữ \(k\) giá trị tốt nhất mỗi ô (k-best DP), chi phí \(O((|V|+|\mathcal{E}|)\cdot L\cdot k)\). Nhanh hơn, nhưng vòng lặp xóa cạnh xử lý hội tụ tự nhiên hơn vì cạnh dùng chung tự thành miễn phí.</p></blockquote>
+
+<!-- =============================================================== -->
+<h2 id="s5">5. Nhiều đích và quan hệ phụ thuộc</h2>
+
+<p>Một đích có thể nằm <b>trên đường tới đích khác</b>:</p>
+
+<pre>
+X --sinh_ở--→ C --inc_in--→ D₇ --mentions--→ B --thuộc--→ D₁₅
+                             |
+                        D₇ VỪA là đích, VỪA là trạm trung chuyển
+</pre>
+
+<p>Xảy ra được vì QuadGraph có cạnh liên tầng hai chiều: entity → document, rồi document → entity khác. Đây chính là <b>multi-hop ở mức tài liệu</b>.</p>
+
+<h3>5.1 Quan hệ này không bao giờ vòng</h3>
+
+<p>\(D_7\) tới được ở tầng 2, \(D_{15}\) ở tầng 4 qua \(D_7\). Không có cách nào \(D_{15}\) lại nằm trên đường tới \(D_7\), vì chỉ số tầng chỉ tăng. Nên quan hệ phụ thuộc giữa các đích <b>tự nó là một DAG</b>, và tầng-tới-được cho sẵn thứ tự topo.</p>
+
+<h3>5.2 Hai thứ rơi ra miễn phí từ bảng QHĐ</h3>
+
+\[ \depth(D)=\min\{\,l : \best[(D,l)]>-\infty\,\} \]
+
+<p>tức <b>cột đầu tiên mà ô hết \(-\infty\)</b>. Trong bảng ở <a href="#dp">§4.7</a>: \(\depth(D_7)=2\), \(\depth(D_{15})=4\). Không cần lượt quét riêng.</p>
+
+<div class="inv"><span class="lab">Phát hiện trạm</span> \[ D \text{ là trạm của } D' \iff \text{truy ngược của } D' \text{ chạm ô } (D,l) \text{ nào đó} \]</div>
+
+<p>Trong ví dụ <a href="#maxsum">§4.8</a>, truy ngược \(D_{15}\) đi xuyên qua ô \((D_7,2)\) — mà \(D_7\in T\). Phát hiện quan hệ phụ thuộc <b>không cần thuật toán riêng</b>, nó lộ ra ngay trong lúc dựng đường.</p>
+
+<h3>5.3 Giải theo thứ tự nông → sâu</h3>
+
+<pre>
+── bước 1: thứ tự ─────────────────────────────────────────
+sắp T theo depth(D) tăng dần        (đọc từ bảng QHĐ, miễn phí)
+
+── bước 2: giải lần lượt ──────────────────────────────────
+Ecov &lt;- rỗng                        # cạnh đã nằm trong báo cáo
+
+cho mỗi D theo thứ tự depth:
+    IG_D  &lt;- chạy IG với F_B = log p(D)
+    IG_D[e,l] &lt;- 0  với mọi (e,l) thuộc Ecov      # CHỈ cho mục tiêu tìm kiếm
+    chạy QHĐ + greedy §4.11  →  Π_D
+    Ecov &lt;- Ecov + cạnh(Π_D)
+</pre>
+
+<pre>
+── D₇  (depth 2) ──────────────────────────────
+đường X → C → D₇            0.52 / 0.60 = 87%
+Ecov = { (X→C,1), (C→D₇,2) }
+
+── D₁₅ (depth 4) ──────────────────────────────
+bảng IG của D₁₅ sau khi xóa:
+    X→C    tầng1   0.11 → 0.00   đã có
+    C→D₇   tầng2   0.14 → 0.00   đã có
+    D₇→B   tầng3   0.17
+    B→D₁₅  tầng4   0.21
+                   ───── mới = 0.38
+</pre>
+
+<p>Báo cáo thành <b>một cây</b>, không phải hai đường rời:</p>
+
+<pre>
+X --0.24--→ C --0.28--→ D₇ ★          87% của D₇
+                         |
+                         +--0.17--→ B --0.21--→ D₁₅ ★    bổ sung 0.38
+</pre>
+
+<p>Trung thực hơn hẳn: báo riêng thì hai cạnh đầu bị tính hai lần, người đọc tưởng có hai chuỗi bằng chứng trong khi chỉ có một chuỗi phân nhánh.</p>
+
+<h3>5.4 Chỗ dễ sai: suff tính trên TOÀN đường</h3>
+
+<pre>
+xóa cạnh  →  CHỈ để làm mục tiêu tìm kiếm và báo cáo giá trị biên
+suff      →  LUÔN tính trên toàn bộ cạnh của đường, KỂ CẢ tiền tố
+
+SAI:   suff(D₁₅) = bật chỉ { D₇→B, B→D₁₅ }
+ĐÚNG:  suff(D₁₅) = bật cả  { X→C, C→D₇, D₇→B, B→D₁₅ }
+</pre>
+
+<p>Bật thiếu tiền tố thì \(D_7\) không có tín hiệu, \(B\) cũng không, \(p(D_{15})\) tụt — bạn sẽ kết luận nhầm là đường sai.</p>
+
+<h3>5.5 Tiền tố có thể khác nhau giữa các bảng IG</h3>
+
+<p>Bảng IG của \(D_{15}\) và của \(D_7\) là hai bảng khác nhau (hai \(F_B\) khác nhau): trong bảng của \(D_{15}\), đường tới \(D_7\) có giá trị \(0{,}25\); trong bảng của \(D_7\) nó là \(0{,}52\). Thường <b>cấu trúc trùng, chỉ khác độ lớn</b>. Nếu tiền tố khác nhau thì đó là thông tin thật:</p>
+
+<pre>
+cùng tiền tố   →  một chuỗi duy nhất, D₇ thật sự là trạm trung chuyển
+khác tiền tố   →  có hai lối tới D₇; lối tốt cho D₇ khác lối tốt để đi tiếp
+                  → báo cáo cả hai, đừng gộp
+</pre>
+
+<p>Khi kiểm tra quan hệ phụ thuộc, so <b>tập cạnh</b>, đừng chỉ nhìn node.</p>
+
+<h3>5.6 Đánh đổi</h3>
+
+<p>Thuật toán này <b>phụ thuộc thứ tự</b>: giải \(D_{15}\) trước có thể ra lối trực tiếp khác không qua \(D_7\). Sắp theo \(\depth\) là lựa chọn có cơ sở (khớp chiều thông tin chảy) nhưng là greedy, không tối ưu toàn cục. Tối ưu thì thành Steiner tree nhiều đích, NP-khó. Với \(|T|\) cỡ 5–8 thì greedy theo \(\depth\) là đủ, và cái bạn được lại là <b>cấu trúc đọc hiểu được</b>.</p>
+
+<!-- =============================================================== -->
+<h2 id="s6">6. Nối hai tầng và train</h2>
+
+\[ \text{nhãn mỗi ví dụ}=\Big(q,\ T,\ \{\Pi_D\}_{D\in T},\ \{\depth(D)\},\ \{w(D)\}\Big) \]
+
+<p><b>Chỉ tập \(T\) đi qua ranh giới hai tầng; không điểm số nào đi qua</b> — xem <a href="#nonhan">§9.1</a>.</p>
+
+<h3 id="chandoan">6.1 Bảng chẩn đoán — làm TRƯỚC khi train</h3>
+
+<table>
+<thead><tr><th>Tình huống</th><th>Chẩn đoán</th><th>Hành động</th></tr></thead>
+<tbody>
+<tr><td>đường mạnh, GFM xếp hạng cao</td><td>ổn</td><td>không làm gì</td></tr>
+<tr><td>đường mạnh, GFM xếp hạng thấp</td><td><b>lỗi model</b></td><td>→ ví dụ train tốt</td></tr>
+<tr><td>đường yếu / vòng vèo</td><td><b>lỗi đồ thị</b></td><td>bổ sung cạnh lúc xây graph</td></tr>
+<tr><td>không có đường trong \(L\) hop</td><td><b>lỗi cấu trúc</b></td><td>tăng \(L\), hoặc nối lại đồ thị</td></tr>
+</tbody>
+</table>
+
+<p>Nếu phần lớn là lỗi đồ thị thì mọi cải tiến loss đều vô ích. Với QuadGraph, “không có đường trong \(L\) hop” thường nghĩa là <b>thiếu cạnh liên tầng</b> (entity→document), không phải thiếu cạnh KG.</p>
+
+<h3>6.2 Trọng số theo quan hệ phụ thuộc</h3>
+
+<p>Nhãn các đích <b>không độc lập</b>: model trượt \(D_7\) thì không đời nào với tới \(D_{15}\). BCE phẳng giả định độc lập nên sai ở đây.</p>
+
+\[ w(D)=1+\big|\{\,D'\in T : D \text{ nằm trên } \Pi_{D'}\,\}\big| \]
+
+<p>Ví dụ: \(w(D_7)=2\), \(w(D_{15})=1\). Dùng kèm curriculum — train đích \(\depth\) nhỏ trước (\(\depth\) đã có sẵn, miễn phí).</p>
+
+<h3>6.3 Ba hàm mất mát</h3>
+
+\[ \mathcal{L}_{\text{node}} =-\sum_{D\in T} w(D)\log p(D)\;-\sum_{v\in V_{\text{neg}}}\log\big(1-p(v)\big) \]
+
+\[ \mathcal{L}_{\text{hop}} =\sum_{l=1}^{L}\sum_{v}\BCE\Big(p^{(l)}(v),\ \mathbf{1}\big[\exists\,\pi\in\Pi:(v,l)\in\pi\big]\Big) \]
+
+\[ \mathcal{L}_{\text{edge}}=\sum_{e,l}\BCE\big(\hat g_e^{(l)},\ \widehat{w}_e^{(l)}\big), \qquad \mathcal{L}=\mathcal{L}_{\text{node}}+\lambda_1\mathcal{L}_{\text{hop}}+\lambda_2\mathcal{L}_{\text{edge}} \]
+
+<p>\(\mathcal{L}_{\text{node}}\) thay nhãn cũ “đoạn có chứa chuỗi đáp án” — nhãn cũ đầy dương tính giả. \(\mathcal{L}_{\text{hop}}\) cần thêm predictor nhỏ \(p^{(l)}\) ở mỗi tầng; đây là giám sát trung gian, vá chỗ credit assignment bị đứt qua \(L\) bước (<a href="#nhannode">§9.4</a>). \(\mathcal{L}_{\text{edge}}\) dạy trực tiếp cho gate phụ thuộc truy vấn ở <a href="#gate">§4.1</a> chế độ 2, với \(\widehat w\) là IG chuẩn hóa về \([0,1]\).</p>
+
+<h3>6.4 Bộ lọc cho giám sát đường đi</h3>
+
+<p>Chỉ áp \(\mathcal{L}_{\text{hop}}\) và \(\mathcal{L}_{\text{edge}}\) lên ví dụ thỏa <b>cả ba</b>:</p>
+
+<table>
+<tbody>
+<tr><td>\(D\in T\)</td><td>Shapley nói cần</td></tr>
+<tr><td>\(\mathrm{rank}_{\text{GFM}}(D)>k\)</td><td>model đang xếp sai — <i>nếu đã đúng thì dạy số 0</i></td></tr>
+<tr><td>\(\suff(\Pi_D)\ge\theta_s\)</td><td>đường đã kiểm chứng — <i>thầy sai thì đừng dạy</i></td></tr>
+</tbody>
+</table>
+
+<p>Lý do điều kiện thứ hai: \(T\) đến từ LLM nên là <b>thông tin mới thật sự</b>; còn \(\Pi\) đến từ chính GFM nên phần lớn là <b>tự chưng cất</b>. Tập con mang thông tin mới là những ca model đang sai — ở đó IG chỉ ra các cạnh <i>lẽ ra</i> phải dùng để nâng \(p(D)\) mà model hiện chưa dùng.</p>
+
+<h3>6.5 Vòng lặp khởi động cho gate</h3>
+
+<p>Con gà quả trứng: cần IG để train gate, mà gate lại đổi IG.</p>
+
+<pre>
+vòng 0   g = 1 (chế độ 1)   →  IG  →  Π  →  train gate
+vòng 1   g = ĝ (chế độ 2)   →  IG sắc hơn  →  Π tốt hơn  →  train tiếp
+vòng 2   ...
+</pre>
+
+<p>Thực tế 2–3 vòng là bão hòa. Nếu vòng 3 vẫn thay đổi nhiều thì nhiều khả năng đang học nhiễu của corpus chứ không phải kỹ năng định tuyến — giảm \(\lambda_2\) hoặc đa dạng hóa corpus đào nhãn.</p>
+
+<h3 id="reverse">6.6 Vòng lặp ngược — dùng đích để tìm ứng viên mới</h3>
+
+<p>Bình thường seed là \(V_q\); vòng ngược lấy seed là \(T\). Phần sắc nhất nằm ở phép trừ tập hợp:</p>
+
+\[ \text{ứng viên đáng giá}=R(T)\setminus R(V_q) \]
+
+<p>Tức <b>đoạn mà bằng chứng tốt dẫn tới, nhưng câu hỏi không dẫn tới</b>. Nếu nằm trong cả hai thì retriever lẽ ra đã tìm được rồi. Phần hiệu mới là chỗ exposure bias đang trốn.</p>
+
+<pre>
+vòng n:    pool = BM25 + GFM + ngẫu nhiên             → Shapley → T_n
+vòng n+1:  pool = pool cũ + top20( R(T_n) \ R(V_q) )  → Shapley → T_{n+1}
+</pre>
+
+<p>Chi phí phía đồ thị gần bằng 0; chi phí thật là chấm Shapley cho ứng viên mới bằng LLM, nên giới hạn 10–20 node. Hai vòng là bão hòa; vòng 3 vẫn lôi ra đoạn \(\phi\) cao nghĩa là pool ban đầu hẹp nghiêm trọng.</p>
+
+<h3>6.7 Kỳ vọng thực tế</h3>
+
+<p>Single-hop gần như không cải thiện — nhãn node đã nói đủ. Multi-hop là chỗ nên ăn. G-reasoner đã đạt EM \(81{,}1\) trên HotpotQA (gần trần), nên đo trên bộ khó hơn (MuSiQue, 2Wiki). Đây là giả thuyết có cơ sở, chưa phải kết quả đã chứng minh.</p>
+
+<!-- =============================================================== -->
+<h2 id="s7">7. Chi phí</h2>
+
+\[ \text{Tầng A}=2^C+\sum_{c\in C^*}\Big(|\mathcal{C}_c|+|\mathcal{C}_c|-1+\cdots\Big)\ \text{lượt LLM} \]
+\[ \text{Tầng B}=\underbrace{M}_{\text{forward}}+\underbrace{M\cdot|T|}_{\text{backward}}+\;|T|\cdot(1+|\Pi|)\ \text{lượt GFM} \]
+
+<table>
+<tbody>
+<tr><td>LLM</td><td>\(64+21=85\)</td><td>← đắt</td></tr>
+<tr><td>GFM (34M)</td><td>20 fwd + 120 bwd + ~12 fwd</td><td>← gần như miễn phí</td></tr>
+</tbody>
+</table>
+
+<p>Hai nửa chênh khoảng 100 lần. Hệ quả: <b>cache tập đích \(T\) lại.</b> Nhãn \((q\to T)\) không phụ thuộc kiến trúc GFM — đào một lần, dùng lại cho mọi lần train, mọi thay đổi đồ thị, mọi giá trị \(L\).</p>
+
+<h3 id="crossover">7.1 Quy tắc chọn IG hay ablation</h3>
+
+<div class="inv"><span class="lab">Quy tắc</span> \[ \text{IG rẻ hơn ablation}\iff N>3M \]</div>
+
+<p>với \(N\) là số đơn vị cần chấm, <i>điều kiện</i>: prompt hoặc đồ thị không phình theo \(N\). Hệ số 3 vì backward \(\approx 2\times\) forward.</p>
+
+<table>
+<tbody>
+<tr><td>cạnh đồ thị (hàng nghìn, đồ thị cố định)</td><td>IG</td></tr>
+<tr><td>token trong đoạn (hàng trăm, prompt cố định)</td><td>IG</td></tr>
+<tr><td>đoạn trong pool (prompt dài theo số đoạn)</td><td>ablation / Shapley</td></tr>
+</tbody>
+</table>
+
+<p>Chứng minh dòng cuối — khi prompt phình theo \(K\), gọi \(c\) là chi phí một forward trên prompt ngắn:</p>
+
+\[ \text{standalone}=K\cdot c, \qquad \text{IG}=M\cdot 3\cdot\underbrace{K\cdot c}_{\text{prompt dài}}, \qquad \frac{\text{IG}}{\text{standalone}}=3M \]
+
+<p>\(K\) triệt tiêu hoàn toàn — <b>không có điểm hòa vốn</b>. Cảm giác “IG chấm một lượt được hết \(K\) đoạn” là ảo giác, vì mỗi lượt phải nuốt cả \(K\) đoạn.</p>
+
+<!-- =============================================================== -->
+<h2 id="s8">8. Bất biến phải kiểm</h2>
+
+\[ \begin{aligned} \text{(1)}\quad & \sum_c \phi_c = F(E)-F(E')\\[3pt] \text{(2)}\quad & \sum_{k\in R_c} S^{\text{final}}_{D_k}=\phi_c \qquad \text{mọi } c\in C^*\\[3pt] \text{(3)}\quad & \sum_k S^{\text{final}}_{D_k}=\big[F(E)-F(E')\big]-\rho\\[3pt] \text{(4)}\quad & \sum_{e,l}\mathrm{IG}_e^{(l)}=F_B(\hat g)-F_B(0)\\[3pt] \text{(5)}\quad & \text{đường } h \text{ hop giá trị } c \ \Longrightarrow\ \text{mỗi hop}\approx c/h \end{aligned} \]
+
+<p>(1)–(3) phải đúng tới sai số máy. (4) chỉ đúng tới sai số rời rạc hóa của \(M\) — lệch quá 5% thì tăng \(M\). (5) là chẩn đoán: lệch nhiều nghĩa là bạn đang nhìn hai đường chứ không phải một.</p>
+
+<p><b>Không có bất biến nào nối tầng A với tầng B.</b></p>
+
+<!-- =============================================================== -->
+<h2 id="s9" class="brk">9. Những chỗ dễ sai</h2>
+
+<h3 id="nonhan">9.1 Nối TẬP, đừng nhân ĐIỂM</h3>
+
+<p>\(F\) và \(F_B\) có mục tiêu khác nhau (\(\log P\) của câu trả lời so với \(\log p\) của node) và baseline khác nhau, nên chuỗi completeness không bắc cầu. Nối một <i>tập</i> thì hợp lệ; nhân hai <i>điểm số</i> thì vô nghĩa. Hiển thị hai cột riêng.</p>
+
+<h3 id="prune">9.2 Đừng cắt tỉa bằng điểm attribution</h3>
+
+<table>
+<tbody>
+<tr><td>phân bổ</td><td>“chia công trạng sao cho công bằng?”</td><td>Shapley / IG</td></tr>
+<tr><td>cắt tỉa</td><td>“bỏ cái này đi thì mất gì?”</td><td>phản thực</td></tr>
+</tbody>
+</table>
+
+<pre>
+Cụm C₁:  φ₁ = 2.40
+  đoạn a: IG = 0.9
+  đoạn b: IG = 0.8      ← ba đoạn gần trùng nhau
+  đoạn c: IG = 0.7
+         tổng = 2.40
+
+Ngưỡng "IG &lt; 1.0 thì cắt"  →  cắt cả ba  →  mất trắng 2.40
+</pre>
+
+<p>Cùng vấn đề ở mức cạnh, cộng thêm <b>đứt kết nối</b>:</p>
+
+<pre>
+[hỏi]--0.9--[A]      [B]--0.8--[đoạn]
+               |       |
+            cạnh 0.3 bị cắt → hai mảnh rời → giải thích 0%
+</pre>
+
+<p>Một cạnh điểm thấp vẫn có thể là cầu nối duy nhất. Phải tìm <b>đường liền mạch</b>, không phải <b>tập cạnh điểm cao</b>.</p>
+
+<h3>9.3 Bất đối xứng giữa hai mức cắt</h3>
+
+<p>Cắt <i>cụm</i> làm mất tín hiệu thật nên phải <b>trừ</b>: \(\sum S^{\text{final}}=[F(E)-F(E')]-\rho\). Cắt <i>đoạn</i> trong cụm thì không mất gì (các đoạn còn lại bù được — đó chính là định nghĩa của dư thừa), nên <b>không trừ, chỉ dồn lại</b>: \(\sum_{k\in R_c}S^{\text{final}}_{D_k}=\phi_c\) vẫn nguyên vẹn. Đó là lý do greedy trong cụm chạy <i>sau</i> bước cắt cụm.</p>
+
+<h3 id="nhannode">9.4 Vì sao nhãn node chưa đủ</h3>
+
+<pre>
+hỏi:  "X sinh ở nước nào?"
+đúng: [X] --sinh_ở--> [thành phố C] --thuộc--> [nước D]
+
+model có thể học:  "truy vấn có chữ X, mà D hay xuất hiện gần X
+                    trong dữ liệu train → cứ chấm D cao"
+
+→ đúng trên tập train, sai trên truy vấn mới
+→ nhãn node KHÔNG phát hiện được, vì kết quả cuối vẫn đúng
+</pre>
+
+<p>\(\mathcal{L}_{\text{hop}}\) ép model đi đúng lộ trình.</p>
+
+<h3 id="exposure">9.5 Exposure bias</h3>
+
+<p>Đoạn tốt nhất không lọt pool thì Shapley không bao giờ thấy nó. Chống bằng pool rộng đa nguồn (BM25 + GFM + ngẫu nhiên, \(K=100\) — <i>không phải</i> top-100 của chính GFM) và vòng lặp ngược <a href="#reverse">§6.6</a>.</p>
+
+<h3>9.6 Không verify được “có dùng thật”</h3>
+
+<p>Cả \(\phi_c\) lẫn IG đều neo vào cùng một cái bánh. Khi \(F(E')=-0{,}20\) và \(F(E)=-0{,}15\) thì cái bánh chỉ \(0{,}05\) nat, mọi đoạn đều \(\approx 0\) — không phân biệt được “bỏ qua” với “đọc rồi thấy trùng trí nhớ”. Cần phép can thiệp thứ ba, <b>đổi nội dung</b>:</p>
+
+\[ \mathrm{use}_k=\log P\big(\text{trả lời cũ}\mid\text{đoạn gốc}\big)-\log P\big(\text{trả lời cũ}\mid\text{đoạn đã sửa}\big) \]
+
+<p>Chi phí 1 lượt forward mỗi đoạn. Để thành <b>cột riêng</b> cạnh \(S^{\text{final}}\): \(S^{\text{final}}\) cao nhưng \(\mathrm{use}_k\approx 0\) là cảnh báo mô hình trả lời từ trí nhớ, đoạn chỉ là trang trí.</p>
+
+<h3>9.7 Ablation bằng vector 0 chỉ là xấp xỉ</h3>
+
+<p>Vector \(0\) nằm ngoài phân phối embedding tự nhiên nên \(v(S)\) dính nhiễu off-manifold. Shapley chính xác tuyệt đối <i>với trò chơi \(v\) như đã định nghĩa</i>, nhưng \(v\) chỉ là proxy của “bỏ đoạn đi”. Thay thế: token <code>[MASK]</code>, hoặc cắt hẳn token rồi đánh lại chỉ số vị trí.</p>
+
+<h3>9.8 Mẫu số có thể tiến về 0</h3>
+
+<p>Ở <a href="#alloc">§3.7</a>, nếu các đoạn trong cụm có \(\psi\) trái dấu thì tỷ phần bùng nổ hoặc lật dấu. Hai cách chữa, cả hai giữ nguyên Kiểm tra 2:</p>
+
+<ol>
+<li>chia theo độ lớn: \(|\psi_k|\big/\sum_j|\psi_j|\);</li>
+<li>khi \(\big|\sum_j\psi_j\big| &lt; \varepsilon\): chia đều \(\phi_c/|R_c|\).</li>
+</ol>
+
+<h3>9.9 Gate học được có thể học thói quen của corpus</h3>
+
+<p>\(\hat g_e^{(l)}\) vẫn inductive (không có ID node trong đầu vào MLP), nhưng nhãn IG sinh trên <b>một</b> corpus có thể dạy nó lối định tuyến riêng của corpus đó. Chống bằng cách đào nhãn trên nhiều corpus, hoặc giữ \(\lambda_2\) nhỏ. Đây là lý do \(\mathcal{L}_{\text{edge}}\) nằm ở bước cuối trong thứ tự triển khai.</p>
+
+<!-- =============================================================== -->
+<h2 id="s10">10. Thứ tự triển khai</h2>
+
+<ol>
+<li>Tầng A đầy đủ, xuất \(T\) — <i>rẻ nhất, dùng được ngay</i></li>
+<li>Đổi nhãn train GFM sang \(T\) (có \(w(D)\)) — <i>chắc ăn nhất</i></li>
+<li>Chạy bảng chẩn đoán 4 ca (<a href="#chandoan">§6.1</a>) — <i>lỗi ở model hay ở đồ thị?</i></li>
+<li>Nếu lỗi model → thêm \(\mathcal{L}_{\text{hop}}\) — <i>cách dễ trước</i></li>
+<li>Nếu vẫn thiếu → gate query-aware + \(\mathcal{L}_{\text{edge}}\) — <i>đổi kiến trúc, làm sau cùng</i></li>
+<li>Vòng lặp ngược (<a href="#reverse">§6.6</a>) — <i>khi nghi exposure bias</i></li>
+</ol>
+
+<p><b>Đừng làm bước 5 trước bước 3.</b> Nếu phần lớn lỗi là thiếu cạnh trong đồ thị, mọi cải tiến loss đều vô nghĩa.</p>
+
+<h2>Tham chiếu</h2>
+<p>Linhao Luo, Shirui Pan và cộng sự. <i>G-reasoner: Foundation Models for Unified Reasoning over Graph-structured Knowledge.</i> arXiv:2509.24276, 2025. <a href="https://arxiv.org/abs/2509.24276">arxiv.org/abs/2509.24276</a></p>
+
+</div>
+</body>
+</html>

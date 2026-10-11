@@ -1,0 +1,199 @@
+% =====================================================================
+%  Quy gán RAG hai tầng — Shapley (sinh) + IG trên đồ thị (truy hồi)
+%
+%  biên dịch
+%      tectonic pipeline-shapley-ig-graph.tex
+%  hoặc
+%      xelatex pipeline-shapley-ig-graph.tex     (chạy 2 lần cho mục lục)
+%
+%  không dùng pdfLaTeX (cần fontspec cho tiếng Việt).
+%
+%  font — đã kiểm chứng bằng tectonic 0.17:
+%    Cả hai font đều lấy từ bundle TeX, không phụ thuộc font hệ thống,
+%    nên file này compile được trên mọi máy.
+%
+%    texgyrepagella     clone của Palatino. Phủ đủ tiếng Việt, nét nhạt.
+%    lmmono10-regular   Latin Modern Mono. Phủ đủ tiếng Việt.
+%
+%    Lỗi hay gặp: font thiếu khối Latin Extended Additional (U+1ea0-1ef9)
+%    sẽ tách "tầng" thành "tâ`ng". Georgia và bản DejaVu Sans Mono trong
+%    bundle tectonic đều dính lỗi này — đừng dùng.
+%
+%    Sơ đồ dùng ascii thuần (+ - | -> v) vì font mono không có ký tự
+%    kẻ khung Unicode.
+% =====================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic ]
+\setmonofont{lmmono10-regular}[Extension=.otf, Scale=0.86]
+
+% Không dùng polyglossia/babel: fontspec đã đủ render tiếng Việt.
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\refname}{Tham chiếu}
+
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.4cm}
+\usepackage{booktabs}
+\usepackage{fancyvrb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\spanop}{span}
+\DeclareMathOperator{\Msg}{Msg}
+\DeclareMathOperator{\Upd}{Upd}
+\DeclareMathOperator{\BCE}{BCE}
+\DeclareMathOperator{\emb}{emb}
+\DeclareMathOperator{\suff}{suff}
+\DeclareMathOperator{\nec}{nec}
+\DeclareMathOperator{\depthop}{depth}
+\newcommand{\best}{\mathrm{best}}
+
+\DefineVerbatimEnvironment{dia}{Verbatim}%
+  {fontsize=\small, frame=single, framesep=4pt, rulecolor=\color{black!25}}
+
+\newcommand{\inv}[2]{%
+  \begin{equation*}\boxed{\;\text{\textsc{#1}}\quad #2\;}\end{equation*}}
+
+\title{\bfseries Những chỗ dễ sai}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-1.1cm}
+
+\noindent Phụ lục của \emph{Quy gán RAG hai tầng}. Tham chiếu dạng ``\S x.y của tài
+liệu chính'' trỏ sang tài liệu đó; các \S trần là mục trong chính phụ lục này.
+
+\medskip
+\tableofcontents
+\bigskip
+
+\section{Nối tập, đừng nhân điểm}
+\label{sec:nonhan}
+
+$F$ và $F_B$ có mục tiêu khác nhau ($\log P$ của câu trả lời so với $\log p$ của node) và baseline khác nhau, nên chuỗi completeness không bắc cầu. Nối một \emph{tập} thì hợp lệ; nhân hai \emph{điểm số} thì vô nghĩa. Hiển thị hai cột riêng.
+
+\section{Đừng cắt tỉa bằng điểm attribution}
+\label{sec:prune}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+phân bổ & ``chia công trạng sao cho công bằng?'' & Shapley / IG \\
+cắt tỉa & ``bỏ cái này đi thì mất gì?'' & phản thực \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{dia}
+Cụm C3:  phi_3 = 2.40
+  đoạn a: IG = 0.9
+  đoạn b: IG = 0.8      <- ba đoạn gần trùng nhau
+  đoạn c: IG = 0.7
+         tổng = 2.40
+
+Ngưỡng "IG < 1.0 thì cắt"  ->  cắt cả ba  ->  mất trắng 2.40
+\end{dia}
+
+Cùng vấn đề ở mức cạnh, cộng thêm đứt kết nối:
+
+\begin{dia}
+[hỏi]--0.9--[A]      [B]--0.8--[đoạn]
+               |       |
+            cạnh 0.3 bị cắt -> hai mảnh rời -> giải thích 0%
+\end{dia}
+
+Một cạnh điểm thấp vẫn có thể là cầu nối duy nhất. Phải tìm đường liền mạch, không phải tập cạnh điểm cao.
+
+\section{Bất đối xứng giữa hai mức cắt}
+
+Cắt \emph{cụm} làm mất tín hiệu thật nên phải trừ: $\sum S^{\text{final}}=[F(E)-F(E')]-\rho$. Cắt \emph{đoạn} trong cụm thì không mất gì (các đoạn còn lại bù được --- đó chính là định nghĩa của dư thừa), nên không trừ, chỉ dồn lại: $\sum_{k\in R_c}S^{\text{final}}_{D_k}=\phi_c$ vẫn nguyên vẹn. Đó là lý do greedy trong cụm chạy \emph{sau} bước cắt cụm.
+
+\section{Vì sao nhãn node chưa đủ}
+\label{sec:nhannode}
+
+\begin{dia}
+hỏi:  "X sinh ở nước nào?"
+đúng: [X] --sinh_ở--> [thành phố C] --thuộc--> [nước D]
+
+model có thể học:  "truy vấn có chữ X, mà D hay xuất hiện gần X
+                    trong dữ liệu train -> cứ chấm D cao"
+
+-> đúng trên tập train, sai trên truy vấn mới
+-> nhãn node không phát hiện được, vì kết quả cuối vẫn đúng
+\end{dia}
+
+$\mathcal{L}_{\text{hop}}$ ép model đi đúng lộ trình.
+
+\section{Exposure bias}
+
+Đoạn tốt nhất không lọt pool thì Shapley không bao giờ thấy nó. Chống bằng pool rộng đa nguồn (bm25 $+$ GFM $+$ ngẫu nhiên, $K=100$ --- \emph{không phải} top-100 của chính GFM) và vòng lặp ngược \S6.6 của tài liệu chính.
+
+\section{Không verify được ``có dùng thật''}
+
+Cả $\phi_c$ lẫn IG đều neo vào cùng một cái bánh. Khi $F(E')=-0{,}20$ và $F(E)=-0{,}15$ thì cái bánh chỉ $0{,}05$ nat, mọi đoạn đều $\approx 0$ --- không phân biệt được ``bỏ qua'' với ``đọc rồi thấy trùng trí nhớ''. Cần phép can thiệp thứ ba, đổi nội dung:
+
+\[
+\mathrm{use}_k=\log P\big(\text{trả lời cũ}\mid\text{đoạn gốc}\big)
+-\log P\big(\text{trả lời cũ}\mid\text{đoạn đã sửa}\big)
+\]
+
+Chi phí 1 lượt forward mỗi đoạn. Để thành cột riêng cạnh $S^{\text{final}}$: $S^{\text{final}}$ cao nhưng $\mathrm{use}_k\approx 0$ là cảnh báo mô hình trả lời từ trí nhớ, đoạn chỉ là trang trí.
+
+\section{Ablation bằng vector 0 chỉ là xấp xỉ}
+
+Vector $0$ nằm ngoài phân phối embedding tự nhiên nên $v(S)$ dính nhiễu off-manifold. Shapley chính xác tuyệt đối \emph{với trò chơi $v$ như đã định nghĩa}, nhưng $v$ chỉ là proxy của ``bỏ đoạn đi''. Thay thế: token \texttt{[MASK]}, hoặc cắt hẳn token rồi đánh lại chỉ số vị trí.
+
+\section{Mẫu số có thể tiến về 0}
+
+Ở \S3.7 của tài liệu chính, nếu các đoạn trong cụm có $\psi$ trái dấu thì tỷ phần bùng nổ hoặc lật dấu. Hai cách chữa, cả hai giữ nguyên Kiểm tra 2:
+
+\begin{enumerate}[nosep,leftmargin=2em]
+\item chia theo độ lớn: $|\psi_k|\big/\sum_j|\psi_j|$;
+\item khi $\big|\sum_j\psi_j\big|<\varepsilon$: chia đều $\phi_c/|R_c|$.
+\end{enumerate}
+
+\section{Gate học được có thể học thói quen của corpus}
+
+$\hat g_e^{(l)}$ vẫn inductive (không có ID node trong đầu vào MLP), nhưng nhãn IG sinh trên một corpus có thể dạy nó lối định tuyến riêng của corpus đó. Chống bằng cách đào nhãn trên nhiều corpus, hoặc giữ $\lambda_2$ nhỏ. Đây là lý do $\mathcal{L}_{\text{edge}}$ nằm ở bước cuối.
+
+\section{Tỷ phần IG không phải suff}
+\label{sec:shareVSsuff}
+
+\begin{dia}
+tỷ phần IG   tổng IG trên đường / tổng IG    suy ra từ phân rã cộng tính
+suff         bật đúng gate đó, chạy model     đo thật
+\end{dia}
+
+Hai chỗ chúng lệch nhau:
+
+\begin{dia}
+1. model phi tuyến   -> 68% tỷ phần IG có thể chỉ cho suff = 0.61
+                        (IG tuyến tính hóa dọc một đường, model thì không)
+
+2. tính chất c/h     -> nhánh nhiều cạnh có tỷ phần cao hơn nhánh ít cạnh
+                        dù hai nhánh thiết yếu ngang nhau
+\end{dia}
+
+\begin{dia}
+tỷ phần IG  ->  xếp hạng ứng viên     miễn phí
+suff        ->  quyết định            1 lượt forward
+\end{dia}
+
+Đừng hiển thị tỷ phần IG cho người dùng như thể nó là mức độ quan trọng của nhánh.
+
+\end{document}

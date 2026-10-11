@@ -1,0 +1,1047 @@
+% =====================================================================
+%  Tang A -- pipeline chi tiet, cong thuc va vi du chay tay
+%  bien dich:  tectonic tang-a-pipeline.tex
+%  (sinh tu tang-a-pipeline.md boi build/mk_pipeline_tex.py -- dung sua tay)
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic ]
+\setmonofont{lmmono10-regular}[Extension=.otf, Scale=0.86]
+
+\renewcommand{\contentsname}{Mục lục}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black!70, urlcolor=blue!60!black,
+            pdftitle={tang-a-pipeline}}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\DefineVerbatimEnvironment{dia}{Verbatim}%
+  {fontsize=\small, frame=single, framesep=4pt, rulecolor=\color{black!25}}
+
+\title{\bfseries Tầng A --- pipeline chi tiết\\[3pt]
+       \large\mdseries công thức và ví dụ chạy tay}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\vspace{1em}
+
+
+Tài liệu này là bản \textbf{thi hành} của tầng A: từng bước, từng công thức, và một ví dụ số chạy
+xuyên suốt. Phần \emph{vì sao} nằm ở \href{pipeline-shapley-ig-graph.md}{tài liệu chính} \S{}3; ở đây chỉ
+nói \emph{làm thế nào}.
+
+Mọi tham chiếu \texttt{\S{}x.y} trỏ sang tài liệu chính.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Ký hiệu}
+
+\begin{dia}
+q                truy vấn
+y                đáp án vàng — BẮT BUỘC có, nên tầng A chỉ chạy offline
+C(q)             pool ứng viên sau rerank,  n = |C(q)| = 40
+c = 1..C         chỉ số cụm,  C <= floor(m/2)
+S c= C(q)         một tập con ứng viên
+T                tập đích cuối cùng — THỨ DUY NHẤT đi sang tầng B
+
+v(S)             điểm judge — model đọc S, trả lời, so với y          thuộc [0,1]
+v_ref(q)         trần: điểm cao nhất pool này đạt được
+tau_q              ngưỡng đủ
+mảnh_j           sub-claim thứ j — câu hỏi chẻ thành khẳng định 1-hop
+adq(S)           S có phủ hết mảnh không                              thuộc {đủ, không}
+g_theta              surrogate, đoán v(S)                                  §3.5
+m                số ứng viên chấm mỗi vòng greedy
+r                SỐ VÒNG greedy — kết quả, không phải núm vặn
+beta_i, PGI_i       Banzhaf có dấu; số MWC chứa i                        §3.7
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Ví dụ dùng xuyên suốt}
+
+\begin{dia}
+q  =  "ai đạo diễn phim thắng Oscar phim hay nhất 1994?"
+y  =  "Robert Zemeckis"
+\end{dia}
+
+Pool sau truy hồi và rerank, \texttt{n = 40}. Sáu đoạn đáng kể:
+
+\begin{dia}
+đoạn  3   "Forrest Gump thắng giải Phim hay nhất cho năm 1994."
+đoạn  7   "Giải Phim hay nhất năm 1994 thuộc về Forrest Gump."        ~ trùng đoạn 3
+đoạn 12   "Forrest Gump do Robert Zemeckis đạo diễn."
+đoạn 23   "Robert Zemeckis là đạo diễn của Forrest Gump và Back to the Future."
+đoạn 31   "Zemeckis đạo diễn Forrest Gump năm 1994."
+đoạn 19   "Forrest Gump là một hiện tượng văn hóa thập niên 1990."    <- KHÔNG có dữ kiện
+34 đoạn còn lại — nhiễu
+\end{dia}
+
+Đoạn 19 là cái bẫy: nó không chứa dữ kiện nào, nhưng nhắc tên phim nên gợi model nhớ ra
+Zemeckis từ tri thức tham số.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Bước truy hồi — chung cả hai pha, 0 lượt LLM}
+
+\begin{dia}
+3 nguồn  ->  pool thô  K <= 60  ->  khử trùng lặp
+                 v  rerank THEO TỪNG NGUỒN, hạn ngạch riêng
+n = 40   =   20 BM25   +   15 GFM   +   5 ngẫu nhiên
+                 v
+gom C cụm theo embedding (pha 1) hoặc theo phần dư của g_theta (pha 2)
+\end{dia}
+
+Pool lấy từ node \texttt{type == "document"} của \texttt{processed/stage1/nodes.csv} (và \texttt{summary} khi có).
+\texttt{entity} không phải đơn vị văn bản nên không bao giờ vào prompt; \texttt{attribute} là cột, không phải
+loại node.
+
+\textbf{Đơn vị chunk do công cụ quyết định:} \texttt{documents.json} là \texttt{\{ "tên tài liệu": "nội dung" \}} và
+mỗi entry là một document node — framework không cắt bên trong. Với HotpotQA / MuSiQue / 2Wiki
+thì đơn vị là đoạn Wikipedia có sẵn. Index BM25 và bộ bốc ngẫu nhiên dựng trên \textbf{đúng} tập
+node đó, nên tính đồng nhất cách cắt là đúng theo cấu trúc.
+
+\textbf{Trần cứng của \texttt{C}:}
+
+\begin{dia}
+C  <=  floor( m / 2 )              m = 12 -> C <= 6;   m = 30 -> C <= 15
+\end{dia}
+
+Lý do: mỗi cụm có \textbf{sàn} 1 lượt, nên sàn tiêu hết \texttt{C} trong ngân sách \texttt{m}. \texttt{C = m} thì phần
+bốc theo xác suất biến mất và phân bổ thoái hóa thành chia đều.
+
+Chọn \texttt{C} trong trần đó:
+
+\begin{dia}
+pha 1    C  =  argmax silhouette trên embedding pool,   2 <= C <= floor(m/2)
+pha 2    gom theo PHẦN DƯ của g_theta, không theo cosine:
+
+             d(k, k')  =  g_theta(q,{k}) + g_theta(q,{k'}) − g_theta(q,{k,k'})
+
+             d lớn  ->  trùng lặp  ->  CÙNG cụm
+             d âm   ->  bắc cầu    ->  KHÁC cụm
+         780 cặp cho 40 chunk, mỗi cặp một lượt forward mô hình nhỏ. 0 lượt LLM.
+\end{dia}
+
+Trong ví dụ: \texttt{C = 6}, và các đoạn 3, 7 rơi vào cùng một cụm (trùng ý); 12, 23, 31 vào cụm
+khác.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{\texttt{A0} / \texttt{C0} — chẻ câu hỏi và bảng phủ}
+
+\subsection{1 Chẻ câu hỏi}
+
+\textbf{Hỏi ai:} \texttt{MuSiQue} gán sẵn. Corpus riêng thì gọi LLM \textbf{một lần cho mỗi truy vấn}, không
+phải mỗi tập con.
+
+\begin{dia}
+vào    q + y
+ra     mảnh 1   "phim thắng Oscar phim hay nhất 1994 là Forrest Gump"
+       mảnh 2   "Forrest Gump do Robert Zemeckis đạo diễn"
+giá    ~400 token
+\end{dia}
+
+Số mảnh \texttt{J} cho \textbf{prior về \texttt{|T|}}: \texttt{|T|} nên bằng \texttt{J}.
+
+\subsection{2 Bảng phủ}
+
+\textbf{Hỏi ai:} model NLI nhỏ (\texttt{\textasciitilde{}400M}), chạy local, \textbf{0 lượt API}.
+
+\begin{dia}
+cho mỗi đoạn k thuộc C(q),  cho mỗi mảnh j:
+     e(k, j)  =  NLI( premise = đoạn k,  hypothesis = mảnh j )  thuộc {entail, neutral, contra}
+\end{dia}
+
+\texttt{40 × 2 = 80} lượt forward mô hình nhỏ. Kết quả:
+
+\begin{dia}
+            mảnh 1      mảnh 2
+đoạn  3     entail        —
+đoạn  7     entail        —
+đoạn 12       —        entail
+đoạn 23       —        entail
+đoạn 31       —        entail
+đoạn 19       —           —          <- cái bẫy, không phủ mảnh nào
+34 đoạn còn lại, không phủ gì
+\end{dia}
+
+\subsection{3 Định nghĩa \texttt{adq}}
+
+\begin{dia}
+cov(S)  =  { j :  có k thuộc S,  e(k,j) = entail }
+
+adq(S) = đủ   <=>   cov(S) = { 1, ..., J }
+\end{dia}
+
+Ví dụ:
+
+\begin{dia}
+adq({3, 12})      cov = {1,2}  =  đủ
+adq({19})         cov = rỗng      =  KHÔNG đủ        <- bẫy bị bắt ở đây
+adq({3, 7})       cov = {1}    =  KHÔNG đủ        <- hai đoạn trùng ý, vẫn thiếu mảnh 2
+adq({3,12,19})    cov = {1,2}  =  đủ              (19 là đoạn thừa)
+\end{dia}
+
+\subsection{4 Cửa thoát}
+
+\begin{dia}
+có j :  không đoạn nào trong C(q) entail mảnh j
+   ->  pool KHÔNG chứa tập đủ  ->  bỏ truy vấn, cờ "pool thiếu"
+   ->  đã tiêu 400 token (không phải 127.500 ở pha 1, hay 21.900 ở pha 2)
+\end{dia}
+
+Đặt \textbf{thận trọng}: chỉ thoát khi điểm \texttt{entail} của mọi đoạn đối mảnh \texttt{j} đều rất thấp, không
+phải chỉ khi nhãn là \texttt{neutral}. NLI hay bỏ sót bằng chứng diễn đạt lại.
+
+Ca bị bỏ \textbf{không xóa} — nó là cờ \texttt{"pool thiếu"}, nguồn nuôi ô «lỗi đồ thị» \S{}6.1 và vòng lặp
+ngược \S{}6.6.
+
+\subsection{5 Nghiệm phủ}
+
+Bài toán phủ tập nhỏ, giải \textbf{chính xác}:
+
+\begin{dia}
+mảnh 1  <-  {3, 7}
+mảnh 2  <-  {12, 23, 31}
+
+nghiệm phủ tối tiểu:  {3,12} {3,23} {3,31} {7,12} {7,23} {7,31}      6 ứng viên, cỡ 2
+\end{dia}
+
+Đây là điểm khởi cho \texttt{\S{}3.4} (greedy) và \texttt{\S{}3.6} (tìm theo tầng).
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Hàm giá trị \texttt{v}}
+
+\begin{dia}
+sinh     â_S   =  generate( q, S )                           ~80 token
+chấm     v(S)  =  P_judge( "đúng" | q, â_S, y )  thuộc [0,1]
+                  đọc logprob token đầu, KHÔNG decode câu trả lời judge
+v(rỗng)           =  điểm khi không đoạn nào — chỉ tri thức tham số
+\end{dia}
+
+\textbf{Judge phải trả số liên tục, không phải thang 1–5.} Thang 5 mức làm hàng chục tập con hòa
+nhau, \texttt{S} và \texttt{S∖\{c\}} không phân biệt được, và "tối tiểu" mất nghĩa.
+
+\textbf{Chi phí một lượt:}
+
+\begin{dia}
+cost(S)  ~  500  +  250*|S|      token
+
+v(rỗng)              =    500
+v({k})            =    750
+v(R),  |R| = 12   =  3.500
+v(C),  |C| = 40   = 10.500
+\end{dia}
+
+Các lượt \textbf{không bằng giá nhau} — đếm theo số lượt sẽ ước lượng sai hẳn.
+
+Ví dụ, các giá trị đo được:
+
+\begin{dia}
+v(rỗng)         = 0,05        model không biết
+v({19})      = 0,71        <- CAO, nhờ nhớ sẵn.  adq = KHÔNG đủ
+v({3})       = 0,12
+v({12})      = 0,18
+v({3,7})     = 0,13        trùng ý, không cộng dồn
+v({3,12})    = 0,94        bắc cầu
+v({3,12,19}) = 0,95
+v(R)         = 0,88
+v(C)         = 0,81        phân tán vì nhồi 40 đoạn
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Ngưỡng \texttt{τ\_q}}
+
+\begin{dia}
+v_ref(q)  =  max( v(C),  v(R),  max_k v({k}),  mọi v(S) đã quan sát )
+
+tau_q  =  theta * [ v_ref(q) − v(rỗng) ]  +  v(rỗng)              theta = 0,95
+\end{dia}
+
+Hai định nghĩa theo pha:
+
+\begin{dia}
+pha 1   v_ref = max( v(C), v(R), max_k v({k}), mọi v(S) trong greedy )
+pha 2   v_ref = max( v(R), v(C) )                 pha 2 không quan sát tập con nào
+\end{dia}
+
+\textbf{Chốt chặn mẫu số nhỏ:}
+
+\begin{dia}
+v_ref − v(rỗng)  <  0,05    ->  T = rỗng,  cờ "truy hồi không đóng góp"
+\end{dia}
+
+\textbf{Mốc phải là cực đại quan sát được, không phải \texttt{v(C)}.} Khi \texttt{C} còn đoạn nhiễu thì một tập
+con có thể ghi điểm cao hơn cả \texttt{C}; neo vào \texttt{v(C)} là neo vào mốc bị dìm.
+
+Trong ví dụ:
+
+\begin{dia}
+v_ref  =  max( 0,81 ; 0,88 ; 0,71 )  =  0,88        <- v(R) thắng v(C), đúng như cảnh báo
+tau_q    =  0,95 x (0,88 − 0,05) + 0,05  =  0,8385   ->  0,84
+\end{dia}
+
+\textbf{Tính tự nhất quán của cập nhật.} Nếu quan sát mới \texttt{v(S) > v\_ref} thì \texttt{v\_ref := v(S)} và
+
+\begin{dia}
+tau_q'  =  theta*[v(S) − v(rỗng)] + v(rỗng)  <  v(S)        vì theta = 0,95 < 1
+\end{dia}
+
+nên tập vừa nâng trần \textbf{luôn vẫn vượt ngưỡng mới}. Cập nhật không bao giờ tự phủ định cái gây
+ra nó, và vì \texttt{τ\_q} chỉ tăng, mọi tập đã bị loại vẫn bị loại. \texttt{θ < 1} gánh toàn bộ tính chất
+này.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Điều kiện nhận — hai mệnh đề, không phải một}
+
+\begin{dia}
+S đủ         v(S) >= tau_q          VÀ     adq(S) = đủ
+S tối tiểu   đủ, và không tập con thực sự nào của S còn đủ
+
+T   =   một S đủ tối tiểu
+\end{dia}
+
+Kiểm trên ví dụ:
+
+\begin{dia}
+S = {19}       v = 0,71 < 0,84        trượt v.   (và adq cũng trượt)
+S = {3,7}      v = 0,13 < 0,84        trượt cả hai
+S = {3,12}     v = 0,94 >= 0,84   ✓    adq = đủ  ✓    tối tiểu?  xem §8
+S = {3,12,19}  v = 0,95 >= 0,84   ✓    adq = đủ  ✓    NHƯNG {3,12} c nó cũng đủ
+                                                      ->  KHÔNG tối tiểu
+\end{dia}
+
+\textbf{Bảng 2×2 — đọc kết quả cho đúng:}
+
+\begin{dia}
+                     adq đủ                       adq KHÔNG đủ
+v >= tau_q        nhãn TỐT — nhận               MỒI THAM SỐ — loại
+v <  tau_q       bằng chứng CÓ mà model        pool THIẾU — thoát sớm ở A0/C0
+               không nối được
+               -> lỗi MODEL SINH
+\end{dia}
+
+Ô dưới-trái là ô mà bản chỉ-dùng-\texttt{v} không tách được. Nếu nó hay xảy ra thì **tầng B không
+sửa được** — phải đổi model sinh hoặc đổi prompt.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Pha 1 — bốn vòng}
+
+\subsection{1 Vòng 0 — quét cố định, không cần \texttt{τ\_q}}
+
+\begin{dia}
+v(rỗng)                                      500
+v(R)     R = 12 đoạn, cách chọn ở dưới  3.500
+v(C)     cả 40 đoạn                    10.500
+v({k})   cả 40 đoạn đơn                30.000
+                                      -------
+                                       44.500 token
+->  v_ref,  tau_q  chốt tại đây
+\end{dia}
+
+\textbf{Chọn \texttt{R}: sàn cụm thắng hạn ngạch nguồn.} Hai ràng buộc xung đột thường xuyên vì cụm gom
+theo embedding chứ không theo nguồn.
+
+\begin{dia}
+6 suất   mỗi cụm 1 đoạn, lấy đoạn hạng cao nhất trong cụm      SÀN CỤM — bắt buộc
+6 suất   còn lại: trước hết bảo đảm mỗi nguồn có >= 1 trong R
+                  rồi lấp phần dư theo hạng
+                                                               |R| = 12
+\end{dia}
+
+Sàn cụm thắng vì nhiệm vụ của \texttt{v(R)} là đo \textbf{trần}, mà trần phải chạm \emph{mọi} chủ đề. Và 2 đoạn
+mỗi cụm chứ không 1 — với 1 thì một \textbf{cặp bắc cầu nằm trong cùng cụm} không bao giờ hiện ra.
+
+\subsection{2 Vòng 1 — greedy biên, có ràng buộc phủ}
+
+\begin{dia}
+S_0 = rỗng,  cov_0 = rỗng
+mỗi vòng t:
+    ứng viên hợp lệ  =  { k không thuộc S_t :  k phủ được một mảnh CHƯA nằm trong cov_t }
+    shortlist m ứng viên theo phân bổ cụm (§7.3)
+    đo  v(S_t + {k})  cho cả m ứng viên,  GHI CẢ m, kể cả cái bị loại
+    k*  =  argmax_k  v(S_t + {k})
+    S_{t+1} = S_t + {k*}
+
+dừng khi   v(S_t) >= tau_q   VÀ   cov_t = mọi mảnh
+\end{dia}
+
+Ba chỗ khác bản cũ:
+
+\begin{dia}
+HƯỚNG ĐI   phủ là ràng buộc CỨNG, v là mục tiêu TRONG ràng buộc đó
+DỪNG       thêm điều kiện phủ.  v >= tau_q mà chưa phủ hết = ca mồi tham số -> ĐI TIẾP
+pi_c        lấy từ bảng phủ, không từ singleton
+\end{dia}
+
+\textbf{Vòng greedy thứ nhất miễn phí} — nó chính là chấm singleton mà vòng 0 đã làm. Nên chi phí
+là \texttt{(r − 1)·m}, không phải \texttt{r·m}.
+
+Chạy trên ví dụ:
+
+\begin{dia}
+vòng 1   cov = rỗng.  ứng viên hợp lệ: mọi đoạn phủ mảnh 1 hoặc 2 = {3,7,12,23,31}
+         (đoạn 19 KHÔNG hợp lệ — nó không phủ mảnh nào)
+         đo: v({3}) = 0,12 * v({7}) = 0,11 * v({12}) = 0,18 * v({23}) = 0,16 * v({31}) = 0,15
+         k* = 12.   S_1 = {12},  cov_1 = {2}
+vòng 2   ứng viên hợp lệ: chỉ đoạn phủ MẢNH 1 = {3, 7}
+         đo: v({12,3}) = 0,94 * v({12,7}) = 0,92
+         k* = 3.    S_2 = {3,12},  cov_2 = {1,2}
+dừng     v = 0,94 >= 0,84  ✓   cov đầy  ✓        r = 2
+\end{dia}
+
+So với bản cũ: bản cũ sẽ thử cả đoạn 19 và thấy \texttt{v(\{19\}) = 0,71}, cao hơn mọi singleton hợp lệ
+— rồi có thể đi theo nhánh đó. Ràng buộc phủ loại nó khỏi danh sách ngay từ đầu.
+
+\subsection{3 Phân bổ \texttt{m} lượt cho các cụm}
+
+\begin{dia}
+tiềm năng của cụm c tại vòng t:
+
+    pi_c  =  max_{k thuộc c \ S_t,  k hợp lệ}   g^ain( k | S_t )
+
+    g^ain   vòng 2:   v({k}) − v(rỗng)                  singleton đã có sẵn
+           vòng 3+:  g_theta(S_t + {k}) − g_theta(S_t)      khi g_theta dùng được
+           và ưu tiên k phủ mảnh CÒN THIẾU           từ bảng phủ
+
+phân bổ:
+
+    a_c  =  1  +  Multinomial( m − C ;  softmax(pi_c / T) )_c
+            ---               -----------------------------
+            sàn, MỌI cụm      phần dư chia theo xác suất
+\end{dia}
+
+\texttt{C = 6, m = 12}: sàn tiêu 6, còn 6 lượt bốc theo \texttt{π}. Cụm nóng nhận \texttt{1+4 = 5}, cụm chết nhận
+\texttt{1}. \textbf{Tổng vẫn đúng \texttt{m}.}
+
+Bốc xác suất chứ không chia tỉ lệ tất định, vì chia tất định thì một cụm bị đánh giá thấp sẽ
+\textbf{không bao giờ} được thăm dò lại.
+
+\subsection{4 \texttt{m} thích nghi}
+
+\begin{dia}
+spread  =  max_k v({k}) − v(rỗng)
+
+spread >= 0,15 * [ v_ref − v(rỗng) ]                 ->  m = 12
+spread <  ngưỡng đó  VÀ  bảng phủ cũng mù        ->  m = 30
+spread <  ngưỡng đó  mà bảng phủ CÓ tín hiệu     ->  m = 12
+\end{dia}
+
+Dòng thứ ba là chỗ bảng phủ tiết kiệm: ở multi-hop \textbf{mọi} singleton \texttt{≈ v(∅)} nên \texttt{spread}
+thấp và \texttt{π\_c} là nhiễu — đó là lý do bản cũ phải nâng \texttt{m} lên 30. Bảng phủ nói đoạn nào mang
+bằng chứng kể cả khi không singleton nào làm \texttt{v} nhích.
+
+\begin{dia}
+m      lượt    token greedy    tổng mỗi truy vấn
+12      24        27.000          128.000
+30      60        67.500          168.500
+\end{dia}
+
+Tiết kiệm \texttt{40.500} token mỗi truy vấn multi-hop.
+
+\subsection{5 Vòng 2 — active learning}
+
+\begin{dia}
+~30 lượt mỗi truy vấn, lặp 2–3 vòng
+chọn mẫu thỏa CẢ HAI:
+    ensemble g_theta bất đồng nhiều
+    dự đoán rơi quanh tau_q
+\end{dia}
+
+\subsection{6 Vòng 3 — xác nhận bằng model thật}
+
+\begin{dia}
+v(T) >= tau_q                      1 lượt
+adq(T) = đủ                     0 lượt  (bảng phủ đã có)
+tập con còn phủ hết < tau_q       xem §8
+\end{dia}
+
+\textbf{Không bao giờ để proxy quyết định nhận hay bỏ.}
+
+\subsection{7 Tổng chi phí pha 1}
+
+\begin{dia}
+A0  chẻ + bảng phủ                        400
+A1  vòng 0                             44.500
+A2  vòng 1,  m = 12,  r = 2–3          27.000
+A3  vòng 2                            ~37.000
+A4  vòng 3                            ~15.000
+                                     --------
+                                      123.900 token  ~  $0,37    ở $3/triệu
+\end{dia}
+
+Nếu \texttt{A0} thoát: \textbf{400 token}, không phải 123.900.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Tính tối tiểu — kiểm thế nào cho rẻ}
+
+Phải quét hết tập con, vì \texttt{v} \textbf{không đơn điệu}:
+
+\begin{dia}
+v(S bỏ {c}) < tau_q   KHÔNG kéo theo   v(tập con nhỏ hơn) < tau_q
+\end{dia}
+
+Ca phản ví dụ, \texttt{b} là đoạn gây nhiễu:
+
+\begin{dia}
+tau_q = 0,76
+v({a})     = 0,85  >= tau_q      ->  {a} MỘT MÌNH đã đủ
+v({a,b})   = 0,60  < tau_q
+v({a,c})   = 0,71  < tau_q
+v({b,c})   = 0,40  < tau_q
+v({a,b,c}) = 0,80  >= tau_q
+
+bỏ-một-phần-tử:  cả ba cặp trượt  ->  tuyên "tối tiểu"      SAI
+sự thật:         {a} thắng        ->  thừa cả b và c
+\end{dia}
+
+\textbf{Nhưng bảng phủ làm phép quét co lại rất mạnh.} Vì điều kiện nhận có hai mệnh đề, một tập
+con chỉ \textbf{đe dọa} tính tối tiểu nếu nó \textbf{cũng phủ hết}:
+
+\begin{dia}
+T = {3, 12, 19}      3 phủ mảnh 1 * 12 phủ mảnh 2 * 19 thừa
+
+tập con thực sự:            7 tập
+trong đó CÒN phủ hết:       1 tập  —  {3,12}
+     ({3,19} mất mảnh 2 * {12,19} mất mảnh 1 * mọi đơn tử mất một mảnh)
+
+->  chỉ cần kiểm {3,12}
+\end{dia}
+
+Và nếu tìm theo tầng (\S{}9) thì \texttt{\{3,12\}} \textbf{đã được đo ở tầng 0} — nên tính tối tiểu không tốn
+lượt nào thêm.
+
+Chi phí quét hết khi \textbf{không} có bảng phủ, để so:
+
+\begin{dia}
+|S*|   lượt kiểm      token      tiền
+ 2      2 + 1 = 3      3.000    $0,009
+ 3      6 + 1 = 7      6.500    $0,020
+ 4     14 + 1 = 15    15.500    $0,047
+ 5     30 + 1 = 31    35.500    $0,107
+ 6     62 + 1 = 63    79.500    $0,239
+ 8    254 + 1 = 255  381.000    $1,14
+10   1022 + 1 = 1023 1.788.500  $5,37
+\end{dia}
+
+Nổ theo \texttt{2\textasciicircum{}s}. Đó là lý do nhánh \textbf{beam mò dự bị} (\S{}9.3) vẫn cần ba ngưỡng và cơ chế tỉa.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Pha 2 — đường rẻ}
+
+\subsection{1 Bảy bước}
+
+\begin{dia}
+C0  chẻ câu hỏi + bảng phủ (§3)                            400 token
+      thiếu mảnh  ->  THOÁT, cờ "pool thiếu"
+C1  v(rỗng)                                                   500 token
+C2  g_theta chấm 40 đoạn đơn,  v~_k che                             0 token
+C3  v(R)                                                 3.500 token
+C4  v(C)                                                10.500 token
+      -- v_ref = max( v(R), v(C) ) ;  tau_q chốt --
+      v_ref − v(rỗng) < 0,05  ->  T = rỗng, cờ "truy hồi không đóng góp"
+C5  tìm theo tầng từ nghiệm phủ (§9.2)                         0 token
+      mọi tầng trượt  ->  beam mò dự bị (§9.3)
+C6  verification bằng LLM THẬT                          ~7.400 token
+C7  ba nhánh (§9.4)
+                                                       -------------
+                                                        ~22.300 token  ~ $0,066
+\end{dia}
+
+\texttt{C2} phải đứng trước \texttt{C5} vì tìm theo tầng cần điểm từng đoạn để xếp hạng; hợp lệ vì \texttt{g\_θ}
+\textbf{không nhận \texttt{τ\_q}} (\S{}3.5).
+
+Kỳ vọng mỗi truy vấn \textbf{nạp vào}, nếu \texttt{\textasciitilde{}45\%} thoát ở \texttt{C0}:
+
+\begin{dia}
+0,45 x 400  +  0,55 x 22.300   =   12.400 token   ~  $0,037
+\end{dia}
+
+\subsection{2 Tìm theo tầng — đi lên từ nghiệm phủ}
+
+\begin{dia}
+tầng 0   các nghiệm phủ tối tiểu               |T| = J
+tầng 1   nghiệm phủ + 1 đoạn
+tầng 2   nghiệm phủ + 2 đoạn
+...
+mỗi tầng:  chấm bằng g_theta, lấy top-beam, đo v theo thứ tự đó
+\end{dia}
+
+Vì sao chỉ tìm trong vùng này:
+
+\begin{dia}
+tập KHÔNG phủ hết  ->  nếu vượt tau_q thì chỉ có thể vì mồi tham số
+                   ->  mà ta đã quyết LOẠI ca đó
+                   ->  tìm ở đó là tìm thứ ta sẽ bỏ
+\end{dia}
+
+Chạy trên ví dụ:
+
+\begin{dia}
+tầng 0   6 nghiệm: {3,12} {3,23} {3,31} {7,12} {7,23} {7,31}
+         g_theta xếp hạng -> {3,12} đứng đầu
+         đo v({3,12}) = 0,94 >= 0,84   ->  QUA ngay ở tầng 0
+         tối tiểu: tập con còn phủ hết = rỗng (cỡ 2 là cỡ tối tiểu của phủ)
+                   -> chỉ cần kiểm hai đơn tử: v({3}) = 0,12 * v({12}) = 0,18, cả hai < tau_q
+         T = {3, 12}
+\end{dia}
+
+Hai lợi ích, cả hai rơi ra từ cấu trúc:
+
+\begin{dia}
+1  MỌI ứng viên đã đủ về bằng chứng — không còn ứng viên mồi tham số
+2  thứ tự theo CỠ -> "tối tiểu trước" miễn phí, không cần bước tỉa riêng
+\end{dia}
+
+\textbf{Giới hạn thật:} một tầng có nhiều ứng viên hơn mức đo nổi (\texttt{tầng 1} với \texttt{n = 40} và 6 nghiệm
+phủ có tới \texttt{\textasciitilde{}228} tập). Nên chỉ đo top vài cái theo \texttt{g\_θ} — tính tối tiểu là *"tối tiểu trong
+số đã thử"*, không phải tối tiểu tuyệt đối. \texttt{T} ở pha 2 là một MWC \textbf{trong} vùng đã thử, không
+phải MWC toàn cục của \texttt{C}.
+
+\subsection{3 Beam mò — nhánh dự bị}
+
+Dùng khi mọi tầng ở \S{}9.2 đều trượt (bảng phủ thiếu cột vì NLI bỏ sót bằng chứng diễn đạt lại):
+
+\begin{dia}
+frontier = { rỗng }
+cho size = 1, 2, ..., n:
+    ứng viên = { S + {i} : S thuộc frontier, i không thuộc S }
+    chấm bằng g_theta
+    đủ = { S : g_theta(S) >= tau_q }
+    nếu đủ khác rỗng:  thu hoạch, và chạy tiếp thêm 1–2 cỡ nữa
+    frontier = top-beam theo g_theta
+
+tỉa:  bỏ c thuộc S nếu g_theta(S bỏ {c}) >= tau_q, lặp tới khi không bỏ được
+      thứ tự bỏ: theo r_i tăng dần (đoạn rerank xếp thấp bị thử bỏ trước)
+\end{dia}
+
+Tỉa \textbf{phụ thuộc thứ tự} vì \texttt{v} không đơn điệu — chốt một thứ tự và ghi rõ.
+
+Ở nhánh này ba ngưỡng \texttt{|S*|} vẫn cần, vì không có bảng phủ để co phép quét:
+
+\begin{dia}
+|S*| <= 5         quét hết ngay                        $0,02 – $0,11
+6 <= |S*| <= 10    tỉa xuống <= 5 rồi quét hết           $0,04 – $0,10
+|S*| >= 11        cứu                                  $0,34
+tỉa KẸT ở >= 6    cứu                                  $0,34
+\end{dia}
+
+Tỉa rồi quét \textbf{vẫn là chứng minh đầy đủ}: \S{}6 chỉ đòi \texttt{T} \emph{là một} MWC, không đòi duy nhất hay
+nhỏ nhất.
+
+\subsection{4 \texttt{C7} — ba nhánh}
+
+\begin{dia}
+(1) v(T) >= tau_q  và  adq(T) = đủ  và  tối tiểu
+        ->  xuất T sang tầng B
+
+(2) v(T) < tau_q                       T KHÔNG đủ — g_theta đoán cao quá
+        ->  thử ứng viên kế, tối đa 3 lần
+            mỗi lần thử chỉ 1 lượt (hết đủ thì dừng, không kiểm tối tiểu)
+        ->  qua -> nhánh (1);   3 lần đều trượt -> nhánh (3)
+
+(3) |T| >= 11,  tỉa kẹt ở >= 6,  hoặc 3 lần thử đều trượt
+        ->  hàng cứu có phân tầng (§10)
+\end{dia}
+
+\textbf{Ca "đủ mà không tối tiểu" không vào hàng cứu.} Nếu quét hết thì cả dàn dưới \texttt{T} đã có giá
+trị đo, nên phần tử tối tiểu đọc ra ngay, 0 lượt thêm:
+
+\begin{dia}
+v({3,12,19}) = 0,95 >= tau_q        đủ
+v({3,12})    = 0,94 >= tau_q        tập con cũng đủ  ->  KHÔNG tối tiểu
+v({3}) = 0,12   v({12}) = 0,18   cả hai dưới ngưỡng
+->  T = {3,12}
+\end{dia}
+
+Đây là ca xảy ra thường xuyên, vì lỗi hay gặp nhất của \texttt{g\_θ} là đề xuất tập \textbf{phình}.
+
+\textbf{Nhánh (2) rẻ hơn tưởng:} hết đủ thì dừng ngay nên một ca trượt chỉ tốn 1 lượt (\texttt{1.250}
+token), còn một lượt cứu tốn \texttt{113.000} — \textbf{mua được 90 lần thử bằng giá một lần cứu}. Dừng ở
+3 vì ứng viên sau cùng một mô hình nên cùng thiên lệch. Với tỷ lệ qua có điều kiện \texttt{\textasciitilde{}30\%}:
+
+\begin{dia}
+p hiệu dụng   0,75  ->  0,75 + 0,25 x 0,66  =  0,91
+\end{dia}
+
+Phải \textbf{ghi lại hạng ứng viên được nhận}: nhận ứng viên \#3 đẩy phân bố \texttt{v(T) − τ\_q} xuống sát
+ngưỡng hơn, và tầng B cần biết để đánh trọng số.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Cứu — chạy pipeline đầy đủ}
+
+\textbf{Cứu = chạy \texttt{A1}–\texttt{A4} lên truy vấn đó.} Nó không bắt đầu từ 0:
+
+\begin{dia}
+đã có trong cache   v(rỗng) 500 * v(R) 3.500 * v(C) 10.500          14.500
+                    + v(T) và dàn tập con đã đo ở C6
+còn phải chạy       40 singleton                                 30.000
+                    vòng 1 greedy biên                           27.000
+                    vòng 2 active learning                       37.000
+                    vòng 3 xác nhận                               6.500
+                                                              ---------
+                    cứu, tính biên                              113.000 token  ~ $0,34
+\end{dia}
+
+\textbf{\texttt{τ\_q} có thể TĂNG khi cứu, và đó là đúng.} Cứu quan sát thêm 40 singleton và hàng chục tập
+con greedy, nên \texttt{v\_ref} lấy max trên tập quan sát lớn hơn. \texttt{v\_ref} chỉ có thể lên, nên \texttt{τ\_q}
+lên theo: một truy vấn trượt ngưỡng pha 2 có thể gặp ngưỡng \textbf{cao hơn} lúc được cứu. Pha 2
+đang đo trần thiếu, và cứu sửa chỗ đó.
+
+\textbf{Cứu mà vẫn trượt là ca có giá trị nhất:}
+
+\begin{dia}
+greedy chạy hết, active learning xong, không tập nào vượt tau_q
+->  T = rỗng  +  cờ "pool không chứa tập đủ"
+->  nuôi ô "lỗi đồ thị" §6.1 và vòng lặp ngược §6.6
+\end{dia}
+
+\subsection{1 Phân tầng}
+
+Cứu hết thì \texttt{\textasciitilde{}17.000} ca × \texttt{\$0,34} = \texttt{\$5.780} để lấy \texttt{17.000} nhãn. Nhưng tính theo **mẫu huấn
+luyện** thì ngược:
+
+\begin{dia}
+cứu              111 mẫu / $0,34    =   $0,0031 / mẫu
+đường rẻ, qua     10 mẫu / $0,066   =   $0,0066 / mẫu
+\end{dia}
+
+Hai mục đích muốn hai cách lấy mẫu ngược nhau:
+
+\begin{dia}
+ĐO     "bao nhiêu % ca trượt là g_theta sai, bao nhiêu là pool thiếu?"
+       -> mẫu KHÔNG LỆCH: ngẫu nhiên trong từng tầng, kèm trọng số N_s / n_s
+TRAIN  nuôi g_theta đúng chỗ nó yếu
+       -> càng nhiều càng tốt, lệch về tầng khó nhất
+\end{dia}
+
+Cách chia: hạn mức nhỏ cố định cho \textbf{đo} (ví dụ 50 ca mỗi tầng), phần còn lại dồn cho tầng
+khó để \textbf{train}.
+
+\begin{dia}
+tầng                           ý nghĩa                           ưu tiên
+trượt, hỏng ở ứng viên #1      g_theta lệch mạnh                      cao
+trượt, hỏng cả 3 ứng viên      g_theta sai hệ thống                   CAO NHẤT
+tỉa kẹt ở |S| >= 6              sai cả hai chiều                   CAO NHẤT
+|T| >= 11                       phình nặng                         cao
+nhiều hop                      ca bắc cầu — đúng thứ ta cần       CAO NHẤT
+v(T) sát ngay dưới tau_q         có thể chỉ là trần đo thiếu        thấp
+phiên bản g_theta^(b)              để tách xem lô nào yếu             (chỉ để đo)
+\end{dia}
+
+\textbf{Trọng số importance — một chỗ dễ dùng sai:}
+
+\begin{dia}
+ĐO     -> PHẢI dùng trọng số (chỉ cứu 10–40%, mẫu lệch)
+TRAIN  -> ĐỪNG hạ trọng số ca leo thang; chúng là hard example, muốn chúng NẶNG
+\end{dia}
+
+Dùng chung một bộ trọng số cho cả hai là lỗi âm thầm: model vẫn train, chỉ là nó học nhẹ đi
+đúng ở chỗ nó yếu.
+
+\textbf{Ca bị bỏ vẫn không vô giá trị:} mỗi ca trượt không được cứu vẫn xuất \texttt{v(∅)}, \texttt{v(R)}, \texttt{v(C)},
+\texttt{v(T)} và dàn tập con đã đo — \texttt{4+} nhãn thật — cộng sự kiện \emph{"\texttt{g\_θ} đề xuất \texttt{T} mà LLM bác"}.
+Ghi vào log train; chỉ \textbf{không} xuất \texttt{T}.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Chỉ số cấu trúc và đầu ra}
+
+\begin{dia}
+beta_i+     số lần thêm i biến thiếu -> đủ
+beta_i-     số lần thêm i biến đủ -> thiếu              đơn điệu thì bằng 0
+beta_i   =  ( beta_i+ − beta_i- ) / 2^(n−1)                   ước lượng bằng lấy mẫu trên g_theta
+
+PGI_i    số MWC trong W có chứa i
+
+overlap(S)  =  tổng_{S' != S}  |S ^ S'| / |S + S'|
+\end{dia}
+
+\textbf{Chuẩn hóa \texttt{β} và \texttt{PGI} riêng rồi mới gộp.} \texttt{β ∈ [−1,1]} còn \texttt{PGI} là số đếm có thể tới hàng
+chục; cộng thẳng thì \texttt{PGI} nuốt \texttt{β} một đến hai bậc độ lớn.
+
+\texttt{β\_i < 0} \textbf{chỉ thẳng ra đoạn gây hại.} Tính không đơn điệu ở đây là thông tin, không phải
+khuyết tật.
+
+\subsection{1 Chọn \texttt{T} khi có nhiều MWC}
+
+\begin{dia}
+parsimony   − |S|
+structure   sigma_g  =  w_beta * betâ  +  w_PGI * PGÎ        hai thành phần chuẩn hóa riêng
+rank        tổng_i r_i                                 hạng rerank, chỉ phá hòa ở bước cuối
+
+lọc Pareto, rồi gộp có trọng số
+\end{dia}
+
+\subsection{2 Đầu ra}
+
+\begin{dia}
+T                          tập đích — CHỈ cái này đi qua ranh giới hai tầng
++ phiên bản g_theta            g_theta^(1) ... g_theta^(10),  lô nào gán
++ đường đi                 qua trực tiếp * giải trong dàn * tỉa * thử lại #k * được cứu
++ trọng số importance      N_s / n_s của tầng lấy mẫu
++ v(T) − tau_q               khoảng vượt ngưỡng
++ cov(T), J                phủ mấy mảnh trên mấy mảnh
+
+W, p(S), entropy(p)        báo cáo và độ tin cậy
+beta_i < 0                    ứng viên V_neg cho L_hop §6.3 — LẤY TỪ PHA 1, không từ pha 2
+\end{dia}
+
+\textbf{Entropy của \texttt{p(S)} là tín hiệu độ tin cậy.} Thấp nghĩa là có một người thắng rõ ràng; cao
+nghĩa là nhiều MWC suýt soát và quy gán đang không chắc.
+
+\texttt{W} và \texttt{β} ở pha 2 \textbf{yếu hơn} pha 1, vì verification chỉ kiểm \texttt{T}, không kiểm cả họ \texttt{W}.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Phép kiểm và chuẩn ngoài}
+
+\subsection{1 Phép kiểm nội bộ — năm điều}
+
+\begin{dia}
+1  v(T) >= tau_q                                      đo bằng model THẬT, không phải g_theta
+2  adq(T) = phủ hết mảnh                           bằng chứng thật sự nằm trong T
+3  v(S') < tau_q  với mọi S' c T mà S' CÒN phủ hết   T thật sự tối tiểu
+4  mọi i có beta_i < 0 đều không nằm trong T           không đưa đoạn gây hại vào đích
+5  tổng_i credit(c_i) = 1                              theo cấu trúc
+\end{dia}
+
+Bộ này \textbf{yếu hơn} bộ bất biến của bản Shapley (\texttt{Σ φ\_c = F(E) − F(E')} là đẳng thức chính xác).
+Phép kiểm 1–3 chỉ xác nhận \texttt{T}, không xác nhận cách ta tìm ra nó. Đó là giá của việc bỏ
+completeness.
+
+\subsection{2 Chuẩn ngoài — HotpotQA}
+
+Mọi phép kiểm trên là \textbf{nội bộ}: \texttt{v(T) ≥ τ\_q} do chính \texttt{v} đo, \texttt{τ\_q} do chính \texttt{v\_ref} đặt,
+\texttt{adq} do chính NLI của ta phán.
+
+HotpotQA gán sẵn \textbf{2 đoạn chống đỡ} và tối đa \textbf{5 câu chống đỡ} — nhãn quy gán do người gán.
+
+\begin{dia}
+lấy ~500 truy vấn HotpotQA  ->  chạy TOÀN BỘ tầng A  ->  so T với 2 đoạn đã gán
+giá:  500 x $0,37  =  $185
+
+1  tỷ lệ ca mồi tham số THẬT     T chứa đoạn không nằm trong nguồn vàng
+2  adq có đáng tin không          nó có đồng ý với nhãn người không
+3  precision/recall của T         so với chuẩn ngoài
+\end{dia}
+
+Con số 2 quan trọng nhất: đem \texttt{adq} loại nhãn trên 200.000 truy vấn mà chưa biết nó sai bao
+nhiêu thì chỉ là đổi một lỗi không biết sang một lỗi khác không biết.
+
+\textbf{MuSiQue} không gán câu chống đỡ, nhưng gán \textbf{phân rã 1-hop kèm đáp án trung gian} — dùng nó
+kiểm chất lượng LLM chẻ câu hỏi.
+
+\textbf{Không cần lớp khớp chunk.} \texttt{T} của ta là tập \textbf{tên tài liệu} (node \texttt{document}), và
+\texttt{supporting\_documents} trong \texttt{train.json} của gfm-rag cũng là tập tên tài liệu — cùng không
+gian tên, so sánh trực tiếp bằng phép so tập.
+
+\textbf{Nhưng phải chạy trên split mà checkpoint CHƯA train.} Loss giám sát của G-reasoner huấn
+luyện trên \emph{"labeled relevant nodes"}, mà đó chính là \texttt{supporting\_documents} — tức chính chuẩn
+ngoài này. Nên nếu hiệu chuẩn trên train split thì nhánh GFM của pool đã thấy sẵn nhãn vàng,
+và cả ba con số phồng giả. Dùng split đánh giá (1.000 mẫu mỗi bộ theo paper).
+
+Và báo cáo mỗi con số \textbf{hai lần}: pool chỉ-BM25 (độc lập với nhãn vàng) và pool đầy đủ (nhánh
+GFM không độc lập). \textbf{Chênh lệch giữa hai lần chính là cỡ của rò rỉ.}
+
+\subsection{3 Phân tích độ nhạy}
+
+\begin{dia}
+quét w_s, w_g, w_r mỗi cái ±50%        T đổi bao nhiêu lần?
+quét tau_q quanh theta thuộc [0,90 ; 0,98]       W có ổn định không?
+bootstrap g_theta, train lại                phương sai của credit
+\end{dia}
+
+\texttt{T} lật lung tung khi nhiễu nhỏ thì \textbf{báo cáo cả biên Pareto} thay vì một \texttt{T} duy nhất.
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Chạy theo lô}
+
+\begin{dia}
+lô b    chạy 20.000 truy vấn bằng g_theta^(b)
+        +- qua    ->  xuất T sang tầng B
+        +- trượt  ->  hàng cứu
+        lấy mẫu hàng cứu theo tầng  ->  chạy pipeline đầy đủ        <- ở ĐÂY
+        gộp mọi nhãn mới  ->  train  g_theta^(b+1)
+lô b+1  ...
+\end{dia}
+
+Cứu phải xử lý \textbf{ở ranh giới lô}, cùng lúc với train lại, vì nhãn cứu là đầu vào giá trị nhất
+cho \texttt{g\_θ\textasciicircum{}(b+1)}.
+
+\begin{dia}
+lô    truy vấn   trượt sau thử lại   tỷ lệ cứu   số ca cứu
+ 1     20.000         ~9%   1.800        40%        720
+ 5     20.000         ~7%   1.400        25%        350
+10     20.000         ~5%   1.000        10%        100
+                                                   -----
+                                                  ~3.000
+\end{dia}
+
+\textbf{Sàn 5\% phải giữ}, không bao giờ xuống 0 — nếu không thì ô «lỗi đồ thị» mất nguồn.
+
+Và lý do chính của chia lô \textbf{không phải tiền}: mỗi ranh giới lô là một \textbf{cửa thoát}.
+
+\begin{dia}
+sau lô 1   p = 0,70 như dự  ->  chạy tiếp
+           p = 0,45         ->  DỪNG. mới tốn ~$1.000, chưa tốn $12.500
+           |T| phình đều    ->  dừng, sửa phần dư âm trước khi chạy tiếp
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Sổ chi phí và sổ dữ liệu}
+
+\begin{dia}
+                           nạp vào      chạy đủ    $/truy vấn       tổng
+pha 1, pipeline đầy đủ      18.200       10.000      $0,37        $3.800
+pha 2, đường rẻ            200.000      110.000      $0,037       $7.500
+cứu, có phân tầng            3.000        3.000      $0,34        $1.000
+hiệu chuẩn HotpotQA §12.2       500          500      $0,37          $185
+                                                                 ---------
+                                                                  $12.485
+
+chạy pipeline đầy đủ cho cả 200.000                               $76.000
+\end{dia}
+
+Khoảng \textbf{6 lần rẻ hơn}, cho \texttt{\textasciitilde{}104k} nhãn \textbf{đáng tin}.
+
+\begin{dia}
+nguồn                                truy vấn    nhãn/truy vấn      tổng
+pha 1, bốn vòng                       10.000         111         1.110.000
+verification đường rẻ                110.000          10         1.100.000
+cứu -> pipeline đầy đủ                 3.000         111           333.000
+ca trượt bị bỏ, không cứu             14.000           5            70.000
+thoát ở A0/C0 (chỉ bảng phủ)          98.200           0                 0
+                                                               -----------
+                                                                 2.613.000
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Chạy tay trọn vẹn một truy vấn — pha 2}
+
+Gom lại toàn bộ ví dụ thành một vết chạy, kèm token tiêu ở mỗi bước.
+
+\begin{dia}
+q = "ai đạo diễn phim thắng Oscar phim hay nhất 1994?"      y = "Robert Zemeckis"
+
+bước  việc                                                      kết quả              token
+--------------------------------------------------------------------------------------------
+—     truy hồi 3 nguồn, rerank theo nguồn, gom 6 cụm           n = 40                   0
+C0    chẻ câu hỏi                                               J = 2 mảnh             400
+      bảng phủ, 40 x 2 = 80 lượt NLI                            mảnh 1 <- {3,7}           0
+                                                                mảnh 2 <- {12,23,31}
+      mọi mảnh có người chống đỡ  ->  KHÔNG thoát
+      nghiệm phủ (giải chính xác)                               6 ứng viên cỡ 2          0
+C1    v(rỗng)                                                      0,05                   500
+C2    g_theta chấm 40 đoạn đơn, v~_k che                              xếp hạng ứng viên        0
+C3    v(R), R = top-2 mỗi cụm tôn trọng hạn ngạch               0,88                 3.500
+C4    v(C), cả 40 đoạn                                          0,81              10.500
+      v_ref = max(0,88 ; 0,81) = 0,88     <- v(R) THẮNG v(C), đúng cảnh báo §5
+      tau_q = 0,95 x (0,88 − 0,05) + 0,05 = 0,84
+      v_ref − v(rỗng) = 0,83 >= 0,05  ->  KHÔNG thoát
+C5    tầng 0: g_theta xếp {3,12} đầu bảng                            —                       0
+C6    v({3,12})                                                 0,94 >= 0,84  ✓       1.000
+      adq({3,12}): cov = {1,2}                                  đủ  ✓                   0
+      tối tiểu — chỉ kiểm tập con CÒN phủ hết:
+         cỡ 2 là cỡ tối tiểu của phủ, nên chỉ còn hai đơn tử
+         v({3})                                                 0,12 < 0,84  ✓         750
+         v({12})                                                0,18 < 0,84  ✓         750
+C7    nhánh (1)                                                 T = {3, 12}
+--------------------------------------------------------------------------------------------
+                                                                              tổng  17.400
+                                                                                   ~ $0,052
+\end{dia}
+
+\textbf{Ba chỗ cơ chế mới cứu được, nhìn rõ trong vết này:}
+
+\begin{dia}
+1  đoạn 19 ("hiện tượng văn hóa") có v({19}) = 0,71 — cao hơn MỌI singleton hợp lệ.
+   Bản chỉ-dùng-v sẽ coi nó là ứng viên mạnh và có thể đi theo nhánh đó.
+   Bảng phủ loại nó khỏi danh sách ngay: cov({19}) = rỗng.
+
+2  tối tiểu chỉ tốn 2 lượt (hai đơn tử), không phải 2³ − 2 = 6.
+   Vì {3} và {12} là các tập con DUY NHẤT có thể còn phủ hết — mà chúng không phủ hết,
+   nên thật ra đã xong sau khi biết cỡ 2 là cỡ tối tiểu của phủ.
+
+3  v(C) = 0,81 < v(R) = 0,88.  Nhồi 40 đoạn làm model phân tán.
+   Nếu neo v_ref vào v(C) thì tau_q = 0,95x(0,81−0,05)+0,05 = 0,77 — THẤP hơn 0,07.
+   Lúc đó v({19}) = 0,71 vẫn trượt, nhưng một tập mồi khác quanh 0,78 sẽ QUA.
+\end{dia}
+
+\textbf{Ca ngược — nếu pool thiếu:} giả sử pool không có đoạn nào nói ai đạo diễn.
+
+\begin{dia}
+C0    bảng phủ:  mảnh 2 <- rỗng          ->  THOÁT NGAY
+      T = rỗng,  cờ "pool thiếu"  ->  nuôi ô "lỗi đồ thị" §6.1
+      tổng tiêu:  400 token  ~ $0,0012      (không phải 17.400)
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Những con số \textbf{chưa được kiểm chứng}}
+
+\begin{dia}
+p = 0,75                     GIẢ ĐỊNH. toàn bộ cột chi phí treo vào nó.
+30% mỗi lần thử lại          GIẢ ĐỊNH. thấp hơn thì p hiệu dụng 0,91 không đạt.
+45% thoát ở A0/C0            suy từ MuSiQue 46,2% / HotpotQA 44,6%, CHƯA đo trên corpus riêng.
+|T| = 2–3 là cột chính       theo lý thuyết 2–3 hop, chưa đo.
+adq sai bao nhiêu            CHƯA BIẾT. §12.2 tồn tại để đo đúng chỗ này.
+\end{dia}
+
+Hai cổng miễn phí phải chạy \textbf{trước} khi cam kết ngân sách:
+
+\begin{dia}
+cổng p       500 truy vấn pha 1 giữ lại, chạy cả đường pha 2       0 lượt LLM
+chuẩn ngoài  500 truy vấn HotpotQA, so với nguồn vàng              $185
+\end{dia}
+
+\vspace{0.3em}\hrule\vspace{0.6em}
+
+\section{Tham chiếu}
+
+\textbf{1.} Joren et al., \emph{Sufficient Context: A New Lens on Retrieval Augmented Generation Systems},\\
+   ICLR 2025. arXiv:2411.06037 — định nghĩa đủ-ngữ-cảnh không dùng đáp án vàng; autorater
+   \texttt{93\%}; MuSiQue-Ans \texttt{46,2\%} và HotpotQA \texttt{44,6\%} ca có ngữ cảnh đủ; model trả lời đúng
+   \texttt{35–62\%} số ca ngữ cảnh không đủ.
+\textbf{2.} \emph{Relevance Is Not Sufficient Evidence: Detecting Evidence Gaps Before Generation in RAG},\\
+   arXiv:2609.37469 — RINSE, \texttt{0,837} pairwise; 12 model vẫn trả lời \texttt{40–99\%} ca thiếu bằng
+   chứng dù được yêu cầu từ chối.
+\textbf{3.} *Verification Without Sufficiency: Per-Chunk Filtering Fails on Multi-Hop RAG, and\\
+   Decomposition Repairs It*, arXiv:2608.00585 — kiểm từng đoạn đối câu hỏi gốc thất bại ở
+   multi-hop; phân rã sửa được. \textbf{Chỉ lấy cơ chế, chưa trích số.}
+\textbf{4.} Yang et al., \emph{HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering},\\
+   EMNLP 2018 — 2 đoạn chống đỡ, tối đa 5 câu chống đỡ, gán ở mức câu.
+\textbf{5.} Deegan \& Packel, \emph{A new index of power for simple n-person games}, Int. J. Game Theory 7(2),\\
+   1978. \textbf{Bạn phải xác thực trích dẫn này.}
+\textbf{6.} Banzhaf, \emph{Weighted voting doesn't work}, Rutgers Law Review 19, 1965. \textbf{Phải xác thực.}\\
+\textbf{7.} Holler \& Packel, \emph{Power, luck and the right index}, J. Economics 43(1), 1983.\\
+   \textbf{Phải xác thực.}
+
+
+\end{document}

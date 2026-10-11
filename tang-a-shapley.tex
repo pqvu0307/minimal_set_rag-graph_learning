@@ -1,0 +1,402 @@
+% =====================================================================
+%  Quy gán RAG hai tầng — Shapley (sinh) + IG trên đồ thị (truy hồi)
+%
+%  biên dịch
+%      tectonic pipeline-shapley-ig-graph.tex
+%  hoặc
+%      xelatex pipeline-shapley-ig-graph.tex     (chạy 2 lần cho mục lục)
+%
+%  không dùng pdfLaTeX (cần fontspec cho tiếng Việt).
+%
+%  font — đã kiểm chứng bằng tectonic 0.17:
+%    Cả hai font đều lấy từ bundle TeX, không phụ thuộc font hệ thống,
+%    nên file này compile được trên mọi máy.
+%
+%    texgyrepagella     clone của Palatino. Phủ đủ tiếng Việt, nét nhạt.
+%    lmmono10-regular   Latin Modern Mono. Phủ đủ tiếng Việt.
+%
+%    Lỗi hay gặp: font thiếu khối Latin Extended Additional (U+1ea0-1ef9)
+%    sẽ tách "tầng" thành "tâ`ng". Georgia và bản DejaVu Sans Mono trong
+%    bundle tectonic đều dính lỗi này — đừng dùng.
+%
+%    Sơ đồ dùng ascii thuần (+ - | -> v) vì font mono không có ký tự
+%    kẻ khung Unicode.
+% =====================================================================
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic ]
+\setmonofont{lmmono10-regular}[Extension=.otf, Scale=0.86]
+
+% Không dùng polyglossia/babel: fontspec đã đủ render tiếng Việt.
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\refname}{Tham chiếu}
+
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.4cm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{fancyvrb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\spanop}{span}
+\DeclareMathOperator{\Msg}{Msg}
+\DeclareMathOperator{\Upd}{Upd}
+\DeclareMathOperator{\BCE}{BCE}
+\DeclareMathOperator{\emb}{emb}
+\DeclareMathOperator{\suff}{suff}
+\DeclareMathOperator{\nec}{nec}
+\DeclareMathOperator{\depthop}{depth}
+\newcommand{\best}{\mathrm{best}}
+
+\DefineVerbatimEnvironment{dia}{Verbatim}%
+  {fontsize=\small, frame=single, framesep=4pt, rulecolor=\color{black!25}}
+
+\newcommand{\inv}[2]{%
+  \begin{equation*}\boxed{\;\text{\textsc{#1}}\quad #2\;}\end{equation*}}
+
+\title{\bfseries Quy gán RAG hai tầng\\[3pt]
+       \large\mdseries Shapley (tầng sinh) $+$ Integrated Gradients trên đồ thị (tầng truy hồi)}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Tầng A bản Shapley}\\[4pt]
+{\large bản thay thế đã rời khỏi tài liệu chính}
+\end{center}
+
+\bigskip
+
+\begin{quote}
+Bản này \textbf{không còn là thiết kế hiện hành}. Tài liệu chính đã chuyển tầng A sang
+\emph{tập đủ tối tiểu} (MWC / Deegan--Packel) --- xem \S3 của tài liệu chính. Giữ lại đây vì
+ba lý do: nó sinh dữ liệu huấn luyện cho surrogate (vòng greedy \S A.6 đánh giá hàng chục tập
+con mỗi truy vấn); nó có bộ bất biến chính xác $\sum\phi_c=F(E)-F(E')$ mà bản MWC không có,
+dùng được làm đối chứng; và nó là phương án lui nếu surrogate không đạt độ chính xác quanh
+ngưỡng.
+\end{quote}
+
+\bigskip
+
+\section{Tầng A --- Tìm tập đích (bản Shapley)}
+
+\paragraph{Ký hiệu mục này giới thiệu.}
+\begin{dia}
+q, D_k, K        truy vấn; đoạn (passage) thứ k; số đoạn ứng viên (20-100)
+x, n, n_q, d     prompt [q, D_1..D_K]; số token của x; của q; chiều ẩn
+y                câu trả lời mô hình sinh ra
+span(D_k)        tập chỉ số token của đoạn D_k
+span(C_c)        hợp các span(D_k) của mọi đoạn k trong cụm c
+E, E', E_S       ma trận embedding; baseline xóa mọi đoạn; chỉ bật cụm trong S
+F(E)             điểm mục tiêu tầng A
+C, C_c           số cụm (4-8); cụm thứ c
+kappa(k), mu_c   ánh xạ đoạn -> cụm; tâm cụm
+v(S), phi_c      lợi ích liên minh cụm; giá trị Shapley của cụm
+tau, C*, C-, rho ngưỡng cắt; cụm giữ / cụm bỏ; phần dư do cắt
+v_c(R), v_c(rỗng) lợi ích cụm c, có điều kiện trên các cụm khác; mốc khi R rỗng
+Delta(S)         F(S) - F(q), mốc chung cho mọi đại lượng ở §3.6
+Delta_full       Delta( q + mọi đoạn của C* ) -- cái bánh greedy được phép hao
+B, kappa         ngân sách hao hụt (1-theta_g)*Delta_full; trần mỗi cụm (0.04)
+theta_g          ngưỡng bảo toàn toàn cục (0.95)
+full_c           v_c(C_c) - v_c(rỗng) -- đại lượng bản cũ, nay chỉ dùng để giải
+                 thích vì sao ngưỡng cục bộ không đủ (§3.6)
+R_c, psi_k       đoạn sống sót trong cụm; Shapley cục bộ trong cụm
+S_final(D_k)     điểm cuối cùng của đoạn D_k
+T                tập đích = hợp các R_c                   <- đầu ra tầng A
+\end{dia}
+
+\subsection{Thiết lập}
+
+\[
+x=[\,q,D_1,\dots,D_K\,],\qquad E\in\mathbb{R}^{n\times d},\qquad
+F(E)=\log P\!\left(y \mid q,D_1,\dots,D_K\right)
+\]
+\[
+E'[t]=\begin{cases} E[t] & t\le n_q \quad\text{(giữ truy vấn)}\\[2pt]
+                    0 & t> n_q \quad\text{(xóa mọi đoạn)}\end{cases}
+\]
+
+Hiệu $F(E)-F(E')$ là cái bánh: toàn bộ phần mà truy hồi đóng góp.
+
+\paragraph{Đơn vị của pool.} $K$ là một \textbf{trần}, không phải con số cố định: tối đa 60,
+gồm không quá 45 chunk tài liệu và 15 bản tóm tắt community. $K$ thực tế là số ứng
+viên vượt ngưỡng liên quan của từng nguồn, \emph{sau} khử trùng lặp --- đừng độn cho đủ 60, vì nhồi
+thêm rác chỉ làm bẩn khâu gom cụm và tốn thêm lượt greedy.
+
+Pool lấy từ node \texttt{document} (và \texttt{summary} khi có); \texttt{entity} không phải
+đơn vị văn bản nên không bao giờ vào prompt --- vai trò của nó ở \S6.3, còn \texttt{attribute}
+là cột trên node chứ không phải loại node riêng. Ba ràng buộc về đơn vị:
+
+\begin{dia}
+cỡ chunk     200-300 token, cắt theo ranh giới đoạn văn / mục, không cắt giữa câu
+             quá dài -> quy gán thô; quá ngắn -> một sự kiện bị cắt đôi và sinh ra
+             chữ ký multi-hop giả (hai nửa đều vô dụng khi đứng riêng)
+
+không chồng lấn   chunk chồng nhau tạo ra dư thừa nhân tạo -- đúng thứ §3.6 sinh ra
+             để phát hiện. Nếu khâu truy hồi cần chồng lấn thì khử trùng lặp
+             trước khi lập pool.
+
+chung một cách chunk   pool và đồ thị phải dùng cùng một cách cắt. Nhánh BM25 và
+             nhánh ngẫu nhiên chạy trên index riêng; nếu index đó cắt khác thì
+             đoạn lấy về không có node nào trong đồ thị (xem tiền kiểm §6.1).
+\end{dia}
+
+Chunk nhỏ hơn thì một mạch suy luận trải qua nhiều chunk hơn, tức đường trong đồ thị dài hơn
+--- phải tăng $L$ tương ứng. Với bộ chuẩn (MuSiQue, 2Wiki) thì dùng luôn đơn vị cấp đoạn có
+sẵn của dataset, đừng cắt lại. Mọi thứ phía sau chia cái này. Ta quy gán trên embedding chứ không trên token ID, vì token ID rời rạc nên không có gradient.
+
+\subsection{Gom cụm}
+
+\[
+\kappa(k)=\argmin_{c\in\{1,\dots,C\}}\big\lVert \emb(D_k)-\mu_c\big\rVert_2,
+\qquad
+\mu_c=\frac{1}{|\mathcal{C}_c|}\sum_{k\in\mathcal{C}_c}\emb(D_k)
+\]
+
+Kéo chi phí Shapley từ $2^K$ xuống $2^C$, và gom đoạn trùng ý vào một chỗ. \textbf{$C$ co
+theo $K$}, giữ cỡ cụm ổn định quanh 10: $C=\mathrm{clamp}\big(\mathrm{round}(K/10),4,8\big)$
+--- tức $K=60\Rightarrow C=6$, $K=40\Rightarrow C=4$. Để $C$ cố định mà $K$ co lại thì cụm
+còn 2--3 phần tử và việc gom cụm mất cả hai công dụng.
+
+$K$ không vào $2^C$, nhưng nó \emph{vào chi phí greedy} ở \S\ref{sec:greedy} một cách tuyến
+tính --- cụm to thì mỗi vòng greedy phải quét nhiều ứng viên hơn. Đó mới là thứ chặn $K$
+lại, không phải Shapley.
+
+\subsection{Trò chơi hợp tác}
+
+\[
+v(S)=F(E_S),\qquad
+(E_S)[t]=\begin{cases}
+E[t] & t\le n_q\\
+E[t] & t\in\spanop(\mathcal{C}_c),\ c\in S\\
+0 & \text{ngược lại}
+\end{cases}
+\qquad
+\begin{aligned}
+v(\emptyset)&=F(E')\\
+v(\{1,\dots,C\})&=F(E)
+\end{aligned}
+\]
+
+\subsection{Shapley mức cụm}
+
+\[
+\phi_c=\sum_{S\subseteq\{1,\dots,C\}\setminus\{c\}}
+\frac{|S|!\,(C-|S|-1)!}{C!}\Big[\,v(S\cup\{c\})-v(S)\,\Big]
+\]
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+$\phi_c$ lớn dương & cụm đóng góp thật \\
+$\phi_c\approx 0$ & mô hình bỏ qua cụm này \\
+$\phi_c<0$ & cụm \emph{đẩy ngược} câu trả lời \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\inv{Kiểm tra 1}{\sum_{c=1}^{C}\phi_c = F(E)-F(E')}
+
+\paragraph{Vì sao không dùng leave-one-out cho rẻ?}
+loo chỉ hỏi \emph{một} câu: bỏ cụm này khi mọi cụm khác còn nguyên. Với bằng chứng dư
+thừa thì câu đó luôn trả lời ``chẳng mất gì'':
+
+\begin{dia}
+ba cụm nói cùng một ý, mỗi cụm đủ để trả lời đúng:
+    loo(c) = v(tất cả) - v(tất cả trừ c) ~ 0   cho cả ba
+    -> tổng loo ~ 0, trong khi cái bánh thật sự là lớn
+
+Shapley lấy trung bình trên mọi thứ tự, nên cụm đến đầu tiên được tính công đầy đủ
+    -> tổng luôn khớp cái bánh
+\end{dia}
+
+loo là marginal contribution ở \emph{đúng vị trí cuối}; Shapley là trung bình trên
+\emph{mọi vị trí}. Dư thừa làm hai con số này lệch nhau rất xa.
+
+\subsection{Cắt cụm}
+
+\[
+C^*=\{c:\phi_c>\tau\},\qquad
+C^-=\{1,\dots,C\}\setminus C^*,\qquad
+\rho=\sum_{c\in C^-}\phi_c
+\]
+
+\subsection{Greedy trong cụm}
+\label{sec:greedy}
+
+Hàm giá trị có điều kiện trên các cụm khác:
+\[ v_c(R)=F\big(q + R + \text{mọi đoạn của các cụm khác trong } C^*\big) \]
+
+Điều kiện hóa là bắt buộc. Nếu đo cụm cô lập thì một cụm chỉ có giá trị khi kết hợp với cụm
+khác --- đúng ca multi-hop --- sẽ có $v_c$ gần $0$ ở mọi tập con; điều kiện dừng thỏa ngay
+sau vòng đầu và greedy giữ một đoạn chọn theo nhiễu. Vì $v_c(\emptyset)\neq 0$, mọi đại
+lượng phải đo theo phần tăng thêm. Bản trước lấy \emph{mốc riêng cho từng cụm} là
+$\mathrm{full}_c=v_c(\mathcal{C}_c)-v_c(\emptyset)$; các con số đo từ những mốc khác nhau
+thì không cộng trừ được với nhau, nên phần dưới quy tất cả về \textbf{một mốc chung $F(q)$}.
+
+\subsubsection*{Phải tỉa tuần tự}
+
+Tỉa song song thì hai đoạn ở hai cụm cùng nắm một thông tin sẽ triệt tiêu nhau: mỗi đoạn bị
+cắt vì sự có mặt của đoạn kia, mà đoạn kia cũng đang bị cắt. Tuần tự khử được điều đó, với
+điều kiện \emph{cụm chưa xử lý vào context ở dạng đầy đủ} --- nhờ vậy ở mọi thời điểm thông
+tin luôn được nắm bởi ít nhất một đoạn.
+
+\begin{dia}
+Delta(S)  =  F(S) - F(q)                mọi đại lượng quy về cùng mốc F(q)
+Delta_full = Delta( q + mọi đoạn của C* )
+B         =  ( 1 - theta_g ) * Delta_full    ngân sách hao hụt cả bài, theta_g = 0.95
+
+sắp C* theo phi_c giảm dần
+R <- {}                                 # các cụm đã xử lý, đã tỉa
+
+cho mỗi c theo thứ tự:
+    ctx(R') =  q  +  hợp R_{c'}         c' đã xử lý, đã tỉa
+                  +  hợp C_{c''}        c'' chưa xử lý, lấy đầy đủ
+                  +  R'
+
+    Delta_truoc = Delta( ctx(C_c) )     = Delta_sau của cụm liền trước
+                                          (cụm đầu tiên thì bằng Delta_full)
+    R_c <- rỗng
+    lặp:
+        k* = argmax  [ Delta(ctx(R_c + {k})) - Delta(ctx(R_c)) ]
+             k thuộc C_c \ R_c
+        R_c <- R_c + {k*}
+        dừng khi  Delta_truoc - Delta(ctx(R_c))  <=  min( B, kappa*Delta_full )
+                                                      kappa = 0.04
+
+    Delta_sau = Delta( ctx(R_c) )       <- chính lượt vừa chạy ở điều kiện dừng
+    B   <-  B - ( Delta_truoc - Delta_sau )   <- trừ phần thật sự mất, đo toàn cục
+    R   <-  R + R_c
+\end{dia}
+
+\paragraph{Vì sao không dùng ngưỡng cục bộ $\theta\cdot\mathrm{full}_c$.} Bản trước dừng khi
+cụm giữ được 95\% đóng góp \emph{của riêng nó}. Nhưng $\mathrm{full}_c$ đo trong ngữ cảnh mà
+các cụm chưa xử lý còn đầy đủ, nên khi cụm $c$ và một cụm phía sau cùng nắm một thông tin
+thì $v_c(\emptyset)$ đã có thông tin đó rồi và $\mathrm{full}_c$ \emph{thấp hơn} đóng góp
+thật của $c$. Mất 5\% của một con số bị đánh giá thấp thì thực tế mất nhiều hơn 5\%, và
+$\sum\mathrm{full}_c\neq\Delta_{\text{full}}$. Qua $|C^*|$ cụm thì trôi đủ xa để chốt chặn
+\S3.8 bật, kéo theo chạy lại toàn bộ.
+
+Ngân sách toàn cục chữa tận gốc: phần hao hụt không đo trong cụm nữa mà đo bằng điểm số
+toàn cục trước và sau khi tỉa cụm đó; mọi con số cùng mốc $F(q)$ nên cộng trừ được, và tổng
+hao hụt bị chặn bởi $B$ theo cấu trúc. Nó cũng tự thích nghi: cụm nào dư thừa thật thì tỉa
+mạnh và tiêu nhiều ngân sách, cụm sau bị siết lại tương ứng. Trần $\kappa=0{,}04$ cho một
+cụm dùng tối đa 80\% ngân sách --- không có trần thì cụm đầu có thể tiêu hết, buộc mọi cụm
+sau giữ nguyên vẹn và $|T|$ phình quá $k_{\text{infer}}$.
+
+\textbf{Không tốn thêm lượt nào.} $\Delta_{\text{trước}}$ là $\Delta_{\text{sau}}$ của cụm
+trước; $\Delta_{\text{sau}}$ chính là lượt vừa chạy để kiểm điều kiện dừng. Ngược lại còn bỏ
+được $v_c(\emptyset)$ và $v_c(\mathcal{C}_c)$ mà bản cũ cần cho mỗi cụm.
+
+Thứ tự theo $\phi_c$ giảm dần: khi hai cụm cùng nắm một thông tin, cụm được giữ nó là cụm mà
+Shapley chấm cao hơn. Đây là greedy có thứ tự thứ ba trong tài liệu, cùng khuôn với
+\S4.11 của tài liệu chính (thứ tự theo giá trị đường) và \S5.3 (thứ tự theo depth).
+
+Đánh đổi: không còn tỉa song song được nữa. Số lượt LLM không đổi nhưng thời gian treo tăng
+theo $|C^*|$.
+
+\subsubsection*{Ví dụ}
+
+Cụm $\mathcal{C}_1$ có 4 đoạn $\{a,b,c,d\}$, được xử lý đầu tiên nên
+$\Delta_{\text{trước}}=\Delta_{\text{full}}=3{,}00$:
+
+\begin{dia}
+B             =  0.05 x 3.00  =  0.15      ngân sách cho cả bài
+kappa*D_full  =  0.04 x 3.00  =  0.12      trần của riêng cụm này
+Delta(ctx(rỗng)) = 0.60                    điểm khi bỏ hẳn C_1
+
+vòng 1   thêm vào rỗng:  a +1.90   b +1.85   c +1.20   d +0.30   -> chọn a
+         Delta(ctx) = 2.50    hụt = 3.00 - 2.50 = 0.50  >  0.12    chưa dừng
+
+vòng 2   thêm vào {a}:   b +0.05   c +0.40   d +0.10             -> chọn c
+         Delta(ctx) = 2.90    hụt = 0.10  <=  0.12                 dừng
+
+giữ {a, c}    bỏ {b, d}    chi phí 7 lượt
+B <- 0.15 - 0.10 = 0.05       <- hai cụm còn lại chỉ còn 1/3 ngân sách
+\end{dia}
+
+$b$ mạnh hơn $c$ khi đứng một mình nhưng là bản sao của $a$. Chỉ phép thử phản thực mới
+thấy. (Giá trị Shapley $\phi_1=2{,}52$ là đại lượng khác, dùng ở \S3.7.)
+
+\subsubsection*{Chẩn đoán miễn phí}
+
+Giữ thêm phép đo cô lập, không để tỉa mà để phát hiện:
+
+\begin{dia}
+so  v_c^cô-lập(C_c)  với  phi_c
+
+    ~ nhau     cụm tự đứng được một mình
+    << phi_c   cụm chỉ có giá trị khi kết hợp  ->  đối tác multi-hop
+\end{dia}
+
+Cả hai số đều đã tính rồi.
+
+\subsection{Chia \texorpdfstring{$\phi_c$}{phi\_c} cho các đoạn sống sót}
+\label{sec:alloc}
+
+$|R_c|$ chỉ 2--3 nên Shapley chính xác được, và mọi $v_c(\cdot)$ đã tính ở \S\ref{sec:greedy} --- không tốn thêm lượt nào:
+
+\[
+\psi_k=\sum_{S\subseteq R_c\setminus\{k\}}
+\frac{|S|!\,(|R_c|-|S|-1)!}{|R_c|!}\Big[\,v_c(S\cup\{k\})-v_c(S)\,\Big]
+\]
+\[
+S^{\text{final}}_{D_k}=
+\begin{cases}
+\displaystyle \phi_c\cdot\frac{\psi_k}{\sum_{j\in R_c}\psi_j} & k\in R_c\\[14pt]
+0 & k\notin R_c
+\end{cases}
+\]
+
+Phải chuẩn hóa vì $\sum_k\psi_k = v_c(R_c)$ là giá trị cụm chạy riêng, còn $\phi_c$ là đóng góp biên \emph{giữa các cụm khác} --- hai đại lượng khác nhau.
+
+Tiếp ví dụ \S3.6, với $R_c=\{a,c\}$ và mọi $v_c(\cdot)$ đã có sẵn:
+\begin{align*}
+\psi_a&=\tfrac12\big[v(a)-v(\emptyset)\big]+\tfrac12\big[v(ac)-v(c)\big]=\tfrac12(1{,}90)+\tfrac12(1{,}10)=1{,}50\\
+\psi_c&=\tfrac12\big[v(c)-v(\emptyset)\big]+\tfrac12\big[v(ac)-v(a)\big]=\tfrac12(1{,}20)+\tfrac12(0{,}40)=0{,}80
+\end{align*}
+\[ \textstyle\sum_k\psi_k=2{,}30=v_c(R_c) \;\neq\; \phi_1=2{,}52 \]
+\[ S^{\text{final}}_{a}=2{,}52\cdot\frac{1{,}50}{2{,}30}=1{,}643,\qquad S^{\text{final}}_{c}=2{,}52\cdot\frac{0{,}80}{2{,}30}=0{,}877,\qquad \text{tổng}=2{,}520=\phi_1\ \checkmark \]
+
+Nếu bỏ bước chuẩn hóa mà cộng thẳng $\psi$ thì Kiểm tra 2 gãy ngay.
+
+\inv{Kiểm tra 2}{\sum_{k\in R_c} S^{\text{final}}_{D_k}=\phi_c \quad \text{mọi } c\in C^*}
+\inv{Kiểm tra 3}{\sum_{k=1}^{K} S^{\text{final}}_{D_k}=\big[F(E)-F(E')\big]-\rho}
+
+\subsection{Đầu ra}
+
+\[ T=\bigcup_{c\in C^*} R_c \]
+
+Hai phép kiểm cuối, tổng $|T|+1$ lượt. Gọi $\Delta(S)=F(q+S)-F(q)$:
+
+\begin{dia}
+chốt chặn toàn cục    Delta(T)  >=  theta_g * Delta_full
+                      <- giờ đúng theo cấu trúc: ngân sách B ở §3.6 không bao
+                         giờ xuống dưới 0, nên tổng hao hụt luôn <= (1-theta_g)
+                         * Delta_full. Nó thành phép kiểm, không còn là cơ chế
+                         sửa sai -- sai ở đây nghĩa là bug cài đặt.
+
+tỉa ngược             cho mỗi D thuộc T:
+                          nếu  Delta(T \ {D}) >= theta * Delta(T):  T <- T \ {D}
+                      <- bắt đoạn mà thứ tự xử lý vô tình giữ lại
+                         (cùng vai với §4.10 pha 2)
+\end{dia}
+
+% =====================================================================
+
+\end{document}

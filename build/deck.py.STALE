@@ -1,0 +1,6 @@
+build/deck.py la ban SHAPLEY 20 SLIDE CU.
+Chay no se XOA HET 33 slide hien tai cua quy-gan-rag-hai-tang.pptx,
+vi file .pptx do duoc SUA TAY va khong sinh lai tu script duoc.
+
+Giu lai chi de tham khao cach dung python-pptx. DUNG CHAY.
+Backup truoc moi lan ghi pptx: build/user-backup.pptx (gitignore).

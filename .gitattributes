@@ -1,0 +1,13 @@
+# Chuan hoa ket thuc dong: LF trong repo, CRLF khi checkout tren Windows.
+# Khong dat thi git canh bao CRLF o moi file text moi lan add.
+* text=auto eol=lf
+
+# Nhi phan — khong duoc dung dau dong
+*.pdf   binary
+*.pptx  binary
+*.exe   binary
+*.png   binary
+*.jpg   binary
+
+# Notebook: diff deo hon mot chut
+*.ipynb text eol=lf

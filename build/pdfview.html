@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+ body{margin:0;background:#fff;font:12px Arial}
+ #info{padding:6px 10px;background:#ffe9a8;font-weight:bold}
+ canvas{display:block;border-bottom:3px solid #c00;max-width:100%}
+ .lbl{padding:3px 10px;background:#eee;font-weight:bold}
+</style></head><body>
+<div id="info">đang tải…</div>
+<div id="out"></div>
+<script>
+// tro workerSrc vao chinh pdf.min.js -> PDF.js chay fake worker tren main thread
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+
+const PAGES = (new URLSearchParams(location.search).get('p') || '1,2').split(',').map(Number);
+
+(async () => {
+  try {
+    const pdf = await pdfjsLib.getDocument("../pipeline-shapley-ig-graph.pdf").promise;
+    document.getElementById('info').textContent =
+      "TỔNG SỐ TRANG: " + pdf.numPages + "  |  đang hiện: " + PAGES.join(', ');
+    for (const n of PAGES) {
+      if (n > pdf.numPages) continue;
+      const page = await pdf.getPage(n);
+      const vp = page.getViewport({ scale: 1.45 });
+      const lbl = document.createElement('div');
+      lbl.className = 'lbl'; lbl.textContent = 'trang ' + n;
+      document.getElementById('out').appendChild(lbl);
+      const cv = document.createElement('canvas');
+      cv.width = vp.width; cv.height = vp.height;
+      document.getElementById('out').appendChild(cv);
+      await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+    }
+    document.title = "done-" + pdf.numPages;
+  } catch (e) {
+    document.getElementById('info').textContent = "LỖI: " + e.message;
+  }
+})();
+</script></body></html>

@@ -1,0 +1,210 @@
+# -*- coding: utf-8 -*-
+"""0.F — Che cau hoi thanh manh (sub-claim).
+
+Hai duong:
+  MuSiQue           phan ra 1-hop + dap an trung gian GAN SAN  ->  0 luot LLM
+  HotpotQA / 2Wiki  LLM, 1 luot MOI TRUY VAN (khong phai moi tap con)
+
+Va dung chinh nhanh MuSiQue de DO xem LLM che co sot hop khong — cach duy nhat
+kiem buoc nay ma khong can nguoi gan.
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from s0_common import (ASK, MISSING, OK, banner, load_config, resolve,
+                       verdict, write_report)
+
+PROMPT = (
+    "Decompose the question into the minimal set of atomic factual claims that "
+    "together entail the gold answer. Each claim must be a single standalone "
+    "sentence stating one fact, verifiable against one passage.\n"
+    "Return ONLY a JSON array of strings, no prose.\n\n"
+    "Question: {q}\nGold answer: {y}\n\nClaims:")
+
+
+# ── nhanh 1: phan ra gan san (MuSiQue) ──────────────────────────────
+def from_annotation(row: Dict[str, Any]) -> Optional[List[str]]:
+    """MuSiQue: question_decomposition = [{question, answer, paragraph_support_idx}].
+
+    Ghep (cau hoi con, dap an trung gian) thanh mot khang dinh.
+    """
+    dec = row.get("question_decomposition") or row.get("decomposition")
+    if not dec:
+        return None
+    out: List[str] = []
+    for step in dec:
+        if not isinstance(step, dict):
+            return None
+        sq = (step.get("question") or "").strip()
+        sa = (step.get("answer") or "").strip()
+        if not sq or not sa:
+            continue
+        # giai tham chieu kieu "#1" ve dap an trung gian truoc do
+        sq = re.sub(r"#(\d+)",
+                    lambda m: out[int(m.group(1)) - 1].split(" -> ")[-1]
+                    if 0 < int(m.group(1)) <= len(out) else m.group(0), sq)
+        out.append("%s -> %s" % (sq, sa))
+    return out or None
+
+
+# ── nhanh 2: LLM ────────────────────────────────────────────────────
+class LLMDecomposer:
+    def __init__(self, cfg: Dict[str, Any]):
+        self.cfg = cfg
+        self.model = cfg["decompose"]["model"]
+        self.cli = None
+        self.error: Optional[str] = None
+        if cfg["decompose"]["provider"] == "dummy" or self.model == "PHAI_DIEN":
+            self.error = "provider/model chua dien"
+            return
+        try:
+            from openai import OpenAI
+            key = os.environ.get(cfg["judge"]["api_key_env"], "")
+            if not key:
+                raise RuntimeError("thieu %s" % cfg["judge"]["api_key_env"])
+            self.cli = OpenAI(api_key=key, base_url=cfg["judge"]["base_url"])
+        except Exception as e:
+            self.error = repr(e)[:200]
+
+    def __call__(self, q: str, y: str) -> Tuple[List[str], Dict[str, int]]:
+        if self.cli is None:
+            return [], {"prompt_tokens": 0, "output_tokens": 0}
+        r = self.cli.chat.completions.create(
+            model=self.model, temperature=0.0, max_tokens=300,
+            messages=[{"role": "user", "content": PROMPT.format(q=q, y=y)}])
+        txt = (r.choices[0].message.content or "").strip()
+        m = re.search(r"\[.*\]", txt, re.S)
+        claims: List[str] = []
+        if m:
+            try:
+                claims = [str(c).strip() for c in json.loads(m.group(0)) if str(c).strip()]
+            except Exception:
+                pass
+        if not claims:
+            claims = [ln.strip("-* ").strip() for ln in txt.splitlines()
+                      if len(ln.strip()) > 10]
+        u = r.usage
+        return claims[: self.cfg["decompose"]["max_claims"]], {
+            "prompt_tokens": getattr(u, "prompt_tokens", 0),
+            "output_tokens": getattr(u, "completion_tokens", 0)}
+
+
+def decompose(row: Dict[str, Any], llm: Optional[LLMDecomposer],
+              cfg: Dict[str, Any]) -> Dict[str, Any]:
+    if cfg["decompose"]["use_annotated_when_available"]:
+        ann = from_annotation(row)
+        if ann:
+            return {"claims": ann, "source": "annotated", "usage": {}}
+    if llm is None or llm.cli is None:
+        return {"claims": [], "source": "none", "usage": {}}
+    claims, usage = llm(row.get("question", ""), str(row.get("answer", "")))
+    return {"claims": claims, "source": "llm", "usage": usage}
+
+
+# ── kiem: LLM che co sot hop khong (do tren MuSiQue) ────────────────
+def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
+    banner("0.F  Che cau hoi thanh manh")
+
+    rep: Dict[str, Any] = {}
+    rdir = resolve(cfg, "raw_dir")
+
+    # tim mot file co phan ra gan san
+    rows: List[Dict[str, Any]] = []
+    src_file = None
+    for base in (rdir / "musique", rdir):
+        for split in ("train.json", "dev.json", "valid.json"):
+            p = base / split
+            if not p.exists():
+                continue
+            try:
+                data = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            cand = data if isinstance(data, list) else list(data.values())
+            if any(r.get("question_decomposition") or r.get("decomposition")
+                   for r in cand[:200]):
+                rows = cand; src_file = str(p); break
+        if rows:
+            break
+
+    rep["annotated_source"] = src_file
+    if not rows:
+        verdict(MISSING,
+                "khong thay file nao co question_decomposition.\n"
+                "           -> khong do duoc 'LLM che co sot hop khong',\n"
+                "              tuc mat lop kiem duy nhat khong can nguoi gan.\n"
+                "           Can file MuSiQue goc (khong chi ban da xu ly cua gfm-rag).")
+        write_report(cfg, "s0f_decompose", rep)
+        return rep
+
+    have = [r for r in rows
+            if (r.get("question_decomposition") or r.get("decomposition"))
+            and r.get("question") and r.get("answer")][:n_probe]
+    verdict(OK, "co %d truy van co phan ra gan san (dung %d de do)"
+            % (sum(1 for r in rows if r.get("question_decomposition")
+                   or r.get("decomposition")), len(have)))
+
+    # phan bo so manh J — day la PRIOR cho |T|
+    js = [len(from_annotation(r) or []) for r in rows[:5000]]
+    js = [x for x in js if x]
+    from collections import Counter
+    rep["J_distribution_annotated"] = dict(sorted(Counter(js).items()))
+    print("     phan bo so manh J (gan san): %s" % rep["J_distribution_annotated"])
+    print("     -> J chinh la PRIOR cho |T|.  |T| lech xa J  =>  phinh, chac chan.")
+
+    llm = LLMDecomposer(cfg)
+    rep["llm_error"] = llm.error
+    if llm.cli is None:
+        verdict(ASK, "LLM chua cau hinh (%s)  ->  chua do duoc do khop.\n"
+                     "           Dien config.decompose.model roi chay lai buoc nay."
+                % llm.error)
+        write_report(cfg, "s0f_decompose", rep)
+        return rep
+
+    # do khop: so manh LLM sinh vs so manh gan san
+    rows_out = []
+    agree = 0
+    for r in have:
+        ann = from_annotation(r) or []
+        got, usage = llm(r["question"], str(r["answer"]))
+        ok = len(got) == len(ann)
+        agree += int(ok)
+        rows_out.append({"question": r["question"][:90],
+                         "J_annotated": len(ann), "J_llm": len(got),
+                         "match": ok, "llm_claims": got,
+                         "usage": usage})
+    rep["probe"] = rows_out
+    rep["J_match_rate"] = round(agree / max(1, len(have)), 3)
+    tok = sum(x["usage"].get("prompt_tokens", 0) + x["usage"].get("output_tokens", 0)
+              for x in rows_out)
+    rep["mean_tokens_per_query"] = round(tok / max(1, len(rows_out)), 1)
+
+    print("\n     ty le khop so manh = %.1f%%   (%d/%d)"
+          % (100 * rep["J_match_rate"], agree, len(have)))
+    print("     token moi truy van   = %.0f   (config gia dinh ~400)"
+          % rep["mean_tokens_per_query"])
+
+    if rep["J_match_rate"] >= 0.85:
+        verdict(OK, "LLM che khop tot  ->  dung duoc cho nhanh HotpotQA / 2Wiki")
+    elif rep["J_match_rate"] >= 0.6:
+        verdict(ASK, "khop %.0f%% — co kha nang SOT HOP.  Hau qua: bang phu thieu cot,\n"
+                     "           va T duoc nhan khi CON THIEU bang chung.\n"
+                     "           -> sua prompt, hoac gan co khi J khong khop so hop du kien"
+                % (100 * rep["J_match_rate"]))
+    else:
+        verdict(ASK, "khop chi %.0f%% — chua dung duoc.  Phai sua buoc nay TRUOC GD 1,\n"
+                     "           khong thi bang phu sai o goc va moi thu sau sai theo"
+                % (100 * rep["J_match_rate"]))
+
+    p = write_report(cfg, "s0f_decompose", rep)
+    print("\n  -> %s" % p)
+    return rep
+
+
+if __name__ == "__main__":
+    run(load_config())

@@ -1,0 +1,116 @@
+# ====================================================================
+#  Giai doan 0 — cau hinh
+#  Moi con so o day la MOT GIA DINH cho tới khi buoc tuong ung do no.
+# ====================================================================
+
+paths:
+  # Colab: /content/drive/MyDrive/ragproj/stage0   ·  local: D:/ragproj/stage0
+  root:        "."
+  gfmrag_repo: "artifacts/gfm-rag"          # git clone RManLuo/gfm-rag
+  graph_dir:   "artifacts/processed/stage1" # <dataset>/nodes.csv · relations.csv · edges.csv
+  raw_dir:     "artifacts/raw"              # <dataset>/documents.json · train.json
+  reports:     "reports"
+  cache:       "cache"
+
+artifacts:
+  checkpoint: "rmanluo/G-reasoner-34M"
+  # KHONG chay sft_training — pool phai doc lap voi tin hieu dang dao
+  run_sft: false
+
+  # mode = test  ->  index CO SAN, $0 indexing.  Day la che do cua GD 0 va GD 0.5.
+  # mode = train ->  index KHONG co, phai tu dung bang Stage 1 scripts (xem openie).
+  mode: "test"
+
+  test_datasets:  ["hotpotqa_test_v2", "musique_test", "2wikimultihopqa_test"]
+  train_datasets: ["hotpotqa_train", "musique_train", "2wikimultihopqa_train"]
+
+  # tai tu OneDrive cua tac gia: testing split + FULL training data (raw)
+  # index dung san CHI co cho test_datasets
+  onedrive_url: "https://1drv.ms/u/c/cb4bbdfe5951d1a1/IQBJXhHkEFY6TJVIX2OSVCPyAd-yP8q3VJn7IqbpdbrX2a8?e=bvgg4G"
+
+# ── OpenIE: chi can khi mode = train ───────────────────────────────
+# Dung LLM lam cong cu OpenIE tren TUNG document (GFM-RAG §KG-index).
+# Day la DONG CHI PHI LON NHAT cua ca chuong trinh neu phai tu dung.
+openie:
+  model: "PHAI_DIEN"              # CON TREO — model nao, va model RE co du khong?
+  prompt_tokens_per_doc: 800      # GIA DINH: huong dan + few-shot
+  output_tokens_per_doc: 150      # GIA DINH: triple sinh ra
+  price_in_per_m: 3.0
+  price_out_per_m: 12.0
+  docs_per_query: 10.7            # 2.972.931 / 277.839 — chu ky distractor setting
+
+# ── 0.B  do cach cat chunk ──────────────────────────────────────────
+chunks:
+  node_types_in_pool: ["document", "summary"]   # entity: khong vao prompt
+  assumed_tokens_per_doc: 250    # GIA DINH, 0.B do lai
+  overlap_shingle: 8
+  overlap_threshold: 0.30
+
+# ── 0.C / 0.D  pool ────────────────────────────────────────────────
+pool:
+  k_raw_max: 60
+  n_final: 40
+  quotas:                   # han ngach RIENG moi nguon — khong gop chung
+    bm25: 20
+    gfm: 15
+    random: 5
+  bm25:
+    k1: 1.5
+    b: 0.75
+  rerank:
+    model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    batch_size: 64
+
+# ── 0.E  judge ─────────────────────────────────────────────────────
+judge:
+  provider: "openai_compat"          # openai_compat | dummy
+  base_url: "https://api.openai.com/v1"
+  gen_model:   "PHAI_DIEN"           # CON TREO — quyet dinh #2
+  judge_model: "PHAI_DIEN"           # can logprobs + top_logprobs
+  api_key_env: "OPENAI_API_KEY"
+  gen_max_tokens: 80
+  temperature: 0.0
+  # cost(S) = overhead + tong do dai THAT cua cac chunk (khong phai 250*|S|,
+  # vi document ~100 va summary ~600 la hai lop do dai)
+  prompt_overhead_tokens: 500
+  yes_tokens: ["Yes", "yes", " Yes", " yes", "YES"]
+  no_tokens:  ["No", "no", " No", " no", "NO"]
+  # answer_aliases PHAI vao prompt judge, khong thi "Zemeckis" vs
+  # "Robert Zemeckis" bi cham No -> v(S) thap gia -> tap dung bi loai
+  use_answer_aliases: true
+
+# ── 0.F  che cau hoi ───────────────────────────────────────────────
+decompose:
+  use_annotated_when_available: true   # MuSiQue co phan ra gan san -> 0 luot LLM
+  provider: "openai_compat"
+  model: "PHAI_DIEN"
+  max_claims: 4
+
+# ── 0.G  NLI / bang phu ────────────────────────────────────────────
+nli:
+  model: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"   # CON TREO — quyet dinh #3
+  batch_size: 32
+  max_length: 512
+  entail_threshold: 0.50
+  exit_max_entail: 0.20   # cua thoat THAN TRONG: chi thoat khi MOI doan deu rat thap
+
+# ── 0.J  chia tap ──────────────────────────────────────────────────
+splits:
+  # GD 1 hieu chuan PHAI dung split checkpoint CHUA train.
+  # test set dung la split do, VA no co index san -> khop hoan hao.
+  calib_on_test: true
+  calib_n: 500
+
+  # GD 0.5 — chay thu CA BON CONG tren test index (mien phi indexing)
+  dryrun:
+    phase1_n: 2000
+    pgate_n: 500
+
+  # GD 2 / GD 5 — tren train split, CAN indexing
+  phase1_n: 18200
+  phase2_n: 200000
+  holdout_min: 20000
+  seed: 20261011
+
+telemetry:
+  steps: ["A0", "A1", "A2", "A3", "A4", "C0", "C1", "C2", "C3", "C4", "C5", "C6"]
