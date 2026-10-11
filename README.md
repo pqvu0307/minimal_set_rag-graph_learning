@@ -41,9 +41,13 @@ python build/checklayout.py         # ĐO bố cục trên PDF vừa sinh
 Thứ tự quan trọng: `checklayout` phải chạy **sau** tectonic, không thì nó đo bản
 biên dịch cũ.
 
-Deck mang nhãn bước ở góc phải tiêu đề (`a1`…`a5`, `b1`…`b3`) qua `\framesubtitle`.
-Template `frametitle` là tự viết, nên **phải** tự gọi `\insertframesubtitle` —
-thiếu nó thì mọi nhãn âm thầm biến mất.
+**Thứ tự slide = thứ tự chạy của pipeline** (`c0`→`c7`, rồi `b1`→`b3`). Không slide nào
+được dùng một ký hiệu trước slide khai sinh ra nó — `τ_q` xuất hiện ở `c4`, nên định
+nghĩa «đủ» phải nằm sau đó, không phải trước.
+
+Nhãn bước ở góc phải tiêu đề đi qua `\framesubtitle`, và dùng **đúng tên bước của
+`pipeline-shapley-ig-graph.md`**. Template `frametitle` là tự viết, nên **phải** tự gọi
+`\insertframesubtitle` — thiếu nó thì mọi nhãn âm thầm biến mất.
 
 ### Năm lỗi im lặng mà bộ kiểm tồn tại để bắt
 
