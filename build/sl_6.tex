@@ -1,0 +1,160 @@
+% ════════════════════════════════════════════════════════════════════
+%  thi hành — pha 1 sinh ra g_theta, cổng, rủi ro, tóm lại
+% ════════════════════════════════════════════════════════════════════
+\section{thi hành}
+
+\begin{frame}[fragile]{$g_\theta$ ở đâu ra — pha 1}
+  \framesubtitle{thi hành}
+  \lead{cả timeline \texttt{c0}--\texttt{c7} giả định đã có $g_\theta$. nó được
+        đào ở một pha riêng, chạy trước, trên một tập nhỏ hơn hai mươi lần.}
+
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{bx}[title={pha 1 · $10{,}000$ truy vấn · llm đầy đủ}]
+      \begin{dia}
+a0  chẻ câu hỏi + bảng phủ       400
+a1  vòng 0  ba mốc + 40 đoạn
+            đơn lẻ            44.500
+a2  vòng 1  greedy biên       27.000
+a3  vòng 2  học chủ động     ~37.000
+a4  vòng 3  xác nhận lại     ~15.000
+                            ---------
+                            ~123.900 token
+      \end{dia}
+      \vspace{0.25em}
+      sản phẩm của pha 1 là \hl{$g_\theta$}, \no{không phải} nhãn cho tầng b.
+    \end{bx}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{bx}[title={pha 2 · $200{,}000$ truy vấn · đường rẻ}]
+      \begin{dia}
+c0  chẻ + bảng phủ               400
+      thiếu mảnh -> THOÁT SỚM
+c1  v(rỗng)                      500
+c2  g_theta chấm 40 đoạn đơn       0
+c3  v(R)                       3.500
+c4  v(C)                      10.500
+      -> chốt tau_q
+c5  tìm theo tầng bằng g_theta     0
+c6  đo v thật, kiểm tối tiểu  ~7.400
+c7  ba nhánh
+                              --------
+                               ~22.300 token
+      \end{dia}
+      \vspace{0.25em}
+      \dd{\textbf{rẻ hơn 5,5 lần.} sản phẩm của pha 2 mới là nhãn $(q \to T)$
+          cho tầng b}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{năm cổng — và chúng nằm trước 75\% chi phí}
+  \framesubtitle{thi hành}
+  \lead{không cam kết ngân sách trước. chia thành các chặng, mỗi chặng kết thúc
+        bằng một \emph{cổng}: một phép đo rẻ quyết định có đi tiếp hay dừng.}
+
+  \begin{center}
+  \footnotesize
+  \begin{tabular}[t]{@{}llrrl@{}}
+    \toprule
+    & \textbf{giai đoạn} & \textbf{chi phí} & \textbf{tích lũy} & \textbf{cổng chặn sau đó}\\
+    \midrule
+    \texttt{0}    & hạ tầng · index test có sẵn & \$0 & \$0 &\\
+    \texttt{0.5}  & chạy thử bốn cổng trên test index & \$18 & \$18
+      & \hl{cổng 0.5} — chặn \$1.100\\
+    \texttt{1}    & hiệu chuẩn với chuẩn ngoài & \$7 & \$25
+      & \hl{cổng 1} — $\mathrm{adq}$ có đáng tin?\\
+    \texttt{2.0}  & dựng index cho phần pha 1 & \$74 & \$99 &\\
+    \texttt{2}    & pha 1 đào nhãn & \$103 & \$202 &\\
+    \texttt{3}    & huấn luyện $g_\theta$ & \$0 & \$202 & \hl{cổng 2} — vượt được sàn?\\
+    \texttt{4}    & đo tỉ lệ $p$ trên phần giữ lại & \$0 & \$202 & \hl{cổng 3} — chặn \$918\\
+    \texttt{5.0}  & dựng index cho phần pha 2 & \$815 & \$1.017 &\\
+    \texttt{5}    & pha 2 $+$ ca chạy lại & \$103 & \$1.120 & \hl{cổng 4} $\times\,10$ lô\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{keyb}
+    tiêu trước \hl{cổng 0.5} là \$18; trước \hl{cổng 3} là \$202. thiết kế sai thì
+    \yes{không bao giờ phải trả \$918 còn lại.}
+    \vspace{0.2em}
+
+    \dd{model sinh chạy trên máy mình nên \$0 tiền, nhưng ${\sim}53$ giờ gpu —
+        ràng buộc thật là \hl{giờ gpu}, không phải tiền. $\$889$ trong bảng là
+        dựng index, vì index dựng sẵn chỉ có cho tập \emph{test}}
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{những gì chưa chắc — và cổng nào đo nó}
+  \framesubtitle{thi hành}
+  \lead{năm con số dưới đây chưa ai đo. nói ra chúng, và nói luôn ai sẽ đo.}
+
+  \begin{center}
+  \begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}
+                        >{\raggedright\arraybackslash}p{0.21\linewidth}
+                        >{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+    \toprule
+    \textbf{con số} & \textbf{trạng thái} & \textbf{ai đo}\\
+    \midrule
+    độ dài đoạn thật & giả định $250$ token
+      & \texttt{0.b} — sai thì \no{mọi} bảng chi phí sai, và \no{không cổng nào bắt được}\\[0.35em]
+    $p$ — tỉ lệ qua được đường rẻ & giả định $0{,}75$
+      & \texttt{cổng 0.5} đo rẻ, \texttt{cổng 3} đo thật\\[0.35em]
+    $45\%$ thoát sớm ở \texttt{c0} & suy từ musique
+      & \texttt{2.1} — chắc chắn \emph{lạc quan}, vì ta cố ý dùng checkpoint chưa
+        tinh chỉnh\\[0.3em]
+    $\mathrm{adq}$ sai bao nhiêu & chưa biết
+      & \texttt{cổng 1}, đối chiếu nhãn \texttt{supporting\_documents}\\[0.3em]
+    cỡ rò rỉ nhãn vàng & chưa biết
+      & \texttt{1.3} — chênh lệch giữa pool chỉ-bm25 và pool đầy đủ\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \begin{keyb}
+    hai cổng \yes{miễn phí} phải chạy trước khi cam kết ngân sách:
+    \hl{cổng $p$} ($500$ truy vấn giữ lại, 0 lượt llm) và
+    \hl{chuẩn ngoài} ($500$ truy vấn test, \$7). chúng rẻ \emph{chính vì} nằm
+    trước chi phí — bỏ qua để «chạy nhanh hơn» là bỏ đi toàn bộ giá trị của chúng.
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{tóm lại}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{keyb}[title={ba quyết định thiết kế}]
+      \textbf{1}\; «đủ» có \emph{hai} thành phần. $v$ đo \emph{trả lời đúng},
+      $\mathrm{adq}$ đo \emph{có bằng chứng}. chỉ dùng $v$ thì nhận cả đoạn 19.
+      \vspace{0.4em}
+
+      \textbf{2}\; tìm \emph{tập nhỏ nhất}, không xếp hạng điểm số. được cả
+      \emph{họ} lời giải thích và một thước đo độ tin cậy; cái giá là mất
+      đẳng thức kiểm tra.
+      \vspace{0.4em}
+
+      \textbf{3}\; chỉ $T$ đi qua ranh giới. hai tầng đo trên hai không gian
+      khác nhau, nên điểm số không mang qua được.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={hai thứ còn phải chứng minh}]
+      \textbf{$p$} — tỉ lệ truy vấn mà đường rẻ đi qua được. cả bảng chi phí treo
+      vào nó, và nó \no{chưa được đo}.
+      \vspace{0.4em}
+
+      \textbf{$\mathrm{adq}$} — model nli loại đúng hay loại bừa. chưa biết, mà nó
+      đang được giao quyền bỏ ${\sim}45\%$ truy vấn.
+    \end{bx}
+    \begin{bx}[title={bước tiếp theo}]
+      chạy \texttt{0.a}--\texttt{0.j} trên test index (đã dựng sẵn, \$0),
+      rồi \texttt{cổng 0.5} với \$18.
+      \vspace{0.2em}
+
+      \dd{github.com/pqvu0307/minimal\_set\_rag-graph\_learning}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}

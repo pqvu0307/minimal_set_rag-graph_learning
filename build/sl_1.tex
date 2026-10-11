@@ -1,7 +1,15 @@
 % =====================================================================
 %  quy gán nguồn cho rag hai tầng — slide
-%  biên dịch:  build/tools/tectonic.exe slides.tex
-%  ghép:       python build/mk_slides.py
+%
+%  HAI LUAT VIET, khong duoc pha:
+%  1. THU TU SLIDE = THU TU CHAY cua pipeline (c0 -> c7, roi b1 -> b3).
+%     Khong bao gio dung mot ky hieu truoc slide khai sinh ra no.
+%  2. Viet cho nguoi CHUA BIET GI: moi thuat ngu giai nghia ngay lan dau,
+%     va moi buoc truu tuong deu co vi du Forrest Gump dat canh.
+%
+%  biên dịch:  python build/mk_slides.py
+%              build/tools/tectonic.exe slides.tex
+%              python build/checklayout.py
 % =====================================================================
 \documentclass[aspectratio=169,10pt]{beamer}
 
@@ -39,8 +47,8 @@
 \setbeamercolor{frametitle}{fg=white, bg=navy}
 \setbeamerfont{frametitle}{size=\large, series=\bfseries}
 
-% Phu de khung = NHAN BUOC (a1..a5, b1..b3).  Template mac dinh cua beamer
-% bi ta thay bang cai duoi, nen phai tu goi \insertframesubtitle — thieu no
+% Phu de khung = TEN BUOC TRONG PIPELINE (c0, c5, b2, ...).  Template
+% frametitle la tu viet, nen PHAI tu goi \insertframesubtitle — thieu no
 % thi moi \framesubtitle am tham bien mat.
 \setbeamertemplate{frametitle}{%
   \nointerlineskip
@@ -89,6 +97,11 @@
 \newcommand{\no}[1]{\leavevmode{\color{warn}\bfseries #1}}
 \newcommand{\yes}[1]{\leavevmode{\color{good}\bfseries #1}}
 
+% cau dan dau: mot cau bang LOI THUONG noi slide nay dang lam gi
+\newcommand{\lead}[1]{{\small #1}\par\vspace{0.45em}}
+% giai nghia thuat ngu ngay lan dau gap
+\newcommand{\gloss}[2]{\hl{#1} \dd{— #2}}
+
 \title{\bfseries quy gán nguồn cho rag hai tầng}
 \subtitle{tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}
 \date{}
@@ -100,12 +113,13 @@
 \begin{frame}[plain]
   \vfill
   {\color{navy}\Large\bfseries quy gán nguồn cho rag hai tầng}\\[0.9em]
-  {\large tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}\\[2.2em]
+  {\large tìm \emph{đoạn văn bản nào} đã tạo ra câu trả lời,
+   và \emph{vì sao} hệ thống tìm được chúng}\\[2.2em]
   \begin{tabular}[t]{@{}ll@{}}
-    \color{mute}tầng a & tìm \hl{tập đủ tối tiểu} trong pool ứng viên\\
-                       & \dd{mwc · deegan–packel · banzhaf có dấu}\\[0.5em]
-    \color{mute}tầng b & tìm \hl{đường} trên đồ thị tri thức\\
-                       & \dd{integrated gradients trên gate của cạnh}\\
+    \color{mute}tầng a & tìm \hl{tập đoạn nhỏ nhất đủ để trả lời}\\
+                       & \dd{lý thuyết trò chơi hợp tác}\\[0.5em]
+    \color{mute}tầng b & tìm \hl{đường đi} trên đồ thị tri thức\\
+                       & \dd{integrated gradients}\\
   \end{tabular}
   \vfill
 \end{frame}
@@ -113,96 +127,129 @@
 % ════════════════════════════════════════════════════════════════════
 \section{bài toán}
 
-\begin{frame}{bài toán}
-  rag trả lời đúng, nhưng không nói được \emph{vì sao}. hai câu hỏi khác nhau:
+\begin{frame}[fragile]{rag là gì, và nó thiếu gì}
+  \lead{hỏi một model ngôn ngữ về sự kiện có thật thì nó hay \emph{bịa}.
+        cách chữa phổ biến tên là \hl{rag}: trước khi trả lời, đi tìm vài
+        đoạn văn bản liên quan rồi đưa kèm câu hỏi cho model đọc.}
 
-  \vspace{0.6em}
+  \begin{dia}
+câu hỏi  ->  [ĐI TÌM]  ->  40 đoạn văn bản  ->  [MODEL ĐỌC]  ->  câu trả lời
+                                ^
+                                |
+                       trong 40 đoạn này, đoạn nào THẬT SỰ tạo ra
+                       câu trả lời?  hiện không ai biết.
+  \end{dia}
+
+  \vspace{0.4em}
+  \begin{columns}[t]
+  \begin{column}{0.49\textwidth}
+    \begin{badb}[title={vì sao «không ai biết» là vấn đề}]
+      câu trả lời không kèm nguồn là câu trả lời \no{không dùng được} trong y tế,
+      pháp lý, tài chính — người đọc không kiểm lại được.
+    \end{badb}
+  \end{column}
+  \begin{column}{0.49\textwidth}
+    \begin{bx}[title={và nó cũng chặn việc cải thiện hệ thống}]
+      không biết đoạn nào đúng thì \no{không dạy} được bộ đi tìm lần sau
+      tìm tốt hơn — không có nhãn để học.
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{ví dụ chạy suốt buổi}
+  \framesubtitle{mọi bước sau đều quay lại ví dụ này}
+\begin{dia}
+câu hỏi   ai đạo diễn bộ phim thắng giải oscar phim hay nhất năm 1994?
+đáp án    Robert Zemeckis
+
+hệ thống lấy về 40 đoạn.  ba đoạn đáng chú ý:
+
+  đoạn  3   "Forrest Gump thắng oscar phim hay nhất năm 1994."
+  đoạn 12   "Robert Zemeckis đạo diễn Forrest Gump."
+  đoạn 19   "Forrest Gump là hiện tượng văn hóa của thập niên 1990."
+
+  ... và 37 đoạn khác, phần lớn không liên quan
+\end{dia}
+
+  \vspace{0.3em}
+  \begin{columns}[t]
+  \begin{column}{0.47\textwidth}
+    \begin{keyb}[title={đáp số mà tầng a phải tự tìm ra}]
+      \hl{đúng hai đoạn: 3 và 12.}
+      \vspace{0.25em}
+
+      đoạn 3 cho biết \emph{phim nào}, đoạn 12 cho biết \emph{ai đạo diễn}.
+      \no{không đoạn nào một mình} trả lời được — phải \hl{bắc cầu} qua hai đoạn.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.47\textwidth}
+    \begin{badb}[title={đoạn 19 là cái bẫy của cả bài}]
+      đoạn 19 \no{không} nói ai đạo diễn, cũng \no{không} nói phim thắng giải.
+      \vspace{0.25em}
+
+      nhưng nó \emph{nhắc tên phim} — và chỉ cần thế là model nhớ ra đáp án từ
+      kiến thức sẵn có rồi trả lời đúng. ta sẽ phải loại nó.
+    \end{badb}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{hai câu hỏi, hai công cụ}
+  \lead{«đoạn nào» và «vì sao tìm ra» là hai bài toán khác hẳn nhau, nên dự án
+        tách làm hai tầng.}
+
   \begin{columns}[t]
   \begin{column}{0.48\textwidth}
-    \begin{bx}[title={đoạn nào gánh câu trả lời}]
-      trong $n$ đoạn đã lấy về, tập nào \emph{thật sự} đủ để trả lời,
+    \begin{bx}[title={tầng a — đoạn nào gánh câu trả lời}]
+      trong 40 đoạn đã lấy về, tập nào \emph{thật sự} đủ để trả lời,
       và không đoạn nào thừa?
       \vspace{0.3em}
-      \dd{prompt phình theo số đoạn $\Rightarrow$ ablation}
+
+      \dd{ở ví dụ trên, đáp số là $\{3, 12\}$}
     \end{bx}
   \end{column}
   \begin{column}{0.48\textwidth}
-    \begin{bx}[title={vì sao truy hồi tìm ra chúng}]
-      trên đồ thị tri thức, \emph{đường} nào dẫn từ thực thể trong câu hỏi
-      tới đoạn đó?
+    \begin{bx}[title={tầng b — vì sao bộ đi tìm tìm ra chúng}]
+      hệ thống đi tìm bằng cách lần theo một \emph{đồ thị tri thức}.
+      \emph{đường} nào đã dẫn nó tới đoạn 3 và đoạn 12?
       \vspace{0.3em}
-      \dd{đồ thị cố định, hàng nghìn cạnh $\Rightarrow$ ig}
+
+      \dd{ví dụ: câu hỏi $\to$ «Forrest Gump» $\to$ «Zemeckis» $\to$ đoạn 12}
     \end{bx}
   \end{column}
   \end{columns}
 
-  \vspace{0.8em}
+  \vspace{0.7em}
   \begin{keyb}
-    hai câu hỏi cần hai công cụ khác nhau. ghép chúng bằng \hl{một giao diện duy nhất}:
-    tầng a trả về tập đích $T$, tầng b nhận $T$. \no{không điểm số nào đi qua.}
+    hai tầng nối nhau bằng \hl{một thứ duy nhất}: tầng a trả về tập đoạn $T$,
+    tầng b nhận $T$ rồi đi tìm đường. \no{không điểm số nào đi qua ranh giới} —
+    lý do ở cuối buổi.
   \end{keyb}
 \end{frame}
 
-\begin{frame}{toàn cảnh}
+\begin{frame}[fragile]{một truy vấn chạy hết pipeline}
+  \framesubtitle{xương sống — mỗi slide sau là một bước ở đây}
 \begin{dia}
-truy vấn q
-   |
-   |  3 nguồn -> pool thô K <= 60 -> khử trùng lặp -> rerank THEO TỪNG NGUỒN
-   v
-pool C(q),  n = 40  =  20 bm25  +  15 gfm  +  5 ngẫu nhiên
-   |
-   |  >>> TẦNG A   tìm tập đủ tối tiểu            (năm bước a1..a5)
-   |      v(S)    model đọc S rồi trả lời — khớp đáp án vàng không?      a1
-   |      adq(S)  các đoạn trong S có THẬT SỰ nói ra đáp án không?       a2
-   |      tau_q   ngưỡng riêng từng truy vấn, chốt từ trần quan sát      a3
-   |      g_theta ước lượng v(S) để khỏi gọi llm cho mọi tập con         a4
-   |      tìm     đi lên từ nghiệm phủ, rồi chứng minh tối tiểu          a5
-   v
-T = S*  =  {đoạn 3, đoạn 12}          <- THỨ DUY NHẤT đi qua ranh giới
-   |
-   |  >>> TẦNG B   tìm đường trên đồ thị          (ba bước b1..b3)
-   |      b1 ĐO    ig trên gate của từng (cạnh, tầng)
-   |      b2 NỐI   trải phẳng theo tầng, quy hoạch động max-sum
-   |      b3 THỬ   suff / nec bằng model thật
-   v
-Pi_D  =  {đường 1, đường 2}  +  suff(Pi_D)  +  credit từng đoạn
+        3 nguồn tìm kiếm  ->  pool C(q) = 40 đoạn ứng viên
+           |
+TẦNG A  c0   chẻ câu hỏi thành các MẢNH nhỏ, rồi lập BẢNG PHỦ          1 lượt
+           |      mảnh nào không đoạn nào nói ra  ->  BỎ truy vấn       (~45%)
+        c1   đo v(rỗng)   model trả lời mà không được đọc gì            1 lượt
+        c3   đo v(R)      cho đọc 12 đoạn tốt nhất                      1 lượt
+        c4   đo v(C)      cho đọc cả 40 đoạn                            1 lượt
+           |      ->  từ ba số này chốt NGƯỠNG tau_q của riêng câu hỏi q
+        c2   g_theta — mô hình rẻ, đoán điểm thay cho llm               0 lượt
+        c5   tìm ứng viên: tập phủ đủ mảnh, rồi +1 đoạn, +2 đoạn, ...   0 lượt
+        c6   đo điểm THẬT bằng llm trên ứng viên và các tập con của nó ~6 lượt
+        c7   đủ & nhỏ nhất -> XUẤT  |  chưa đủ -> thử tiếp  |  chạy lại đầy đủ
+           v
+        T = {đoạn 3, đoạn 12}              <-  THỨ DUY NHẤT qua ranh giới
+           |
+TẦNG B  b1   chấm điểm từng cạnh đồ thị, ở từng bước truyền tin
+        b2   nối các cạnh điểm cao thành một ĐƯỜNG liền mạch
+        b3   kiểm lại đường đó bằng model thật
+           v
+        đường đi  +  độ tin cậy  +  credit chia cho từng đoạn
 \end{dia}
-\end{frame}
-
-% ════════════════════════════════════════════════════════════════════
-\section{tầng a}
-
-\begin{frame}{phương pháp tầng a — năm bước}
-  \vspace{0.2em}
-  \begin{center}
-  \footnotesize
-  \begin{tabular}[t]{@{}l>{\raggedright\arraybackslash}p{0.235\linewidth}
-                        >{\raggedright\arraybackslash}p{0.205\linewidth}
-                        >{\raggedright\arraybackslash}p{0.175\linewidth}
-                        >{\raggedright\arraybackslash}p{0.175\linewidth}@{}}
-    \toprule
-    & \textbf{làm gì} & \textbf{bằng công cụ gì} & \textbf{giá mỗi truy vấn}
-    & \textbf{cho ra}\\
-    \midrule
-    \hl{a1} & đo \emph{trả lời đúng} & llm sinh $+$ llm judge
-      & 2 lượt mỗi \emph{tập con} & $v(S) \in [0,1]$\\[0.45em]
-    \hl{a2} & đo \emph{có bằng chứng} & chẻ câu hỏi $+$ model nli nhỏ
-      & 1 lượt, rồi 0 & bảng phủ, $\mathrm{adq}(S)$\\[0.45em]
-    \hl{a3} & chốt ngưỡng riêng cho truy vấn & $v(\emptyset)$, $v(R)$, $v(C)$
-      & 3 lượt & $\tau_q$, $v_{\mathrm{ref}}$\\[0.45em]
-    \hl{a4} & thay $v$ bằng ước lượng rẻ & surrogate $g_\theta$
-      & \yes{0 lượt} & $\hat v(S)$\\[0.45em]
-    \hl{a5} & tìm, rồi \emph{chứng minh} tối tiểu & tầng phủ $+$ beam $+$ quét dàn
-      & ${\sim}6$ lượt & $T = S^{*}$\\
-    \bottomrule
-  \end{tabular}
-  \end{center}
-
-  \vspace{0.5em}
-  \begin{keyb}
-    hai chỗ quyết định toàn bộ chi phí. \hl{a2} chạy \emph{trước} \hl{a1} dù nó kiểm
-    điều kiện thứ hai — vì nó miễn phí và loại ${\sim}45\%$ truy vấn ngay.
-    \hl{a4} tồn tại chỉ để $2^{40}$ tập con không phải đi qua llm.
-    \dd{\;· mọi slide sau đây mang nhãn bước ở góc phải tiêu đề}
-  \end{keyb}
 \end{frame}

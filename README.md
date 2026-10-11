@@ -29,7 +29,7 @@ build/tools/tectonic.exe ke-hoach.tex
 
 ## Slide
 
-`slides.tex` → `slides.pdf`, **33 slide beamer**, 16:9. Nguồn chia thành `build/sl_1..5.tex`
+`slides.tex` → `slides.pdf`, **36 slide beamer**, 16:9. Nguồn chia thành `build/sl_1..6.tex`
 theo phần; ghép, biên dịch, rồi kiểm — đúng thứ tự này:
 
 ```bash
@@ -94,7 +94,7 @@ Cả bốn phải sạch trước khi commit.
 ## Trạng thái
 
 ```
-thiết kế     xong, 53 + 18 + 13 trang  ·  slide 33 beamer
+thiết kế     xong, 53 + 18 + 13 trang  ·  slide 36 beamer
 GĐ 0 code    xong, test logic pass, chưa chạy trên hiện vật thật
 GĐ 0.5       chưa chạy — $18, chạy cả bốn cổng trên test index
 ngân sách    $1.120 ước tính (sinh chạy local qwen3-8b), trong đó $889 là
