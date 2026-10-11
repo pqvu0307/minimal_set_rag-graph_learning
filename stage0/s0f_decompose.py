@@ -56,7 +56,10 @@ def from_annotation(row: Dict[str, Any]) -> Optional[List[str]]:
 class LLMDecomposer:
     def __init__(self, cfg: Dict[str, Any]):
         self.cfg = cfg
-        self.model = cfg["decompose"]["model"]
+        # mac dinh theo judge (DeepSeek) — che cau hoi la 1 luot MOI TRUY VAN,
+        # nen re, khong can chay local
+        self.model = (cfg["decompose"].get("model")
+                      or cfg["judge"]["judge_model"])
         self.cli = None
         self.error: Optional[str] = None
         if cfg["decompose"]["provider"] == "dummy" or self.model == "PHAI_DIEN":

@@ -72,7 +72,9 @@ class OpenAICompatBackend:
             raise RuntimeError("thieu bien moi truong %s"
                                % cfg["judge"]["api_key_env"])
         self.cli = OpenAI(api_key=key, base_url=cfg["judge"]["base_url"])
-        self.gen_model = cfg["judge"]["gen_model"]
+        # backend nay gio CHI lam judge khi provider = split_local_gen;
+        # giu gen_model cho che do openai_compat (sinh qua API) neu can
+        self.gen_model = cfg["judge"].get("gen_model") or cfg.get("gen", {}).get("model")
         self.judge_model = cfg["judge"]["judge_model"]
 
     def generate(self, prompt: str, max_tokens: int, temperature: float):
@@ -99,13 +101,121 @@ class OpenAICompatBackend:
         return {t.token: t.logprob for t in lp.content[0].top_logprobs}
 
 
+class LocalHFBackend:
+    """Sinh cau tra loi bang model chay TRONG MAY (Colab GPU).
+
+    vLLM neu co (nhanh hon nhieu, co prefix caching); khong thi transformers.
+    Chi lam viec `generate` — judge van qua API, vi can logprobs on dinh.
+
+    Doi voi mo hinh chi phi: sinh o day KHONG ton tien, ton GIO GPU.
+    Nen rang buoc chuyen tu TIEN sang THONG LUONG + gioi han session Colab,
+    va DiskCache tro thanh bat buoc de chay lai duoc nhieu phien.
+    """
+    name = "local_hf"
+
+    def __init__(self, cfg: Dict[str, Any]):
+        g = cfg["gen"]
+        self.model_id = g["model"]
+        self.impl = None
+        self.error: Optional[str] = None
+        self.max_tokens = g["max_tokens"]
+        self.temperature = g["temperature"]
+        try:
+            from vllm import LLM, SamplingParams        # type: ignore
+            self._LLM = LLM(model=self.model_id,
+                            dtype=g.get("dtype", "auto"),
+                            gpu_memory_utilization=g.get("gpu_mem_util", 0.90),
+                            max_model_len=g.get("max_model_len", 8192),
+                            enable_prefix_caching=True)
+            self._SP = SamplingParams
+            self.impl = "vllm"
+            return
+        except Exception as e:
+            self.error = "vllm: %s" % repr(e)[:120]
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            self.tok = AutoTokenizer.from_pretrained(self.model_id)
+            self.mdl = AutoModelForCausalLM.from_pretrained(
+                self.model_id, torch_dtype="auto", device_map="auto")
+            self.mdl.eval()
+            self.torch = torch
+            self.impl = "transformers"
+        except Exception as e:
+            self.error = (self.error or "") + " | transformers: %s" % repr(e)[:120]
+
+    def generate(self, prompt: str, max_tokens: int, temperature: float):
+        if self.impl == "vllm":
+            sp = self._SP(temperature=temperature, max_tokens=max_tokens)
+            out = self._LLM.generate([prompt], sp, use_tqdm=False)
+            txt = out[0].outputs[0].text.strip()
+            return txt, {"prompt_tokens": len(out[0].prompt_token_ids),
+                         "output_tokens": len(out[0].outputs[0].token_ids),
+                         "cached_prompt_tokens": 0, "local": True}
+        if self.impl == "transformers":
+            enc = self.tok(prompt, return_tensors="pt").to(self.mdl.device)
+            with self.torch.no_grad():
+                out = self.mdl.generate(
+                    **enc, max_new_tokens=max_tokens,
+                    do_sample=temperature > 0, temperature=max(temperature, 1e-5),
+                    pad_token_id=self.tok.eos_token_id)
+            new = out[0][enc["input_ids"].shape[1]:]
+            return self.tok.decode(new, skip_special_tokens=True).strip(), {
+                "prompt_tokens": int(enc["input_ids"].shape[1]),
+                "output_tokens": int(new.shape[0]),
+                "cached_prompt_tokens": 0, "local": True}
+        raise RuntimeError("khong nap duoc model sinh local: %s" % self.error)
+
+    def first_token_logprobs(self, prompt: str) -> Dict[str, float]:
+        raise RuntimeError("LocalHFBackend chi sinh; judge phai qua API")
+
+
+class SplitBackend:
+    """Sinh = backend A (local)  ·  judge = backend B (API).
+
+    Hai nua cua v(S) chay o hai cho khac nhau, va do la co y:
+    sinh can thong luong (GPU), judge can LOGPROBS ON DINH (API).
+    """
+    name = "split"
+
+    def __init__(self, gen, judge):
+        self.gen, self.judge = gen, judge
+
+    def generate(self, prompt: str, max_tokens: int, temperature: float):
+        return self.gen.generate(prompt, max_tokens, temperature)
+
+    def first_token_logprobs(self, prompt: str) -> Dict[str, float]:
+        return self.judge.first_token_logprobs(prompt)
+
+
 def make_backend(cfg: Dict[str, Any]):
     p = cfg["judge"]["provider"]
     if p == "dummy":
         return DummyBackend()
     if p == "openai_compat":
         return OpenAICompatBackend(cfg)
+    if p == "split_local_gen":
+        return SplitBackend(LocalHFBackend(cfg), OpenAICompatBackend(cfg))
     raise ValueError("provider la khong biet: %s" % p)
+
+
+def check_logprobs_sane(lp: Dict[str, float]) -> Optional[str]:
+    """DeepSeek V3.2 co bao cao tra logprobs toan 0 / -9999.
+
+    Loi nay IM LANG: tham so duoc nhan, response co truong logprobs, nhung so
+    vo nghia -> v(S) thanh nhi phan -> "toi tieu" mat nghia (dung thu §3.1
+    canh bao o vu thang 1-5).  Phai kiem GIA TRI, khong chi kiem ton tai.
+    """
+    if not lp:
+        return "logprobs rong"
+    vals = list(lp.values())
+    if all(v == 0 for v in vals):
+        return "moi logprob = 0 -> vo nghia"
+    if any(v <= -9000 for v in vals) and len({round(v) for v in vals}) <= 2:
+        return "logprobs chi co 0 va -9999 -> suy bien (loi da bao o DeepSeek V3.2)"
+    if len({round(v, 3) for v in vals}) <= 1:
+        return "moi logprob bang nhau -> vo nghia"
+    return None
 
 
 # ── v(S) ────────────────────────────────────────────────────────────
@@ -128,6 +238,14 @@ class Judge:
         self.tc = TokenCounter()
         self.tel = telemetry or Telemetry()
         self.overhead = self.jc["prompt_overhead_tokens"]
+
+    def _model_tag(self) -> str:
+        """Dinh danh CA hai model trong khoa cache.
+
+        Doi model sinh HOAC model judge la doi ket qua, nen cache phai tach.
+        """
+        gen = self.cfg.get("gen", {}).get("model") or self.jc.get("gen_model") or "?"
+        return "%s|%s" % (gen, self.jc["judge_model"])
 
     # thu tu CHUAN de tien to chung dung duoc o prompt caching
     @staticmethod
@@ -154,7 +272,7 @@ class Judge:
         chunk_texts = [texts[d] for d in ids]
         al = _aliases_line(aliases, self.jc.get("use_answer_aliases", True))
         # aliases vao KHOA cache: doi aliases la doi phep cham
-        key = cache_key(self.jc["gen_model"] + "|" + self.jc["judge_model"],
+        key = cache_key(self._model_tag(),
                         GEN_TMPL + JUDGE_TMPL + q + y + al, chunk_texts)
 
         est = cost_tokens(self.tc.count_many(chunk_texts), self.overhead)
@@ -171,6 +289,12 @@ class Judge:
 
         lp = self.backend.first_token_logprobs(
             JUDGE_TMPL.format(q=q, y=y, aliases=al, a=ans or "(empty)"))
+        bad = check_logprobs_sane(lp)
+        if bad:
+            raise RuntimeError(
+                "logprobs khong dung duoc: %s\n"
+                "  Dung deepseek-chat, KHONG dung deepseek-reasoner — thinking mode\n"
+                "  nhan tham so logprobs nhung KHONG co tac dung (loi im lang)." % bad)
         py = self.p_yes(lp)
 
         real = (u1.get("prompt_tokens", 0) + u1.get("output_tokens", 0))
@@ -190,9 +314,22 @@ def run(cfg: Dict[str, Any], texts: Optional[Dict[str, str]] = None,
         ) -> Dict[str, Any]:
     banner("0.E  Khung judge  —  va do prompt caching co an khong")
 
-    rep: Dict[str, Any] = {"provider": cfg["judge"]["provider"]}
+    rep: Dict[str, Any] = {
+        "provider": cfg["judge"]["provider"],
+        "gen_model": cfg.get("gen", {}).get("model"),
+        "judge_model": cfg["judge"]["judge_model"],
+    }
+    if cfg["judge"]["provider"] == "split_local_gen":
+        print("  sinh  = %s   (LOCAL, GPU — khong ton tien, ton GIO)"
+              % cfg["gen"]["model"])
+        print("  judge = %s   (API — can logprobs that)"
+              % cfg["judge"]["judge_model"])
+        if "reasoner" in str(cfg["judge"]["judge_model"]).lower():
+            verdict(ASK, "judge_model co chu 'reasoner' -> thinking mode KHONG\n"
+                         "           ho tro logprobs, va no KHONG BAO LOI.\n"
+                         "           Doi sang deepseek-chat.")
 
-    if cfg["judge"]["gen_model"] == "PHAI_DIEN":
+    if cfg["judge"]["judge_model"] == "PHAI_DIEN":
         verdict(ASK, "config.judge.gen_model / judge_model con la PHAI_DIEN.\n"
                      "           Day la quyet dinh #2 cua ke-hoach, va no quyet\n"
                      "           cost(S) cung toan bo bang chi phi.  Dien roi chay lai.")
@@ -269,7 +406,8 @@ def run(cfg: Dict[str, Any], texts: Optional[Dict[str, str]] = None,
     _al = _aliases_line(aliases, cfg["judge"].get("use_answer_aliases", True))
     cached_tok = sum(
         (j.cache.get(cache_key(
-            cfg["judge"]["gen_model"] + "|" + cfg["judge"]["judge_model"],
+            "%s|%s" % (cfg.get("gen", {}).get("model") or "?",
+                       cfg["judge"]["judge_model"]),
             GEN_TMPL + JUDGE_TMPL + q + y + _al,
             [texts[d] for d in sorted(S)])) or {}).get("cached_prompt_tokens", 0)
         for S in probes)
@@ -283,7 +421,12 @@ def run(cfg: Dict[str, Any], texts: Optional[Dict[str, str]] = None,
         rep["real_over_est"] = round(ratio, 3)
         print("\n     tong est = %d   tong real = %d   real/est = %.2f"
               % (est, real, ratio))
-        if cached_tok == 0:
+        if cfg["judge"]["provider"] == "split_local_gen":
+            verdict(OK,
+                    "sinh chay LOCAL  ->  prompt caching cua API khong ap dung.\n"
+                    "           Phan tiet kiem tien to chung gio do vLLM prefix\n"
+                    "           caching lo, va no la THONG LUONG chu khong phai tien.")
+        elif cached_tok == 0:
             verdict(ASK,
                     "cached_prompt_tokens = 0  ->  prompt caching CHUA an.\n"
                     "           cost(S) = overhead + tong len(k) van dung cho ke hoach,\n"

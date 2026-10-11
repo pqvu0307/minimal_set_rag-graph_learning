@@ -61,15 +61,38 @@ pool:
     model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
     batch_size: 64
 
+# ── Model sinh: chay LOCAL tren GPU Colab ──────────────────────────
+# Doi mo hinh chi phi: sinh KHONG ton tien, ton GIO GPU.
+# Rang buoc chuyen tu TIEN sang THONG LUONG + gioi han session Colab,
+# nen DiskCache (cache/judge) la BAT BUOC de chay lai duoc nhieu phien.
+gen:
+  # CHU Y: "Qwen 3.5-9B" KHONG ton tai.  Qwen3 (4/2025) dense co:
+  #   0.6B · 1.7B · 4B · 8B · 14B · 32B      — khong co 9B, khong co dong 3.5
+  # Gan nhat voi "9B" la Qwen3-8B.
+  model: "Qwen/Qwen3-8B"
+  max_tokens: 80
+  temperature: 0.0
+  dtype: "auto"
+  gpu_mem_util: 0.90
+  max_model_len: 8192
+  # vLLM neu co (nhanh + prefix caching), khong thi transformers
+  prefer_vllm: true
+
 # ── 0.E  judge ─────────────────────────────────────────────────────
 judge:
-  provider: "openai_compat"          # openai_compat | dummy
-  base_url: "https://api.openai.com/v1"
-  gen_model:   "PHAI_DIEN"           # CON TREO — quyet dinh #2
-  judge_model: "PHAI_DIEN"           # can logprobs + top_logprobs
-  api_key_env: "OPENAI_API_KEY"
+  # split_local_gen = sinh LOCAL (khoi gen tren) + judge qua API
+  provider: "split_local_gen"        # split_local_gen | openai_compat | dummy
+  base_url: "https://api.deepseek.com/v1"
+  # PHAI la deepseek-chat.  deepseek-reasoner (thinking mode) NHAN tham so
+  # logprobs nhung KHONG CO TAC DUNG — loi IM LANG, khong bao gi.
+  judge_model: "deepseek-chat"
+  api_key_env: "DEEPSEEK_API_KEY"    # CHO BAN cung cap
   gen_max_tokens: 80
   temperature: 0.0
+  # DeepSeek V3.2 co bao cao tra logprobs toan 0 / -9999.
+  # 0.E kiem GIA TRI logprobs, khong chi kiem ton tai.
+  price_in_per_m: 0.27               # PHAI XAC THUC gia hien hanh
+  price_out_per_m: 1.10
   # cost(S) = overhead + tong do dai THAT cua cac chunk (khong phai 250*|S|,
   # vi document ~100 va summary ~600 la hai lop do dai)
   prompt_overhead_tokens: 500
@@ -83,7 +106,9 @@ judge:
 decompose:
   use_annotated_when_available: true   # MuSiQue co phan ra gan san -> 0 luot LLM
   provider: "openai_compat"
-  model: "PHAI_DIEN"
+  # de trong -> lay theo judge.judge_model (deepseek-chat).
+  # Che cau hoi la 1 luot MOI TRUY VAN nen re, khong can chay local.
+  model: null
   max_claims: 4
 
 # ── 0.G  NLI / bang phu ────────────────────────────────────────────
