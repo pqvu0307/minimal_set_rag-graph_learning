@@ -29,21 +29,39 @@ build/tools/tectonic.exe ke-hoach.tex
 
 ## Slide
 
-`slides.tex` → `slides.pdf`, **31 slide beamer**, 16:9. Nguồn chia thành `build/sl_1..5.tex`
-theo phần; ghép và biên dịch:
+`slides.tex` → `slides.pdf`, **33 slide beamer**, 16:9. Nguồn chia thành `build/sl_1..5.tex`
+theo phần; ghép, biên dịch, rồi kiểm — đúng thứ tự này:
 
 ```bash
-python build/mk_slides.py        # ghép, tự thêm [fragile] cho frame có verbatim
+python build/mk_slides.py           # ghép, tự thêm [fragile] cho frame có verbatim
 build/tools/tectonic.exe slides.tex
-python build/mk_slides.py        # chạy lại để kiểm tràn trên PDF
+python build/checklayout.py         # ĐO bố cục trên PDF vừa sinh
 ```
 
-`mk_slides.py` làm hai việc mà bỏ qua là dính lỗi im lặng:
+Thứ tự quan trọng: `checklayout` phải chạy **sau** tectonic, không thì nó đo bản
+biên dịch cũ.
+
+Deck mang nhãn bước ở góc phải tiêu đề (`a1`…`a5`, `b1`…`b3`) qua `\framesubtitle`.
+Template `frametitle` là tự viết, nên **phải** tự gọi `\insertframesubtitle` —
+thiếu nó thì mọi nhãn âm thầm biến mất.
+
+### Năm lỗi im lặng mà bộ kiểm tồn tại để bắt
+
+Cả năm đều **biên dịch sạch**, không một dòng lỗi:
 
 ```
-[fragile]     beamer KHÔNG xử lý được verbatim trong frame thường
-kiểm tràn     beamer KHÔNG báo lỗi khi nội dung chạy quá lề — chỉ ghi
-              "Overfull vbox" vào log.  Phải ĐO trên PDF.
+1  verbatim        beamer không xử lý verbatim trong frame thường
+                   -> mk_slides.py tự thêm [fragile]
+2  tràn lề         beamer chỉ ghi "Overfull vbox" vào log, không báo lỗi
+                   -> checklayout đo trên PDF, cả tràn trang LẪN đè lên footer
+3  lệch ô bảng     \color ở ĐẦU ô p{} sinh whatsit trước hộp đầu tiên
+                   -> \vtop cao 0 -> cả ô tụt xuống ~6,6pt
+                   -> chữa ở gốc: \leavevmode trong \hl \no \yes \dd
+4  tabular trong   tabular mặc định căn GIỮA, nên cột chứa nó bị kéo lên
+   column          -> \begin{tabular}[t]
+5  chữ bị nuốt     \dd{tiếng Việt} bên trong align*/$...$ chạy ở font toán;
+                   cmmi10 không có glyph có dấu -> "trùng lặp" in ra "trnglp"
+                   -> không bao giờ đặt văn bản tiếng Việt trong math mode
 ```
 
 `quy-gan-rag-hai-tang.pptx` (33 slide) là **bản cũ**, đã được `slides.tex` thay thế. Giữ lại
@@ -68,19 +86,20 @@ Trên Colab: mở `stage0/Stage0.ipynb`.
 python build/audit.py       # tham chiếu §x.y · ký hiệu chưa khai báo · md↔tex lệch
 python build/checkdau.py    # chữ tiếng Việt thiếu dấu, trong 4 .tex và .pptx
 python build/test_dau.py    # kiểm rằng ngoại lệ của checkdau không che mất lỗi thật
-python build/mk_slides.py   # kiểm tràn slide trên PDF
+python build/checklayout.py # cỡ chữ · tràn · lệch ô · lệch cột (chạy sau tectonic)
 ```
 
-Cả ba phải sạch trước khi commit.
+Cả bốn phải sạch trước khi commit.
 
 ## Trạng thái
 
 ```
-thiết kế     xong, 53 + 18 + 13 trang  ·  slide 31 beamer
+thiết kế     xong, 53 + 18 + 13 trang  ·  slide 33 beamer
 GĐ 0 code    xong, test logic pass, chưa chạy trên hiện vật thật
-GĐ 0.5       chưa chạy — $945, chạy cả bốn cổng trên test index
-ngân sách    $23.300 ước tính, trong đó $9.820 là indexing và nó là
-             QUYẾT ĐỊNH SAU CỔNG, không phải chi phí đầu vào
+GĐ 0.5       chưa chạy — $18, chạy cả bốn cổng trên test index
+ngân sách    $1.120 ước tính (sinh chạy local qwen3-8b), trong đó $889 là
+             indexing và nó là QUYẾT ĐỊNH SAU CỔNG, không phải chi phí đầu vào
+ràng buộc    ~53 giờ GPU, không phải tiền
 ```
 
 Bảy quyết định còn treo — xem *"Phải chốt trước khi giai đoạn 0 chạy"* trong `ke-hoach.md`.

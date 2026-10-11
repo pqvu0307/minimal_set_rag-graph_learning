@@ -1,88 +1,54 @@
 % ════════════════════════════════════════════════════════════════════
-\section{nền}
+%  tầng a — phần 1:  nền trò chơi · định nghĩa · v · adq · ngưỡng
+% ════════════════════════════════════════════════════════════════════
 
-\begin{frame}{lý thuyết trò chơi hợp tác — bảy khái niệm, một ví dụ}
+\begin{frame}{nền trò chơi hợp tác — bốn khái niệm, một ví dụ}
+  \framesubtitle{a · nền}
   ba đoạn $a, b, c$. $v(S)$ là điểm khi cho model đọc đúng tập $S$.
 
   \vspace{0.4em}
   \begin{columns}[t]
-  \begin{column}{0.52\textwidth}
-    \begin{dia}
-v(rỗng)      0,05      ngưỡng tau_q = 0,84
+  \begin{column}{0.455\textwidth}
+    \begin{bx}[title={ví dụ chạy suốt phần này}]
+      \begin{dia}
+v(rỗng)      0,05   ngưỡng tau_q = 0,84
 v({a})       0,12
 v({b})       0,18
-v({c})       0,71      <- cao mà KHÔNG chứa dữ kiện
-v({a,b})     0,94      <- bắc cầu
+v({c})       0,71   <- cao mà KHÔNG có dữ kiện
+v({a,b})     0,94   <- bắc cầu
 v({a,c})     0,74
 v({b,c})     0,76
 v({a,b,c})   0,95
-    \end{dia}
-  \end{column}
-  \begin{column}{0.44\textwidth}
-    \footnotesize
-    \begin{tabular}{@{}p{0.34\linewidth}p{0.6\linewidth}@{}}
-      \hl{trò chơi} & $(N, v)$, $N$ là pool, $v$ là hàm giá trị\\
-      \hl{đơn điệu} & $S \subseteq S' \Rightarrow v(S) \le v(S')$. \no{ta KHÔNG có}\\
-      \hl{thắng} & $v(S) \ge \tau_q$\\
-      \hl{mwc} & thắng, và không tập con thật sự nào thắng\\
-      \hl{pivotal} & thêm $i$ biến thiếu thành đủ\\
-      \hl{banzhaf} & đếm số lần pivotal\\
-      \hl{pgi} & tỉ lệ mwc có chứa $i$\\
-    \end{tabular}
-  \end{column}
-  \end{columns}
-
-  \vspace{0.5em}
-  \begin{keyb}
-    $v$ \no{không đơn điệu}: thêm đoạn gây nhiễu làm $v$ \emph{giảm}.
-    định nghĩa mwc không cần đơn điệu, và bao đơn điệu
-    $\bar v(S) = \max_{S'\subseteq S} v(S')$ cho $\mathrm{mwc}(\bar v) = W$ —
-    đơn điệu hóa \no{không đổi gì ngoài chi phí.}
-  \end{keyb}
-\end{frame}
-
-\begin{frame}{integrated gradients — và vì sao tầng b cần nó}
-  gradient tại một điểm chỉ nói độ dốc \emph{ở đó}. ig tích phân dọc đường từ mốc tới điểm thật:
-
-  \[
-    \mathrm{ig}_i \;=\; (x_i - x_i^{0}) \times
-    \frac{1}{M}\sum_{m=1}^{M}
-    \frac{\partial F\!\left(x^{0} + \alpha_m (x - x^{0})\right)}{\partial x_i},
-    \qquad \alpha_m = \tfrac{m}{M}
-  \]
-
-  \vspace{0.3em}
-  \begin{columns}[t]
-  \begin{column}{0.48\textwidth}
-    \begin{bx}[title={tính chất ta dùng}]
-      \textbf{completeness}\;
-      $\sum_i \mathrm{ig}_i = F(x) - F(x^0)$
-      \vspace{0.3em}
-
-      tổng đóng góp \emph{bằng đúng} phần mà đầu vào tạo ra. nên credit chia được, và
-      kiểm được bằng một đẳng thức.
-    \end{bx}
-  \end{column}
-  \begin{column}{0.48\textwidth}
-    \begin{bx}[title={vì sao ig cho cạnh, ablation cho đoạn}]
-      \[ \text{ig rẻ hơn ablation} \iff N > 3M \]
-      \vspace{-0.6em}
-      \begin{dia}
-cạnh đồ thị   hàng nghìn, đồ thị CỐ ĐỊNH   -> ig
-token         hàng trăm, prompt CỐ ĐỊNH    -> ig
-đoạn trong    prompt PHÌNH theo số đoạn    -> ablation
-pool          -> tỉ lệ = 3M, K triệt tiêu,
-                 KHÔNG có điểm hòa vốn
       \end{dia}
+      \vspace{0.2em}
+      tập thắng: $\{a,b\}$, $\{a,b,c\}$. \hl{tối tiểu: chỉ $\{a,b\}$} —
+      $\{a,b,c\}$ thắng nhưng chứa một tập thắng nhỏ hơn.
     \end{bx}
+  \end{column}
+  \begin{column}{0.505\textwidth}
+    \begin{bx}[title={bốn khái niệm dùng ngay ở slide sau}]
+      \footnotesize
+      \begin{tabular}[t]{@{}l@{\hspace{1.1em}}>{\raggedright\arraybackslash}p{0.73\linewidth}@{}}
+        \hl{trò chơi} & $(N, v)$ — $N$ là pool, $v$ là hàm giá trị\\[0.45em]
+        \hl{đơn điệu} & $S \subseteq S' \Rightarrow v(S) \le v(S')$.
+                        \no{ta KHÔNG có tính chất này}\\[0.45em]
+        \hl{thắng}    & $v(S) \ge \tau_q$\\[0.45em]
+        \hl{mwc}      & thắng, và không tập con thật sự nào thắng\\
+      \end{tabular}
+    \end{bx}
+    \begin{badb}[title={$v$ không đơn điệu, và ta không sửa}]
+      ví dụ trên tình cờ đơn điệu; thực tế \no{không} — ta gặp đúng ca đó ở slide
+      \hl{tối tiểu} ($v(\{a\}) = 0{,}85$ mà $v(\{a,b\}) = 0{,}60$).
+      định nghĩa mwc \yes{không cần đơn điệu}, và bao đơn điệu
+      $\bar v(S) = \max_{S'\subseteq S} v(S')$ cho $\mathrm{mwc}(\bar v) = W$ —
+      \no{không đổi gì ngoài chi phí.}
+    \end{badb}
   \end{column}
   \end{columns}
 \end{frame}
-
-% ════════════════════════════════════════════════════════════════════
-\section{tầng a}
 
 \begin{frame}{đối tượng cần tìm}
+  \framesubtitle{a · mục tiêu}
   \[
     \boxed{\;
       S \text{ đủ} \;\iff\; \underbrace{v(S) \ge \tau_q}_{\text{trả lời đúng}}
@@ -94,6 +60,8 @@ pool          -> tỉ lệ = 3M, K triệt tiêu,
     \nexists\, S' \subsetneq S \text{ đủ}
     \qquad\qquad
     W = \{\, S \text{ đủ tối tiểu} \,\}
+    \qquad\qquad
+    T = S^{*} \in W
   \]
 
   \vspace{0.6em}
@@ -104,72 +72,78 @@ pool          -> tỉ lệ = 3M, K triệt tiêu,
       \vspace{0.3em}
 
       nên bản này \no{không cần gom cụm để hạ} $2^K$ — dư thừa tự lộ trong cấu trúc $W$,
-      còn $2^K$ thì surrogate lo.
+      còn $2^K$ thì surrogate \hl{a4} lo.
     \end{bx}
   \end{column}
   \begin{column}{0.48\textwidth}
-    \begin{bx}[title={cái giá so với shapley}]
-      mất \textbf{completeness}: $\sum_c \varphi_c = F(E) - F(E')$ là đẳng thức
-      chính xác, bắt được mọi lỗi cài đặt.
+    \begin{bx}[title={cái giá: bỏ shapley là bỏ completeness}]
+      shapley có $\sum_c \varphi_c = F(E) - F(E')$ — một đẳng thức chính xác, bắt được
+      mọi lỗi cài đặt.
       \vspace{0.3em}
 
       mwc không có đẳng thức đó. đổi lại: được cả \emph{họ} lời giải thích, chỉ số
-      cấu trúc, và độ tin cậy.
+      cấu trúc, và độ tin cậy. \dd{tầng b lấy lại đẳng thức này bằng $c/h$}
     \end{bx}
   \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{«đủ» có hai thành phần, và $v$ chỉ đo một}
+  \framesubtitle{a1 · a2}
   \begin{columns}[t]
-  \begin{column}{0.5\textwidth}
+  \begin{column}{0.425\textwidth}
     \begin{badb}[title={ca mồi tham số}]
       \begin{dia}
-q  ai đạo diễn phim thắng oscar 1994?
+q  ai đạo diễn phim thắng
+   oscar 1994?
 y  Robert Zemeckis
 
-đoạn 19  "Forrest Gump là hiện tượng
-          văn hóa thập niên 1990"
-         -> KHÔNG nói đạo diễn
-         -> KHÔNG nói thắng giải
+đoạn 19  "Forrest Gump là hiện
+          tượng văn hóa thập
+          niên 1990"
+   -> KHÔNG nói đạo diễn
+   -> KHÔNG nói thắng giải
 
-model thấy tên phim -> TỰ NHỚ
-                    -> trả lời ĐÚNG
-v({19}) = 0,71  cao
+model thấy tên phim
+   -> TỰ NHỚ -> trả lời ĐÚNG
+v({19}) = 0,71   cao
       \end{dia}
       \vspace{0.2em}
       định nghĩa chỉ-dùng-$v$ \no{nhận đoạn 19 vào $T$}, rồi dạy retriever đi lấy nó.
     \end{badb}
   \end{column}
-  \begin{column}{0.46\textwidth}
+  \begin{column}{0.535\textwidth}
     \begin{bx}[title={và lệch này đã được đo}]
       \footnotesize
-      \begin{tabular}{@{}p{0.52\linewidth}r@{}}
-        model trả lời \emph{đúng} khi ngữ cảnh \emph{không đủ} & 35--62\,\%\\[0.3em]
-        tỉ lệ trả lời sai: không ngữ cảnh & 10,2\,\%\\
-        \qquad ngữ cảnh không đủ & 66,1\,\%\\[0.3em]
-        ca \emph{có} ngữ cảnh đủ sau truy hồi &\\
+      \begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{0.76\linewidth}r@{}}
+        \multicolumn{2}{@{}l@{}}{\hl{model trả lời đúng khi ngữ cảnh không đủ}}\\[0.15em]
+        \quad trên các bộ đo trong bài & 35--62\,\%\\[0.6em]
+        \multicolumn{2}{@{}l@{}}{\hl{trong các ca model trả lời sai}}\\[0.15em]
+        \quad do \emph{không có} ngữ cảnh & 10,2\,\%\\
+        \quad do ngữ cảnh \emph{có mà không đủ} & 66,1\,\%\\[0.6em]
+        \multicolumn{2}{@{}l@{}}{\hl{sau truy hồi, tỉ lệ ca thật sự đủ ngữ cảnh}}\\[0.15em]
         \quad musique-ans & 46,2\,\%\\
         \quad hotpotqa & 44,6\,\%\\
       \end{tabular}
       \vspace{0.4em}
 
       \dd{joren et al., iclr 2025 — arXiv:2411.06037}
-      \vspace{0.3em}
-
-      hơn \emph{nửa} truy vấn trên đúng hai bộ ta nhắm \no{không có tập đủ trong pool.}
     \end{bx}
+    \begin{keyb}
+      hai bộ ta nhắm: hơn \emph{nửa} truy vấn \no{không có tập đủ trong pool.}
+      nên điều kiện thứ hai không phải cầu toàn — nó là ca \emph{đa số}.
+    \end{keyb}
   \end{column}
   \end{columns}
-
 \end{frame}
 
 \begin{frame}{hai điều kiện, bốn ô — mỗi ô một nguyên nhân khác}
+  \framesubtitle{a1 · a2}
   \vspace{0.5em}
   \begin{center}
-  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}
-                     >{\raggedright\arraybackslash}p{0.37\linewidth}
-                     >{\raggedright\arraybackslash}p{0.37\linewidth}@{}}
+  \begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}
+                        >{\raggedright\arraybackslash}p{0.37\linewidth}
+                        >{\raggedright\arraybackslash}p{0.37\linewidth}@{}}
     \toprule
     & \textbf{adq phủ hết} & \textbf{adq không phủ}\\
     \midrule
@@ -194,6 +168,7 @@ v({19}) = 0,71  cao
 \end{frame}
 
 \begin{frame}{$v(S)$ — hai lượt llm, một con số}
+  \framesubtitle{a1}
   \begin{columns}[t]
   \begin{column}{0.52\textwidth}
     \begin{bx}[title={bước 1 · sinh từ đúng $S$}]
@@ -213,7 +188,7 @@ Answer:
       \begin{dia}
 Question: <q>
 Gold answer: Robert Zemeckis
-Also acceptable: Zemeckis · Robert Lee ...
+Also acceptable: Zemeckis · Robert Lee
 Candidate answer: <â_S>
 Correct? One word: Yes or No.
 Answer:
@@ -253,6 +228,7 @@ Answer:
 \end{frame}
 
 \begin{frame}{$\mathrm{adq}$ — chẻ câu hỏi, rồi đối chiếu}
+  \framesubtitle{a2}
   \begin{columns}[t]
   \begin{column}{0.46\textwidth}
     \begin{bx}[title={bước 1 · chẻ thành mảnh}]
@@ -260,16 +236,20 @@ Answer:
       \hl{hỏi ai:} musique gán sẵn phân rã 1-hop $+$ đáp án trung gian.
       corpus riêng thì llm, \textbf{1 lượt mỗi truy vấn} — không phải mỗi tập con.
       \begin{dia}
-mảnh 1  phim thắng oscar 1994 là Forrest Gump
-mảnh 2  Forrest Gump do Zemeckis đạo diễn
+mảnh 1  phim thắng oscar 1994 là
+        Forrest Gump
+mảnh 2  Forrest Gump do Zemeckis
+        đạo diễn
       \end{dia}
     \end{bx}
     \begin{bx}[title={bước 2 · đối chiếu}]
       \footnotesize
       \hl{hỏi ai:} model nli nhỏ (${\sim}400$M), chạy local, \textbf{0 lượt api}.
-      \[ e(k,j) = \mathrm{nli}(\underbrace{\text{đoạn } k}_{\text{premise}},
-                               \underbrace{\text{mảnh } j}_{\text{hypothesis}}) \]
-      \dd{$40 \times J$ lượt forward model nhỏ}
+      \[ e(k,j) = \mathrm{nli}\bigl(\text{đoạn } k,\; \text{mảnh } j\bigr) \]
+      \vspace{-0.5em}
+
+      \dd{đoạn $k$ vào chỗ \emph{premise}, mảnh $j$ vào chỗ \emph{hypothesis} ·
+          $40 \times J$ lượt forward model nhỏ}
     \end{bx}
   \end{column}
   \begin{column}{0.5\textwidth}
@@ -293,7 +273,7 @@ mảnh 2  Forrest Gump do Zemeckis đạo diễn
       \footnotesize
       bảng phủ cho \textbf{ba} thứ, cả ba miễn phí:
       \begin{dia}
-1 CỬA THOÁT  mảnh nào trống -> bỏ truy vấn ngay
+1 CỬA THOÁT  mảnh nào trống -> bỏ ngay
 2 ỨNG VIÊN   phủ tập nhỏ, giải CHÍNH XÁC
              {3,12} {3,23} {7,12} ...
 3 PRIOR |T|  |T| nên bằng J
@@ -304,6 +284,7 @@ mảnh 2  Forrest Gump do Zemeckis đạo diễn
 \end{frame}
 
 \begin{frame}{vì sao phải chẻ ra — hai lý do độc lập}
+  \framesubtitle{a2}
   \begin{columns}[t]
   \begin{column}{0.48\textwidth}
     \begin{bx}[title={độ dài}]
@@ -334,6 +315,7 @@ mảnh 2  Forrest Gump do Zemeckis đạo diễn
 \end{frame}
 
 \begin{frame}{ngưỡng và trần}
+  \framesubtitle{a3}
   \vspace{-0.2em}
   \begin{align*}
     \tau_q &= \theta \,\bigl[\, v_{\mathrm{ref}}(q) - v(\emptyset) \,\bigr] + v(\emptyset),
@@ -358,9 +340,9 @@ v(R)  = 0,88   12 đoạn, ít nhiễu hơn
     \begin{bx}[title={hai mốc đặc biệt}]
       \begin{dia}
 v(rỗng)  không cho đoạn nào
-         -> chỉ tri thức tham số của model
-v(R)     12 đoạn: top-2 mỗi cụm, VÀ tôn
-         trọng hạn ngạch nguồn 20/15/5
+         -> chỉ tri thức tham số
+v(R)     12 đoạn: top-2 mỗi cụm, VÀ
+         tôn trọng hạn ngạch 20/15/5
       \end{dia}
       \vspace{0.2em}
       \dd{\textbf{chốt chặn mẫu số nhỏ:}\;
@@ -372,6 +354,7 @@ v(R)     12 đoạn: top-2 mỗi cụm, VÀ tôn
 \end{frame}
 
 \begin{frame}{cập nhật $v_{\mathrm{ref}}$ tự nhất quán — và $\theta < 1$ gánh tất}
+  \framesubtitle{a3}
   quan sát mới có thể \emph{cao hơn} trần đang dùng. lúc đó $v_{\mathrm{ref}}$ tăng,
   nên $\tau_q$ cũng tăng — liệu tập vừa nâng trần có bị chính ngưỡng mới loại?
 

@@ -1,6 +1,7 @@
 % =====================================================================
 %  quy gán nguồn cho rag hai tầng — slide
 %  biên dịch:  build/tools/tectonic.exe slides.tex
+%  ghép:       python build/mk_slides.py
 % =====================================================================
 \documentclass[aspectratio=169,10pt]{beamer}
 
@@ -11,7 +12,8 @@
   BoldFont       = *-bold,
   ItalicFont     = *-italic,
   BoldItalicFont = *-bolditalic ]
-\setmonofont{lmmono10-regular}[Extension=.otf, Scale=0.82]
+% Scale=1.0: o 0.82 khoi dia chi con 5,7pt — khong doc noi khi chieu len man.
+\setmonofont{lmmono10-regular}[Extension=.otf, Scale=1.0]
 
 \usepackage{tcolorbox}
 \usepackage{fancyvrb}
@@ -26,6 +28,7 @@
 \definecolor{mute}{HTML}{6B7280}
 \definecolor{warn}{HTML}{9A3412}
 \definecolor{good}{HTML}{14532D}
+\definecolor{badge}{HTML}{A8C4EE}
 
 % ── theme tối giản ─────────────────────────────────────────────────
 \usetheme{default}
@@ -35,13 +38,17 @@
 \setbeamercolor{structure}{fg=navy}
 \setbeamercolor{frametitle}{fg=white, bg=navy}
 \setbeamerfont{frametitle}{size=\large, series=\bfseries}
-\setbeamerfont{framesubtitle}{size=\small, series=\mdseries}
-\setbeamercolor{framesubtitle}{fg=mute}
 
+% Phu de khung = NHAN BUOC (a1..a5, b1..b3).  Template mac dinh cua beamer
+% bi ta thay bang cai duoi, nen phai tu goi \insertframesubtitle — thieu no
+% thi moi \framesubtitle am tham bien mat.
 \setbeamertemplate{frametitle}{%
   \nointerlineskip
-  \begin{beamercolorbox}[wd=\paperwidth, ht=2.4ex, dp=1.2ex, leftskip=0.9em]{frametitle}
+  \begin{beamercolorbox}[wd=\paperwidth, ht=2.4ex, dp=1.2ex,
+                         leftskip=0.9em, rightskip=0.9em]{frametitle}
     \usebeamerfont{frametitle}\insertframetitle
+    \hfill
+    {\normalfont\footnotesize\color{badge}\insertframesubtitle}
   \end{beamercolorbox}}
 
 \setbeamertemplate{footline}{%
@@ -57,8 +64,11 @@
 
 % ── hộp ─────────────────────────────────────────────────────────────
 \tcbset{
+  % before/after skip: mac dinh la \medskipamount (~5pt) moi dau — tren slide
+  % xep ba hop chong nhau thi rieng khoang trang da an 20pt chieu cao.
   bx/.style={colback=tint, colframe=navy!22, boxrule=0.4pt, arc=2pt,
              left=4.5pt, right=4.5pt, top=2pt, bottom=2pt,
+             before skip=3pt, after skip=3pt,
              fonttitle=\bfseries\small, coltitle=navy},
   key/.style={bx, colback=navy!6, colframe=navy!45},
   bad/.style={bx, colback=warn!6, colframe=warn!35, coltitle=warn},
@@ -68,11 +78,16 @@
 \newtcolorbox{badb}[1][]{bad,#1}
 
 \DefineVerbatimEnvironment{dia}{Verbatim}%
-  {fontsize=\scriptsize, baselinestretch=0.92}
-\newcommand{\dd}[1]{{\color{mute}\scriptsize #1}}
-\newcommand{\hl}[1]{{\color{navy}\bfseries #1}}
-\newcommand{\no}[1]{{\color{warn}\bfseries #1}}
-\newcommand{\yes}[1]{{\color{good}\bfseries #1}}
+  {fontsize=\scriptsize, baselinestretch=0.95}
+
+% \leavevmode mo hop ngang TRUOC khi doi mau.  Thieu no, \color sinh mot
+% whatsit o DAU danh sach doc cua o p{} — \vtop khi do cao 0 — nen ca o tut
+% xuong dung mot chieu cao dong (~6,6pt) so voi o ben canh.  Day la nguyen
+% nhan "lech chu" o moi bang ma cot dau bat dau bang \hl / \no / \yes / \dd.
+\newcommand{\dd}[1]{\leavevmode{\color{mute}\scriptsize #1}}
+\newcommand{\hl}[1]{\leavevmode{\color{navy}\bfseries #1}}
+\newcommand{\no}[1]{\leavevmode{\color{warn}\bfseries #1}}
+\newcommand{\yes}[1]{\leavevmode{\color{good}\bfseries #1}}
 
 \title{\bfseries quy gán nguồn cho rag hai tầng}
 \subtitle{tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}
@@ -86,7 +101,7 @@
   \vfill
   {\color{navy}\Large\bfseries quy gán nguồn cho rag hai tầng}\\[0.9em]
   {\large tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}\\[2.2em]
-  \begin{tabular}{@{}ll@{}}
+  \begin{tabular}[t]{@{}ll@{}}
     \color{mute}tầng a & tìm \hl{tập đủ tối tiểu} trong pool ứng viên\\
                        & \dd{mwc · deegan–packel · banzhaf có dấu}\\[0.5em]
     \color{mute}tầng b & tìm \hl{đường} trên đồ thị tri thức\\
@@ -136,17 +151,58 @@ truy vấn q
    v
 pool C(q),  n = 40  =  20 bm25  +  15 gfm  +  5 ngẫu nhiên
    |
-   |  >>> TẦNG A   tìm tập đủ tối tiểu
-   |      v(S)    model đọc S rồi trả lời — khớp đáp án vàng không?
-   |      adq(S)  các đoạn trong S có THẬT SỰ nói ra đáp án không?
-   |              (adq dùng bảng phủ, 0 lượt LLM)
+   |  >>> TẦNG A   tìm tập đủ tối tiểu            (năm bước a1..a5)
+   |      v(S)    model đọc S rồi trả lời — khớp đáp án vàng không?      a1
+   |      adq(S)  các đoạn trong S có THẬT SỰ nói ra đáp án không?       a2
+   |      tau_q   ngưỡng riêng từng truy vấn, chốt từ trần quan sát      a3
+   |      g_theta ước lượng v(S) để khỏi gọi llm cho mọi tập con         a4
+   |      tìm     đi lên từ nghiệm phủ, rồi chứng minh tối tiểu          a5
    v
 T = S*  =  {đoạn 3, đoạn 12}          <- THỨ DUY NHẤT đi qua ranh giới
    |
-   |  >>> TẦNG B   tìm đường trên đồ thị
-   |      gate trên cạnh · ig trên gate · quy hoạch động · trích đường
+   |  >>> TẦNG B   tìm đường trên đồ thị          (ba bước b1..b3)
+   |      b1 ĐO    ig trên gate của từng (cạnh, tầng)
+   |      b2 NỐI   trải phẳng theo tầng, quy hoạch động max-sum
+   |      b3 THỬ   suff / nec bằng model thật
    v
 Pi_D  =  {đường 1, đường 2}  +  suff(Pi_D)  +  credit từng đoạn
 \end{dia}
 \end{frame}
 
+% ════════════════════════════════════════════════════════════════════
+\section{tầng a}
+
+\begin{frame}{phương pháp tầng a — năm bước}
+  \vspace{0.2em}
+  \begin{center}
+  \footnotesize
+  \begin{tabular}[t]{@{}l>{\raggedright\arraybackslash}p{0.235\linewidth}
+                        >{\raggedright\arraybackslash}p{0.205\linewidth}
+                        >{\raggedright\arraybackslash}p{0.175\linewidth}
+                        >{\raggedright\arraybackslash}p{0.175\linewidth}@{}}
+    \toprule
+    & \textbf{làm gì} & \textbf{bằng công cụ gì} & \textbf{giá mỗi truy vấn}
+    & \textbf{cho ra}\\
+    \midrule
+    \hl{a1} & đo \emph{trả lời đúng} & llm sinh $+$ llm judge
+      & 2 lượt mỗi \emph{tập con} & $v(S) \in [0,1]$\\[0.45em]
+    \hl{a2} & đo \emph{có bằng chứng} & chẻ câu hỏi $+$ model nli nhỏ
+      & 1 lượt, rồi 0 & bảng phủ, $\mathrm{adq}(S)$\\[0.45em]
+    \hl{a3} & chốt ngưỡng riêng cho truy vấn & $v(\emptyset)$, $v(R)$, $v(C)$
+      & 3 lượt & $\tau_q$, $v_{\mathrm{ref}}$\\[0.45em]
+    \hl{a4} & thay $v$ bằng ước lượng rẻ & surrogate $g_\theta$
+      & \yes{0 lượt} & $\hat v(S)$\\[0.45em]
+    \hl{a5} & tìm, rồi \emph{chứng minh} tối tiểu & tầng phủ $+$ beam $+$ quét dàn
+      & ${\sim}6$ lượt & $T = S^{*}$\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \begin{keyb}
+    hai chỗ quyết định toàn bộ chi phí. \hl{a2} chạy \emph{trước} \hl{a1} dù nó kiểm
+    điều kiện thứ hai — vì nó miễn phí và loại ${\sim}45\%$ truy vấn ngay.
+    \hl{a4} tồn tại chỉ để $2^{40}$ tập con không phải đi qua llm.
+    \dd{\;· mọi slide sau đây mang nhãn bước ở góc phải tiêu đề}
+  \end{keyb}
+\end{frame}

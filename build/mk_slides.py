@@ -107,4 +107,11 @@ def check_overflow(pdf: str = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(1 if check_overflow() else 0)
+    # check_overflow() o day doc PDF cua LAN BIEN DICH TRUOC, nen no bao ve
+    # mot ban khac voi slides.tex vua ghi — lech pha, rat de hieu nham.
+    # Kiem that nam o build/checklayout.py, chay SAU tectonic:
+    #     python build/mk_slides.py
+    #     build/tools/tectonic.exe slides.tex
+    #     python build/checklayout.py
+    print("  -> bien dich roi chay: python build/checklayout.py")
+    sys.exit(0)

@@ -1,4 +1,10 @@
+% ════════════════════════════════════════════════════════════════════
+%  tầng a — phần 2:  surrogate · tìm · tối tiểu · chỉ số
+%  rồi mở sang tầng b
+% ════════════════════════════════════════════════════════════════════
+
 \begin{frame}[fragile]{surrogate $g_\theta$ — một hàm, hai pha}
+  \framesubtitle{a4}
   \[
     g_\theta\Bigl(q,\; S,\; \{\hat s(q,k)\}_{k \in S},\; \{\tilde v_k\}_{k \in S},\; v(\emptyset)\Bigr)
     \;\longrightarrow\; \hat v(S)
@@ -25,14 +31,14 @@
   \begin{column}{0.49\textwidth}
     \begin{bx}[title={dữ liệu — là log của chính các lượt gọi $v$}]
       \begin{dia}
-nguồn                    truy vấn  nhãn    tổng
-pha 1, bốn vòng            10.000  x111  1.110.000
-verification pha 2        188.000  x 10  1.880.000
-tỉa, |S*| = 6..10           8.000  x 13    104.000
-cứu -> pipeline đầy đủ      7.400  x111    821.000
-trượt bị bỏ                14.000  x  5     70.000
-                                        ---------
-                                          3.983.000
+nguồn                 truy vấn  nhãn      tổng
+pha 1, bốn vòng         10.000  x111  1.110.000
+verification pha 2     188.000  x 10  1.880.000
+tỉa, |S*| = 6..10        8.000  x 13    104.000
+cứu -> pipeline đầy đủ   7.400  x111    821.000
+trượt bị bỏ             14.000  x  5     70.000
+                                     ---------
+                                     3.983.000
       \end{dia}
       \vspace{0.2em}
       $|S|$ chạy từ 0 tới 40 — \hl{không cỡ nào đặc biệt}, nên \emph{một} mô hình,
@@ -43,11 +49,12 @@ trượt bị bỏ                14.000  x  5     70.000
 \end{frame}
 
 \begin{frame}[fragile]{che $\tilde v_k$ theo từng chunk, và nghiệm thu}
+  \framesubtitle{a4}
   \begin{columns}[t]
   \begin{column}{0.49\textwidth}
     \begin{bx}[title={ba khuôn, vì thực tế có ba chế độ}]
       \begin{dia}
-pha 1 + cứu        cả 40 chunk có ṽ_k
+pha 1 + cứu        cả 40 chunk có v~_k
 verification pha 2 CHỈ |T| chunk có
 tìm theo tầng (c5) không chunk nào có
       \end{dia}
@@ -79,6 +86,7 @@ tìm theo tầng (c5) không chunk nào có
 \end{frame}
 
 \begin{frame}[fragile]{tìm theo tầng, đi lên từ nghiệm phủ}
+  \framesubtitle{a5}
   \begin{columns}[t]
   \begin{column}{0.45\textwidth}
     \begin{keyb}[title={vì sao chỉ tìm trong vùng này}]
@@ -100,7 +108,7 @@ tập KHÔNG phủ hết mảnh
   \begin{column}{0.51\textwidth}
     \begin{bx}[title={các tầng}]
       \begin{dia}
-tầng 0  nghiệm phủ tối tiểu          |T| = J
+tầng 0  nghiệm phủ tối tiểu       |T| = J
         giải CHÍNH XÁC từ bảng phủ
 tầng 1  nghiệm phủ + 1 đoạn
 tầng 2  nghiệm phủ + 2 đoạn
@@ -121,20 +129,21 @@ mỗi tầng: chấm bằng g_theta, lấy top-beam,
 \end{frame}
 
 \begin{frame}[fragile]{tối tiểu — vì sao phải quét hết, và vì sao không tốn}
+  \framesubtitle{a5}
   \begin{columns}[t]
   \begin{column}{0.47\textwidth}
     \begin{badb}[title={bỏ-một-phần-tử là SAI, vì $v$ không đơn điệu}]
       \begin{dia}
 tau_q = 0,76
-v({a})     = 0,85  >= tau_q   <- {a} MỘT MÌNH đã đủ
-v({a,b})   = 0,60  <  tau_q      b làm model lạc
+v({a})     = 0,85  >= tau_q  <- {a} ĐÃ ĐỦ
+v({a,b})   = 0,60  <  tau_q     b làm lạc
 v({a,c})   = 0,71  <  tau_q
 v({b,c})   = 0,40  <  tau_q
 v({a,b,c}) = 0,80  >= tau_q
 
 bỏ-một-phần-tử:  ba cặp đều trượt
-                 -> tuyên "tối tiểu"   SAI
-sự thật:         {a} thắng -> thừa b và c
+                 -> tuyên "tối tiểu"  SAI
+sự thật:         {a} thắng -> thừa b, c
       \end{dia}
     \end{badb}
   \end{column}
@@ -154,7 +163,8 @@ trong đó CÒN phủ hết:   1 tập -- {3,12}
     \end{keyb}
     \begin{bx}[title={khi không có bảng phủ: $2^{|S^*|} - 2$ lượt}]
       \footnotesize
-      \begin{tabular}{@{}lrrrrr@{}}
+      \setlength{\tabcolsep}{3pt}
+      \begin{tabular}[t]{@{}lrrrrr@{}}
         \toprule
         $|S^*|$ & 3 & 5 & 6 & 8 & 10\\
         \midrule
@@ -167,55 +177,100 @@ trong đó CÒN phủ hết:   1 tập -- {3,12}
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{chỉ số cấu trúc, và đầu ra}
+\begin{frame}[fragile]{ba chỉ số trò chơi — tính thẳng trên ví dụ $a, b, c$}
+  \framesubtitle{a5 · nền}
+  \[
+    \beta_i^{+} = \bigl|\{\, S \subseteq N \setminus \{i\} :
+      v(S) < \tau_q \;\wedge\; v(S \cup \{i\}) \ge \tau_q \,\}\bigr|
+    \qquad
+    \beta_i = \frac{\beta_i^{+} - \beta_i^{-}}{2^{\,n-1}}
+    \qquad
+    \mathrm{pgi}_i = \bigl|\{\, S \in W : i \in S \,\}\bigr|
+  \]
+  \dd{$\beta_i^{+}$: thêm $i$ biến thiếu $\to$ đủ \;·\; $\beta_i^{-}$: biến đủ $\to$ thiếu,
+      $=0$ nếu đơn điệu \;·\; pgi chỉ đếm trên các mwc}
+
+  \vspace{0.2em}
   \begin{columns}[t]
-  \begin{column}{0.47\textwidth}
-    \begin{align*}
-      \beta_i &= \frac{\beta_i^{+} - \beta_i^{-}}{2^{\,n-1}}
-        & \dd{banzhaf có dấu}\\[0.3em]
-      \mathrm{pgi}_i &= \bigl|\{\, S \in W : i \in S \,\}\bigr|
-        & \dd{public good index}\\[0.3em]
-      \mathrm{ov}(S) &= \sum_{S' \ne S} \frac{|S \cap S'|}{|S \cup S'|}
-        & \dd{trùng lặp giữa các mwc}
-    \end{align*}
-    \dd{$\beta_i^{+}$: số lần thêm $i$ biến thiếu $\to$ đủ ·
-        $\beta_i^{-}$: biến đủ $\to$ thiếu, $= 0$ nếu đơn điệu}
-
-    \vspace{0.4em}
-    \begin{bx}[title={$\beta_i < 0$ chỉ thẳng ra đoạn gây hại}]
-      đúng vai mà $\varphi_c < 0$ đóng trong bản shapley. tính \no{không đơn điệu}
-      ở đây là \yes{thông tin}, không phải khuyết tật.
-      \vspace{0.25em}
-
-      \hl{chuẩn hóa $\beta$ và pgi riêng rồi mới gộp} — $\beta \in [-1,1]$ còn pgi là
-      số đếm tới hàng chục; cộng thẳng thì pgi nuốt $\beta$ một đến hai bậc.
+  \begin{column}{0.53\textwidth}
+    \begin{bx}[title={đếm tay, $\tau_q = 0{,}84$, $n = 3$}]
+      \begin{dia}
+i = a  {b}   0,18 -> {a,b} 0,94  pivotal
+       {b,c} 0,76 -> 0,95        pivotal
+       hai ca kia: không           B+ = 2
+i = b  {a}   0,12 -> {a,b} 0,94  pivotal
+       {a,c} 0,74 -> 0,95        pivotal
+       hai ca kia: không           B+ = 2
+i = c  {a,b} đã thắng -> KHÔNG tính
+       ba ca kia: vẫn thua         B+ = 0
+      \end{dia}
     \end{bx}
   \end{column}
-  \begin{column}{0.49\textwidth}
-    \begin{bx}[title={chọn $S^*$}]
+  \begin{column}{0.43\textwidth}
+    \begin{keyb}[title={kết quả}]
+      \footnotesize
+      \begin{tabular}[t]{@{}lrrr@{}}
+        \toprule
+        & $a$ & $b$ & $c$\\
+        \midrule
+        $v(\{i\})$     & 0,12 & 0,18 & \no{0,71}\\
+        $\beta_i$      & 0,50 & 0,50 & \no{0}\\
+        $\mathrm{pgi}_i$ & 1 & 1 & \no{0}\\
+        \bottomrule
+      \end{tabular}
+    \end{keyb}
+    \begin{badb}[title={đây chính là điều cần thấy}]
+      $c$ có \emph{điểm đơn lẻ cao nhất} ($0{,}71$) mà \no{cả hai chỉ số đều cho 0} —
+      vì $c$ \yes{không bao giờ} là thứ biến một tập thiếu thành đủ.
+    \end{badb}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{chỉ số cấu trúc, và đầu ra}
+  \framesubtitle{a5}
+  \begin{columns}[t]
+  \begin{column}{0.47\textwidth}
+    % KHONG dat \dd (hay bat ky van ban tieng Viet nao) ben trong align*/$...$:
+    % no chay o font TOAN, va cmmi10 khong co glyph co dau — chu bi NUOT im
+    % lang, bien dich van sach.  "trung lap giua cac mwc" in ra "trnglpgiaccmwc".
+    \[ \mathrm{ov}(S) = \sum_{S' \ne S} \frac{|S \cap S'|}{|S \cup S'|} \]
+    \vspace{-1.1em}
+
+    \dd{độ trùng lặp giữa các mwc — cao nghĩa là nhiều lời giải thích gần như nhau}
+    \vspace{0.05em}
+    \begin{bx}[title={$\beta_i < 0$ chỉ thẳng ra đoạn gây hại}]
+      đúng vai mà $\varphi_c < 0$ đóng ở bản shapley: \no{không đơn điệu} ở đây là
+      \yes{thông tin}, không phải khuyết tật.
+      \vspace{0.2em}
+
+      \hl{chuẩn hóa $\beta$ và pgi riêng rồi mới gộp} — $\beta \in [-1,1]$ còn pgi
+      đếm tới hàng chục, cộng thẳng thì pgi nuốt $\beta$.
+    \end{bx}
+    \begin{bx}[title={chọn $S^{*}$}]
       \begin{dia}
 parsimony   -|S|
 structure   sigma_g = w_b*beta + w_p*PGI
-rank        tổng r_i      (chỉ phá hòa cuối)
-
-lọc Pareto, rồi gộp có trọng số
+rank        tổng r_i   (chỉ phá hòa cuối)
+-> lọc Pareto, rồi gộp có trọng số
       \end{dia}
     \end{bx}
+  \end{column}
+  \begin{column}{0.49\textwidth}
     \begin{keyb}[title={đầu ra}]
       \begin{dia}
-T = S*              <- THỨ DUY NHẤT qua ranh giới
-+ phiên bản g_theta    lô nào gán
-+ đường đi             qua · tỉa · thử lại #k · cứu
-+ trọng số importance  N_s / n_s
-+ v(T) - tau_q         khoảng vượt ngưỡng
-+ cov(T), J            phủ mấy trên mấy mảnh
+T = S*             <- THỨ DUY NHẤT qua ranh giới
++ phiên bản g_theta   lô nào gán
++ đường đi            qua · tỉa · thử lại · cứu
++ trọng số            N_s / n_s
++ v(T) - tau_q        khoảng vượt ngưỡng
++ cov(T), J           phủ mấy trên mấy mảnh
 
-W, p(S), entropy(p)   báo cáo, độ tin cậy
-beta_i < 0            ứng viên V_neg (tầng b)
+W, p(S), entropy(p)  báo cáo, độ tin cậy
+beta_i < 0           ứng viên V_neg (tầng b)
       \end{dia}
       \vspace{0.2em}
-      \dd{entropy thấp = một người thắng rõ · cao = nhiều mwc suýt soát,
-          quy gán đang không chắc}
+      \dd{entropy thấp = một người thắng rõ · cao = nhiều mwc suýt soát}
     \end{keyb}
   \end{column}
   \end{columns}
@@ -225,6 +280,7 @@ beta_i < 0            ứng viên V_neg (tầng b)
 \section{tầng b}
 
 \begin{frame}[fragile]{bài toán tầng b — thứ cần đọc ra là một CHUỖI}
+  \framesubtitle{b · mục tiêu}
   \begin{columns}[t]
   \begin{column}{0.46\textwidth}
     $T$ từ tầng a, và đồ thị. gfm truyền tin $L$ bước từ node khởi tới $T$.
@@ -242,17 +298,17 @@ q -> Forrest Gump -> Zemeckis -> D
     \end{badb}
   \end{column}
   \begin{column}{0.50\textwidth}
-    \begin{keyb}[title={ba bước}]
+    \begin{keyb}[title={ba bước — xương sống của cả phần này}]
       \begin{dia}
-1  ĐO     ig trên gate của từng (cạnh, tầng)
-          -> cạnh nào gánh, ở bước nào
+b1 ĐO   ig trên gate của từng (cạnh, tầng)
+        -> cạnh nào gánh, ở bước nào
 
-2  NỐI    trải phẳng đồ thị theo tầng rồi
-          quy hoạch động max-sum
-          -> dãy cạnh nối tiếp, không phải đống
+b2 NỐI  trải phẳng đồ thị theo tầng rồi
+        quy hoạch động max-sum
+        -> dãy cạnh nối tiếp, không phải đống
 
-3  THỬ    suff / nec bằng model THẬT
-          -> đường tìm được có thật đủ không
+b3 THỬ  suff / nec bằng model THẬT
+        -> đường tìm được có thật đủ không
       \end{dia}
     \end{keyb}
     \begin{bx}[title={điểm mục tiêu}]
@@ -264,7 +320,51 @@ q -> Forrest Gump -> Zemeckis -> D
   \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{integrated gradients — công cụ của bước $\mathtt{b1}$}
+  \framesubtitle{b1 · nền}
+  gradient tại một điểm chỉ nói độ dốc \emph{ở đó}. ig tích phân dọc đường từ mốc tới điểm thật:
+
+  \[
+    \mathrm{ig}_i \;=\; (x_i - x_i^{0}) \times
+    \frac{1}{M}\sum_{m=1}^{M}
+    \frac{\partial F\!\left(x^{0} + \alpha_m (x - x^{0})\right)}{\partial x_i},
+    \qquad \alpha_m = \tfrac{m}{M}
+  \]
+
+  \vspace{0.3em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={tính chất ta dùng}]
+      \textbf{completeness}\;
+      $\sum_i \mathrm{ig}_i = F(x) - F(x^0)$
+      \vspace{0.3em}
+
+      tổng đóng góp \emph{bằng đúng} phần mà đầu vào tạo ra. nên credit chia được, và
+      kiểm được bằng một đẳng thức.
+      \vspace{0.3em}
+
+      \dd{đây là đẳng thức mà tầng a đã mất khi bỏ shapley — tầng b lấy lại được}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={vì sao ig cho cạnh, ablation cho đoạn}]
+      \[ \text{ig rẻ hơn ablation} \iff N > 3M \]
+      \vspace{-0.6em}
+      \begin{dia}
+cạnh đồ thị  hàng nghìn, đồ thị CỐ ĐỊNH -> ig
+token        hàng trăm, prompt CỐ ĐỊNH  -> ig
+đoạn / pool  prompt PHÌNH theo số đoạn
+             -> tỉ lệ = 3M, K triệt tiêu
+             -> KHÔNG có điểm hòa vốn
+             -> ablation
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}[fragile]{gate trên cạnh — và phải riêng từng tầng}
+  \framesubtitle{b1}
   \[
     \text{truyền tin bước } l:\qquad
     h_v^{(l)} \;=\; \mathrm{agg}\Bigl(
@@ -283,8 +383,8 @@ q -> Forrest Gump -> Zemeckis -> D
       \vspace{0.3em}
 
       \begin{dia}
-gate chung       g_e            |E| biến
-gate theo tầng   g_e^(l)        |E| x L biến
+gate chung       g_e        |E| biến
+gate theo tầng   g_e^(l)    |E| x L biến
       \end{dia}
       \vspace{0.2em}
       chỉ gate theo tầng mới đọc ra được \emph{thứ tự} các bước — tức mới ra được
@@ -314,6 +414,7 @@ g* = ĝ    khi BÁO CÁO
 \end{frame}
 
 \begin{frame}[fragile]{tính chất chia đều — kiểm tra nội bộ miễn phí}
+  \framesubtitle{b1}
   một đường $\pi$ dùng $h$ cạnh, và đường đó đóng góp $c$ vào $F_B$. completeness của ig cho:
   \[
     \sum_{e \in \pi} \mathrm{ig}_e \;=\; c
@@ -342,10 +443,10 @@ g* = ĝ    khi BÁO CÁO
 c = 0,81          đóng góp của cả đường
 
 ig cạnh 1 = 0,27
-ig cạnh 2 = 0,27        mỗi cạnh = c/h
-ig cạnh 3 = 0,27             = 0,81/3
+ig cạnh 2 = 0,27      mỗi cạnh = c/h
+ig cạnh 3 = 0,27           = 0,81/3
             -----
-tổng      = 0,81  = c          KHỚP
+tổng      = 0,81  = c        KHỚP
       \end{dia}
       \vspace{0.2em}
       lệch $\Rightarrow$ có lỗi cài đặt, \no{dừng, đừng đi tiếp}.

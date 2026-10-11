@@ -2,6 +2,7 @@
 \section{thi hành}
 
 \begin{frame}[fragile]{hai pha — mô hình ở pha 1, nhãn ở pha 2}
+  \framesubtitle{thi hành}
   chạy pipeline đầy đủ cho $200{,}000$ truy vấn thì không trả nổi. nên tách hai pha
   có \emph{mục đích} khác nhau:
 
@@ -47,6 +48,7 @@ C7  ba nhánh (slide sau)
 \end{frame}
 
 \begin{frame}[fragile]{$\mathtt{c7}$ — ba nhánh}
+  \framesubtitle{thi hành}
   \begin{columns}[t]
   \begin{column}{0.52\textwidth}
     \begin{bx}[title={ba nhánh}]
@@ -66,46 +68,43 @@ C7  ba nhánh (slide sau)
       \end{dia}
     \end{bx}
     \begin{keyb}[title={nhánh 2 rẻ hơn tưởng}]
-      một ca trượt chỉ tốn \hl{1 lượt} ($1{,}250$ token). một lượt cứu tốn
-      $113{,}000$ — \yes{mua được 90 lần thử bằng giá một lần cứu}.
-      \vspace{0.2em}
-
-      $30\%$ qua mỗi lần thử $\Rightarrow$ 3 lần vớt $1 - 0{,}7^3 = 66\%$ số ca:
-      $p$ hiệu dụng $0{,}75 \to 0{,}91$.
+      một ca trượt chỉ tốn \hl{1 lượt} ($1{,}250$ token), một lượt cứu tốn
+      $113{,}000$ — \yes{90 lần thử bằng giá một lần cứu}. với $30\%$ qua mỗi lần,
+      3 lần vớt $1 - 0{,}7^3 = 66\%$ số ca: $p$ hiệu dụng $0{,}75 \to 0{,}91$.
     \end{keyb}
   \end{column}
   \begin{column}{0.44\textwidth}
     \begin{bx}[title={«đủ mà không tối tiểu» KHÔNG vào hàng cứu}]
-      quét hết thì \texttt{c6} đo \emph{trọn} dàn tập con dưới $T$ — nên phần tử tối tiểu
-      đọc ra ngay, 0 lượt thêm:
+      \texttt{c6} đo \emph{trọn} dàn tập con dưới $T$, nên tối tiểu đọc ra ngay,
+      0 lượt thêm:
       \begin{dia}
-v({a,b,c}) = 0,80 >= tau_q   T đủ
-v({a,b})   = 0,78 >= tau_q   con cũng đủ
-                             -> T KHÔNG tối tiểu
+v({a,b,c}) = 0,80 >= tau_q  T đủ
+v({a,b})   = 0,78 >= tau_q  con cũng đủ
+                   -> T KHÔNG tối tiểu
 v({a}) = 0,30  v({b}) = 0,22
-                             -> T = {a,b}
+                   -> T = {a,b}
       \end{dia}
       \vspace{0.2em}
       ca này xảy ra \emph{thường xuyên}, vì lỗi hay gặp nhất của $g_\theta$ là
       đề xuất tập \no{phình}.
     \end{bx}
     \begin{bx}[title={cứu là gì}]
-      chạy \texttt{a1}--\texttt{a4} lên truy vấn đó. đã có $v(\emptyset), v(R), v(C)$
+      chạy \texttt{a1}--\texttt{a4} lên truy vấn đó. $v(\emptyset), v(R), v(C)$ đã có
       trong cache nên còn $113{,}000$ token.
-      \vspace{0.2em}
+      \vspace{0.15em}
 
-      \dd{$\tau_q$ \emph{tăng} khi cứu — cứu quan sát thêm 40 singleton và hàng chục tập
-          con, nên $v_{\mathrm{ref}}$ lên. đúng, không nghịch lý: pha 2 đang đo trần thiếu.}
+      \dd{$\tau_q$ \emph{tăng} khi cứu — pha 2 vốn đang đo trần thiếu.}
     \end{bx}
   \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{năm cổng — và chúng nằm trước 75\% chi phí}
+  \framesubtitle{thi hành}
   \vspace{0.3em}
   \begin{center}
   \footnotesize
-  \begin{tabular}{@{}llrrl@{}}
+  \begin{tabular}[t]{@{}llrrl@{}}
     \toprule
     & \textbf{giai đoạn} & \textbf{chi phí} & \textbf{tích lũy} & \textbf{cổng chặn sau đó}\\
     \midrule
@@ -136,10 +135,11 @@ v({a}) = 0,30  v({b}) = 0,22
 \end{frame}
 
 \begin{frame}[fragile]{những gì chưa chắc — và cổng nào đo nó}
+  \framesubtitle{thi hành}
   \begin{center}
-  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}
-                     >{\raggedright\arraybackslash}p{0.21\linewidth}
-                     >{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+  \begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}
+                        >{\raggedright\arraybackslash}p{0.21\linewidth}
+                        >{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
     \toprule
     \textbf{con số} & \textbf{trạng thái} & \textbf{ai đo}\\
     \midrule
