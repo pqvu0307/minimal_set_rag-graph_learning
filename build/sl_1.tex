@@ -1,0 +1,152 @@
+% =====================================================================
+%  quy gán nguồn cho rag hai tầng — slide
+%  biên dịch:  build/tools/tectonic.exe slides.tex
+% =====================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic ]
+\setmonofont{lmmono10-regular}[Extension=.otf, Scale=0.82]
+
+\usepackage{tcolorbox}
+\usepackage{fancyvrb}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+
+% ── bảng màu ────────────────────────────────────────────────────────
+\definecolor{navy}{HTML}{0E3F92}
+\definecolor{tint}{HTML}{EDF2FB}
+\definecolor{ink}{HTML}{2B2B2B}
+\definecolor{mute}{HTML}{6B7280}
+\definecolor{warn}{HTML}{9A3412}
+\definecolor{good}{HTML}{14532D}
+
+% ── theme tối giản ─────────────────────────────────────────────────
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=ink}
+\setbeamercolor{structure}{fg=navy}
+\setbeamercolor{frametitle}{fg=white, bg=navy}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\small, series=\mdseries}
+\setbeamercolor{framesubtitle}{fg=mute}
+
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth, ht=2.4ex, dp=1.2ex, leftskip=0.9em]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}}
+
+\setbeamertemplate{footline}{%
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth, ht=2.2ex, dp=1ex]{}
+    \hspace{0.9em}\color{mute}\scriptsize\insertsection
+    \hfill\color{mute}\scriptsize\insertframenumber\,/\,\inserttotalframenumber
+    \hspace{0.9em}\end{beamercolorbox}}}
+
+\setbeamertemplate{itemize item}{\color{navy}\small$\bullet$}
+\setbeamertemplate{itemize subitem}{\color{mute}\scriptsize$\circ$}
+\setlength{\leftmargini}{1.1em}
+\setlength{\leftmarginii}{1.1em}
+
+% ── hộp ─────────────────────────────────────────────────────────────
+\tcbset{
+  bx/.style={colback=tint, colframe=navy!22, boxrule=0.4pt, arc=2pt,
+             left=4.5pt, right=4.5pt, top=2pt, bottom=2pt,
+             fonttitle=\bfseries\small, coltitle=navy},
+  key/.style={bx, colback=navy!6, colframe=navy!45},
+  bad/.style={bx, colback=warn!6, colframe=warn!35, coltitle=warn},
+}
+\newtcolorbox{bx}[1][]{bx,#1}
+\newtcolorbox{keyb}[1][]{key,#1}
+\newtcolorbox{badb}[1][]{bad,#1}
+
+\DefineVerbatimEnvironment{dia}{Verbatim}%
+  {fontsize=\scriptsize, baselinestretch=0.92}
+\newcommand{\dd}[1]{{\color{mute}\scriptsize #1}}
+\newcommand{\hl}[1]{{\color{navy}\bfseries #1}}
+\newcommand{\no}[1]{{\color{warn}\bfseries #1}}
+\newcommand{\yes}[1]{{\color{good}\bfseries #1}}
+
+\title{\bfseries quy gán nguồn cho rag hai tầng}
+\subtitle{tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}
+\date{}
+\author{}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════════════
+\begin{frame}[plain]
+  \vfill
+  {\color{navy}\Large\bfseries quy gán nguồn cho rag hai tầng}\\[0.9em]
+  {\large tập đủ tối tiểu \;$+$\; integrated gradients trên đồ thị}\\[2.2em]
+  \begin{tabular}{@{}ll@{}}
+    \color{mute}tầng a & tìm \hl{tập đủ tối tiểu} trong pool ứng viên\\
+                       & \dd{mwc · deegan–packel · banzhaf có dấu}\\[0.5em]
+    \color{mute}tầng b & tìm \hl{đường} trên đồ thị tri thức\\
+                       & \dd{integrated gradients trên gate của cạnh}\\
+  \end{tabular}
+  \vfill
+\end{frame}
+
+% ════════════════════════════════════════════════════════════════════
+\section{bài toán}
+
+\begin{frame}{bài toán}
+  rag trả lời đúng, nhưng không nói được \emph{vì sao}. hai câu hỏi khác nhau:
+
+  \vspace{0.6em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={đoạn nào gánh câu trả lời}]
+      trong $n$ đoạn đã lấy về, tập nào \emph{thật sự} đủ để trả lời,
+      và không đoạn nào thừa?
+      \vspace{0.3em}
+      \dd{prompt phình theo số đoạn $\Rightarrow$ ablation}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={vì sao truy hồi tìm ra chúng}]
+      trên đồ thị tri thức, \emph{đường} nào dẫn từ thực thể trong câu hỏi
+      tới đoạn đó?
+      \vspace{0.3em}
+      \dd{đồ thị cố định, hàng nghìn cạnh $\Rightarrow$ ig}
+    \end{bx}
+  \end{column}
+  \end{columns}
+
+  \vspace{0.8em}
+  \begin{keyb}
+    hai câu hỏi cần hai công cụ khác nhau. ghép chúng bằng \hl{một giao diện duy nhất}:
+    tầng a trả về tập đích $T$, tầng b nhận $T$. \no{không điểm số nào đi qua.}
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{toàn cảnh}
+\begin{dia}
+truy vấn q
+   |
+   |  3 nguồn -> pool thô K <= 60 -> khử trùng lặp -> rerank THEO TỪNG NGUỒN
+   v
+pool C(q),  n = 40  =  20 bm25  +  15 gfm  +  5 ngẫu nhiên
+   |
+   |  >>> TẦNG A   tìm tập đủ tối tiểu
+   |      v(S)    model đọc S rồi trả lời — khớp đáp án vàng không?
+   |      adq(S)  các đoạn trong S có THẬT SỰ nói ra đáp án không?
+   |              (adq dùng bảng phủ, 0 lượt LLM)
+   v
+T = S*  =  {đoạn 3, đoạn 12}          <- THỨ DUY NHẤT đi qua ranh giới
+   |
+   |  >>> TẦNG B   tìm đường trên đồ thị
+   |      gate trên cạnh · ig trên gate · quy hoạch động · trích đường
+   v
+Pi_D  =  {đường 1, đường 2}  +  suff(Pi_D)  +  credit từng đoạn
+\end{dia}
+\end{frame}
+

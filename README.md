@@ -27,8 +27,27 @@ python build/mk_pipeline_tex.py ke-hoach "Kế hoạch thi hành --- tầng A" "
 build/tools/tectonic.exe ke-hoach.tex
 ```
 
-Slide: `quy-gan-rag-hai-tang.pptx` (33 slide). **Sửa tay** — đừng chạy `build/deck.py`, nó là
-bản Shapley 20 slide cũ và sẽ xóa hết.
+## Slide
+
+`slides.tex` → `slides.pdf`, **31 slide beamer**, 16:9. Nguồn chia thành `build/sl_1..5.tex`
+theo phần; ghép và biên dịch:
+
+```bash
+python build/mk_slides.py        # ghép, tự thêm [fragile] cho frame có verbatim
+build/tools/tectonic.exe slides.tex
+python build/mk_slides.py        # chạy lại để kiểm tràn trên PDF
+```
+
+`mk_slides.py` làm hai việc mà bỏ qua là dính lỗi im lặng:
+
+```
+[fragile]     beamer KHÔNG xử lý được verbatim trong frame thường
+kiểm tràn     beamer KHÔNG báo lỗi khi nội dung chạy quá lề — chỉ ghi
+              "Overfull vbox" vào log.  Phải ĐO trên PDF.
+```
+
+`quy-gan-rag-hai-tang.pptx` (33 slide) là **bản cũ**, đã được `slides.tex` thay thế. Giữ lại
+làm lịch sử. Đừng chạy `build/deck.py` — nó là bản Shapley 20 slide còn cũ hơn nữa.
 
 ## Code
 
@@ -47,8 +66,9 @@ Trên Colab: mở `stage0/Stage0.ipynb`.
 
 ```bash
 python build/audit.py       # tham chiếu §x.y · ký hiệu chưa khai báo · md↔tex lệch
-python build/checkdau.py    # chữ tiếng Việt thiếu dấu, trong .tex và .pptx
+python build/checkdau.py    # chữ tiếng Việt thiếu dấu, trong 4 .tex và .pptx
 python build/test_dau.py    # kiểm rằng ngoại lệ của checkdau không che mất lỗi thật
+python build/mk_slides.py   # kiểm tràn slide trên PDF
 ```
 
 Cả ba phải sạch trước khi commit.
@@ -56,7 +76,7 @@ Cả ba phải sạch trước khi commit.
 ## Trạng thái
 
 ```
-thiết kế     xong, 53 + 18 + 13 trang
+thiết kế     xong, 53 + 18 + 13 trang  ·  slide 31 beamer
 GĐ 0 code    xong, test logic pass, chưa chạy trên hiện vật thật
 GĐ 0.5       chưa chạy — $945, chạy cả bốn cổng trên test index
 ngân sách    $23.300 ước tính, trong đó $9.820 là indexing và nó là

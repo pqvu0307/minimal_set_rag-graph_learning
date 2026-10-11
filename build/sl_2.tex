@@ -1,0 +1,406 @@
+% ════════════════════════════════════════════════════════════════════
+\section{nền}
+
+\begin{frame}{lý thuyết trò chơi hợp tác — bảy khái niệm, một ví dụ}
+  ba đoạn $a, b, c$. $v(S)$ là điểm khi cho model đọc đúng tập $S$.
+
+  \vspace{0.4em}
+  \begin{columns}[t]
+  \begin{column}{0.52\textwidth}
+    \begin{dia}
+v(rỗng)      0,05      ngưỡng tau_q = 0,84
+v({a})       0,12
+v({b})       0,18
+v({c})       0,71      <- cao mà KHÔNG chứa dữ kiện
+v({a,b})     0,94      <- bắc cầu
+v({a,c})     0,74
+v({b,c})     0,76
+v({a,b,c})   0,95
+    \end{dia}
+  \end{column}
+  \begin{column}{0.44\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}p{0.34\linewidth}p{0.6\linewidth}@{}}
+      \hl{trò chơi} & $(N, v)$, $N$ là pool, $v$ là hàm giá trị\\
+      \hl{đơn điệu} & $S \subseteq S' \Rightarrow v(S) \le v(S')$. \no{ta KHÔNG có}\\
+      \hl{thắng} & $v(S) \ge \tau_q$\\
+      \hl{mwc} & thắng, và không tập con thật sự nào thắng\\
+      \hl{pivotal} & thêm $i$ biến thiếu thành đủ\\
+      \hl{banzhaf} & đếm số lần pivotal\\
+      \hl{pgi} & tỉ lệ mwc có chứa $i$\\
+    \end{tabular}
+  \end{column}
+  \end{columns}
+
+  \vspace{0.5em}
+  \begin{keyb}
+    $v$ \no{không đơn điệu}: thêm đoạn gây nhiễu làm $v$ \emph{giảm}.
+    định nghĩa mwc không cần đơn điệu, và bao đơn điệu
+    $\bar v(S) = \max_{S'\subseteq S} v(S')$ cho $\mathrm{mwc}(\bar v) = W$ —
+    đơn điệu hóa \no{không đổi gì ngoài chi phí.}
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{integrated gradients — và vì sao tầng b cần nó}
+  gradient tại một điểm chỉ nói độ dốc \emph{ở đó}. ig tích phân dọc đường từ mốc tới điểm thật:
+
+  \[
+    \mathrm{ig}_i \;=\; (x_i - x_i^{0}) \times
+    \frac{1}{M}\sum_{m=1}^{M}
+    \frac{\partial F\!\left(x^{0} + \alpha_m (x - x^{0})\right)}{\partial x_i},
+    \qquad \alpha_m = \tfrac{m}{M}
+  \]
+
+  \vspace{0.3em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={tính chất ta dùng}]
+      \textbf{completeness}\;
+      $\sum_i \mathrm{ig}_i = F(x) - F(x^0)$
+      \vspace{0.3em}
+
+      tổng đóng góp \emph{bằng đúng} phần mà đầu vào tạo ra. nên credit chia được, và
+      kiểm được bằng một đẳng thức.
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={vì sao ig cho cạnh, ablation cho đoạn}]
+      \[ \text{ig rẻ hơn ablation} \iff N > 3M \]
+      \vspace{-0.6em}
+      \begin{dia}
+cạnh đồ thị   hàng nghìn, đồ thị CỐ ĐỊNH   -> ig
+token         hàng trăm, prompt CỐ ĐỊNH    -> ig
+đoạn trong    prompt PHÌNH theo số đoạn    -> ablation
+pool          -> tỉ lệ = 3M, K triệt tiêu,
+                 KHÔNG có điểm hòa vốn
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+% ════════════════════════════════════════════════════════════════════
+\section{tầng a}
+
+\begin{frame}{đối tượng cần tìm}
+  \[
+    \boxed{\;
+      S \text{ đủ} \;\iff\; \underbrace{v(S) \ge \tau_q}_{\text{trả lời đúng}}
+      \;\wedge\; \underbrace{\mathrm{adq}(S)}_{\text{có bằng chứng}}
+    \;}
+  \]
+  \[
+    S \text{ tối tiểu} \;\iff\; S \text{ đủ} \;\wedge\;
+    \nexists\, S' \subsetneq S \text{ đủ}
+    \qquad\qquad
+    W = \{\, S \text{ đủ tối tiểu} \,\}
+  \]
+
+  \vspace{0.6em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={dư thừa hiện ra thành bội số mwc}]
+      ba đoạn trùng ý $\Rightarrow$ ba mwc khác nhau, mỗi tập chứa một đoạn.
+      \vspace{0.3em}
+
+      nên bản này \no{không cần gom cụm để hạ} $2^K$ — dư thừa tự lộ trong cấu trúc $W$,
+      còn $2^K$ thì surrogate lo.
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={cái giá so với shapley}]
+      mất \textbf{completeness}: $\sum_c \varphi_c = F(E) - F(E')$ là đẳng thức
+      chính xác, bắt được mọi lỗi cài đặt.
+      \vspace{0.3em}
+
+      mwc không có đẳng thức đó. đổi lại: được cả \emph{họ} lời giải thích, chỉ số
+      cấu trúc, và độ tin cậy.
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{«đủ» có hai thành phần, và $v$ chỉ đo một}
+  \begin{columns}[t]
+  \begin{column}{0.5\textwidth}
+    \begin{badb}[title={ca mồi tham số}]
+      \begin{dia}
+q  ai đạo diễn phim thắng oscar 1994?
+y  Robert Zemeckis
+
+đoạn 19  "Forrest Gump là hiện tượng
+          văn hóa thập niên 1990"
+         -> KHÔNG nói đạo diễn
+         -> KHÔNG nói thắng giải
+
+model thấy tên phim -> TỰ NHỚ
+                    -> trả lời ĐÚNG
+v({19}) = 0,71  cao
+      \end{dia}
+      \vspace{0.2em}
+      định nghĩa chỉ-dùng-$v$ \no{nhận đoạn 19 vào $T$}, rồi dạy retriever đi lấy nó.
+    \end{badb}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \begin{bx}[title={và lệch này đã được đo}]
+      \footnotesize
+      \begin{tabular}{@{}p{0.52\linewidth}r@{}}
+        model trả lời \emph{đúng} khi ngữ cảnh \emph{không đủ} & 35--62\,\%\\[0.3em]
+        tỉ lệ trả lời sai: không ngữ cảnh & 10,2\,\%\\
+        \qquad ngữ cảnh không đủ & 66,1\,\%\\[0.3em]
+        ca \emph{có} ngữ cảnh đủ sau truy hồi &\\
+        \quad musique-ans & 46,2\,\%\\
+        \quad hotpotqa & 44,6\,\%\\
+      \end{tabular}
+      \vspace{0.4em}
+
+      \dd{joren et al., iclr 2025 — arXiv:2411.06037}
+      \vspace{0.3em}
+
+      hơn \emph{nửa} truy vấn trên đúng hai bộ ta nhắm \no{không có tập đủ trong pool.}
+    \end{bx}
+  \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{hai điều kiện, bốn ô — mỗi ô một nguyên nhân khác}
+  \vspace{0.5em}
+  \begin{center}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}
+                     >{\raggedright\arraybackslash}p{0.37\linewidth}
+                     >{\raggedright\arraybackslash}p{0.37\linewidth}@{}}
+    \toprule
+    & \textbf{adq phủ hết} & \textbf{adq không phủ}\\
+    \midrule
+    \hl{$v \ge \tau_q$}
+      & \yes{nhãn tốt} — nhận
+      & \no{mồi tham số} — loại\\[0.7em]
+    \hl{$v < \tau_q$}
+      & bằng chứng \emph{có} mà model không nối được\newline
+        $\rightarrow$ lỗi \textbf{model sinh}, tầng b \no{không sửa được}
+      & pool \emph{thiếu}\newline
+        $\rightarrow$ thoát sớm ở \texttt{a0}/\texttt{c0}\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.9em}
+  \begin{keyb}
+    giữ $\mathrm{adq}$ \hl{tách khỏi} $v$, không gộp thành một điểm số — gộp thì mất bảng
+    này, và mất luôn khả năng tách \emph{lỗi truy hồi} khỏi \emph{lỗi model sinh}.
+    ô dưới-trái là ô mà bản chỉ-dùng-$v$ không bao giờ thấy.
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{$v(S)$ — hai lượt llm, một con số}
+  \begin{columns}[t]
+  \begin{column}{0.52\textwidth}
+    \begin{bx}[title={bước 1 · sinh từ đúng $S$}]
+      \begin{dia}
+Answer using ONLY the passages below.
+If insufficient, say: INSUFFICIENT.
+
+[1] <nội dung chunk thứ nhất trong S>
+[2] <nội dung chunk thứ hai>
+Question: <q>
+Answer:
+      \end{dia}
+      \vspace{-0.2em}
+      \[ \hat a_S = \mathrm{generate}(q, S) \]
+    \end{bx}
+    \begin{bx}[title={bước 2 · judge, đọc logprob token đầu}]
+      \begin{dia}
+Question: <q>
+Gold answer: Robert Zemeckis
+Also acceptable: Zemeckis · Robert Lee ...
+Candidate answer: <â_S>
+Correct? One word: Yes or No.
+Answer:
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.44\textwidth}
+    \[
+      v(S) \;=\;
+      \frac{\sum_{t \in \mathcal{Y}} e^{\ell_t}}
+           {\sum_{t \in \mathcal{Y}} e^{\ell_t} + \sum_{t \in \mathcal{N}} e^{\ell_t}}
+      \;\in [0,1]
+    \]
+    \dd{$\ell_t$ = logprob token đầu · $\mathcal{Y}$ = \{Yes, yes, ...\}}
+
+    \vspace{0.5em}
+    \begin{bx}[title={ba chỗ không được làm sai}]
+      \footnotesize
+      \no{không} log-likelihood của $y$ — \emph{"Paris"} vs \emph{"Paris, France"} đúng
+      ngữ nghĩa mà logprob thấp, và lệch đó \emph{không} triệt tiêu giữa các tập con:
+      \textbf{thứ tự lật}.
+      \vspace{0.35em}
+
+      \no{không} thang 1--5 — 5 mức làm hàng chục tập con hòa nhau, không phân biệt
+      được $S$ với $S \setminus \{c\}$, và \emph{tối tiểu} mất nghĩa.
+      \vspace{0.35em}
+
+      \hl{phải} nhét \texttt{answer\_aliases} vào prompt judge, không thì tập \emph{đúng}
+      bị loại oan.
+    \end{bx}
+    \vspace{-0.3em}
+    \dd{$\mathrm{cost}(S) = \text{overhead} + \sum_{k \in S} \mathrm{len}(k)$ —
+        không phải $500 + 250|S|$, vì document ${\sim}100$ và summary ${\sim}600$
+        là hai lớp độ dài}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{$\mathrm{adq}$ — chẻ câu hỏi, rồi đối chiếu}
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{bx}[title={bước 1 · chẻ thành mảnh}]
+      \footnotesize
+      \hl{hỏi ai:} musique gán sẵn phân rã 1-hop $+$ đáp án trung gian.
+      corpus riêng thì llm, \textbf{1 lượt mỗi truy vấn} — không phải mỗi tập con.
+      \begin{dia}
+mảnh 1  phim thắng oscar 1994 là Forrest Gump
+mảnh 2  Forrest Gump do Zemeckis đạo diễn
+      \end{dia}
+    \end{bx}
+    \begin{bx}[title={bước 2 · đối chiếu}]
+      \footnotesize
+      \hl{hỏi ai:} model nli nhỏ (${\sim}400$M), chạy local, \textbf{0 lượt api}.
+      \[ e(k,j) = \mathrm{nli}(\underbrace{\text{đoạn } k}_{\text{premise}},
+                               \underbrace{\text{mảnh } j}_{\text{hypothesis}}) \]
+      \dd{$40 \times J$ lượt forward model nhỏ}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{bx}[title={bảng phủ — 0 lượt llm}]
+      \begin{dia}
+            mảnh 1   mảnh 2
+đoạn  3     entail      —
+đoạn  7     entail      —
+đoạn 12       —      entail
+đoạn 23       —      entail
+đoạn 31       —      entail
+đoạn 19       —         —      <- bẫy
+      \end{dia}
+      \vspace{-0.3em}
+      \begin{align*}
+        \mathrm{cov}(S) &= \{\, j : \exists k \in S,\; e(k,j) = \text{entail} \,\}\\
+        \mathrm{adq}(S) &\iff \mathrm{cov}(S) = \{1, \dots, J\}
+      \end{align*}
+    \end{bx}
+    \begin{keyb}
+      \footnotesize
+      bảng phủ cho \textbf{ba} thứ, cả ba miễn phí:
+      \begin{dia}
+1 CỬA THOÁT  mảnh nào trống -> bỏ truy vấn ngay
+2 ỨNG VIÊN   phủ tập nhỏ, giải CHÍNH XÁC
+             {3,12} {3,23} {7,12} ...
+3 PRIOR |T|  |T| nên bằng J
+      \end{dia}
+    \end{keyb}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{vì sao phải chẻ ra — hai lý do độc lập}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={độ dài}]
+      premise $=$ cả $S$ có thể tới $10{,}000$ token, mà model nli chỉ nhận $512$.
+      \vspace{0.4em}
+
+      chẻ ra thì mỗi lượt kiểm là \textbf{1 đoạn} (${\sim}100$ token) đối
+      \textbf{1 câu ngắn}.
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{badb}[title={bắc cầu}]
+      claim ghép \emph{"phim thắng 1994 do Zemeckis đạo diễn"} thì
+      \no{không đoạn nào một mình} khẳng định được.
+      \vspace{0.4em}
+
+      không chẻ $\Rightarrow$ loại oan cả $\{3,12\}$, tức loại đúng
+      \textbf{ca multi-hop} mà cả dự án nhắm.
+    \end{badb}
+  \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \begin{keyb}
+    chẻ ra thì mỗi mảnh có \emph{đúng một} đoạn khẳng định nó, và ghép lại thành $T$ đầy đủ.
+    \dd{\;· cơ chế theo arXiv:2608.00585 — kiểm từng đoạn đối câu hỏi gốc thất bại ở multi-hop}
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{ngưỡng và trần}
+  \vspace{-0.2em}
+  \begin{align*}
+    \tau_q &= \theta \,\bigl[\, v_{\mathrm{ref}}(q) - v(\emptyset) \,\bigr] + v(\emptyset),
+      \qquad \theta = 0{,}95\\[-0.1em]
+    v_{\mathrm{ref}}(q) &= \max\Bigl(\, v(C),\; v(R),\; \max_k v(\{k\}),\;
+      \text{mọi } v(S) \text{ đã quan sát} \Bigr)
+  \end{align*}
+  \vspace{-0.6em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={mốc phải là cực đại quan sát được}]
+      khi $C$ còn đoạn nhiễu thì một tập con có thể ghi điểm \emph{cao hơn} cả $C$ —
+      neo vào $v(C)$ là neo vào \no{mốc bị dìm}.
+      \begin{dia}
+v(C)  = 0,81   nhồi 40 đoạn -> phân tán
+v(R)  = 0,88   12 đoạn, ít nhiễu hơn
+->  v_ref = 0,88,  tau_q = 0,84
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={hai mốc đặc biệt}]
+      \begin{dia}
+v(rỗng)  không cho đoạn nào
+         -> chỉ tri thức tham số của model
+v(R)     12 đoạn: top-2 mỗi cụm, VÀ tôn
+         trọng hạn ngạch nguồn 20/15/5
+      \end{dia}
+      \vspace{0.2em}
+      \dd{\textbf{chốt chặn mẫu số nhỏ:}\;
+          $v_{\mathrm{ref}} - v(\emptyset) < 0{,}05 \Rightarrow T = \emptyset$,
+          cờ \emph{"truy hồi không đóng góp"} — ca có thật, không phải lỗi.}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{cập nhật $v_{\mathrm{ref}}$ tự nhất quán — và $\theta < 1$ gánh tất}
+  quan sát mới có thể \emph{cao hơn} trần đang dùng. lúc đó $v_{\mathrm{ref}}$ tăng,
+  nên $\tau_q$ cũng tăng — liệu tập vừa nâng trần có bị chính ngưỡng mới loại?
+
+  \vspace{0.8em}
+  \[
+    v(S) > v_{\mathrm{ref}}
+    \;\Longrightarrow\;
+    v_{\mathrm{ref}} := v(S)
+    \;\Longrightarrow\;
+    \tau_q' = \theta\bigl[v(S) - v(\emptyset)\bigr] + v(\emptyset)
+    \;\underbrace{<}_{\theta\,<\,1}\; v(S)
+  \]
+
+  \vspace{0.8em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{keyb}[title={không bao giờ tự phủ định}]
+      tập vừa nâng trần \yes{luôn vẫn vượt ngưỡng mới}. cập nhật không thể loại
+      chính cái gây ra nó.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{keyb}[title={không phải xét lại lịch sử}]
+      $\tau_q$ chỉ \emph{tăng}, nên mọi tập đã bị loại vẫn bị loại.
+      \vspace{0.25em}
+
+      \dd{$\theta = 1$ thì suy biến: $\tau_q' = v(S)$, tập nâng trần chỉ \emph{bằng}
+          ngưỡng, và tính chất trên mất}
+    \end{keyb}
+  \end{column}
+  \end{columns}
+\end{frame}

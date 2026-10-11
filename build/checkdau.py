@@ -38,14 +38,20 @@ bad = []
 for path, tag in ((r"D:\ragproj\pipeline-shapley-ig-graph.tex", "chinh"),
                   (r"D:\ragproj\tang-a-pipeline.tex",          "tangA"),
                   (r"D:\ragproj\tang-a-shapley.tex",           "shply"),
-                  (r"D:\ragproj\ke-hoach.tex",                 "kehoa")):
+                  (r"D:\ragproj\ke-hoach.tex",                 "kehoa"),
+                  (r"D:\ragproj\slides.tex",                   "slide")):
     tex = io.open(path, encoding="utf-8").read()
     blocks = re.findall(r"\\begin\{dia\}(.*?)\\end\{dia\}", tex, re.S)
     b2 = [(tag, i, b, hits(b)) for i, b in enumerate(blocks, 1) if hits(b) >= 2]
     print("  %-6s %3d khoi dia,  %d khoi con tu THIEU DAU" % (tag, len(blocks), len(b2)))
+    # Ky tu ke khung CHI sai trong khoi dia (font mono khong co no).
+    # Ngoai khoi dia \u2014 comment, hoac van ban thuong \u2014 thi font chinh co du,
+    # nen khong duoc bao o day, khong thi bao dong gia o moi file.
     for ch in "\u2500\u2502\u250c\u2510\u2514\u2518\u251c\u2524\u252c\u2534\u253c":
-        if ch in tex:
-            print("     ! ky tu ke khung %r trong %s" % (ch, tag))
+        hit = [i for i, b in enumerate(blocks, 1) if ch in b]
+        if hit:
+            print("     ! ky tu ke khung %r trong khoi dia %s cua %s"
+                  % (ch, hit[:5], tag))
     bad += b2
 for tag, i, b, h in bad[:8]:
     print("     [%s] #%-3d (%d tu) %s" % (tag, i, h, b.strip().split("\n")[0][:46]))

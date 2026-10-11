@@ -1,0 +1,214 @@
+\begin{frame}[fragile]{đồ thị trải phẳng, và quy hoạch động}
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{bx}[title={vẽ lại: mỗi tầng một bản sao}]
+      \begin{dia}
+node (v, l)   = node v ở bước l
+cạnh (u,l) -> (v,l+1)  nếu u->v trong G
+
+L tầng  ->  đồ thị KHÔNG CÓ CHU TRÌNH
+        ->  quy hoạch động một lượt
+      \end{dia}
+      \vspace{0.2em}
+      đồ thị gốc có chu trình, nên không duyệt một lượt được. trải theo tầng thì
+      \yes{thứ tự topo là chính $l$}.
+    \end{bx}
+    \begin{bx}[title={một lượt quét}]
+      \[ \mathrm{best}(v, l) = \max_{u \,:\, (u,v) \in E}
+         \Bigl[\, \mathrm{best}(u, l-1) + \mathrm{ig}_{(u,v)}^{(l)} \,\Bigr] \]
+      \dd{lưu \texttt{back[}$v,l$\texttt{]} để truy ngược ra dãy cạnh ·
+          $O\bigl((|V| + |E|)\,L\bigr)$}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{badb}[title={max-SUM, không phải min-cost}]
+      quen tay thì đặt $\mathrm{cost} = -\log(\cdot)$ rồi chạy dijkstra. \no{sai ở đây.}
+      \vspace{0.3em}
+
+      \begin{dia}
+ig CỘNG TÍNH theo completeness:
+   tổng ig trên một đường = đóng góp
+   của đường đó
+
+-log thì BIẾN TỔNG thành TÍCH
+   -> mất completeness
+   -> c/h không còn đúng
+   -> mất luôn phép kiểm nội bộ
+      \end{dia}
+      \vspace{0.2em}
+      và ig \emph{có dấu}: cạnh gây hại cho $\mathrm{ig} < 0$, mà $-\log$ của số âm
+      thì vô nghĩa.
+    \end{badb}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{kiểm chứng — và hai đại lượng khác nhau}
+  \[
+    \mathrm{suff}(\Pi_D) \;=\;
+    \frac{\sum_{(e,l) \,\in\, \Pi_D} \mathrm{ig}_e^{(l)}}
+         {\sum_{(e,l)} \mathrm{ig}_e^{(l)}}
+    \qquad\qquad
+    \mathrm{nec}(\pi) \;=\; F_B(g^{*}) - F_B\bigl(g^{*} \text{ với } \pi \text{ bị xóa}\bigr)
+  \]
+  \dd{$\mathrm{suff}$: phần của «cái bánh» mà tập đường đã lấy · $\mathrm{nec}$: mất bao nhiêu
+      nếu bỏ đúng đường đó}
+
+  \vspace{0.6em}
+  \begin{columns}[t]
+  \begin{column}{0.47\textwidth}
+    \begin{keyb}[title={$\mathrm{suff}$ tính trên TOÀN tập đường}]
+      \no{không} cộng $\mathrm{suff}$ của từng đường rồi lấy tổng — hai đường dùng chung
+      cạnh thì cạnh đó bị đếm hai lần.
+      \vspace{0.3em}
+
+      lấy \hl{hợp các cạnh} rồi mới chia:
+      \begin{dia}
+hợp cạnh: 0,22 + 0,19 + 0,33 = 0,74
+          0,74 / 0,81 = 91%
+suff = 0,97     đủ
+      \end{dia}
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.49\textwidth}
+    \begin{bx}[title={$\mathrm{suff}$ có thể bị chặn dưới 1 — credit mồ côi}]
+      node \emph{không} tới được từ bất kỳ seed nào vẫn góp vào \hl{mẫu số}.
+      nên $\mathrm{suff}$ thấp có \emph{hai} nguyên nhân:
+      \vspace{0.25em}
+
+      \begin{dia}
+suff_max  tính MIỄN PHÍ từ bảng qhđ
+          = trần mà mọi đường từ seed
+            đạt được
+
+suff_max < theta_s  ->  entity linking
+                        hỏng, dừng ngay
+suff_max >= theta_s ->  đồ thị thiếu cạnh
+                        (ô «lỗi đồ thị» §6.1)
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{nhiều seed hội tụ — greedy xóa cạnh, rồi tỉa ngược}
+  \begin{columns}[t]
+  \begin{column}{0.52\textwidth}
+    \begin{bx}[title={hai chặng}]
+      \begin{dia}
+-- chặng 1: gom ------------------------
+Pi_D <- rỗng
+lặp:
+    pi   = truy ngược back[] từ (D, L)
+    gain = tổng ig các cạnh MỚI trong pi
+    Pi_D <- Pi_D + pi
+
+    suff(Pi_D) >= theta_s  -> DỪNG: thành công
+    gain < eps             -> DỪNG: bằng chứng
+                              phân tán
+    |Pi_D| = n_max         -> DỪNG: hết ngân
+                              sách đọc hiểu
+
+    đặt ig = 0 cho mọi cạnh đã lấy
+    chạy lại qhđ
+
+-- chặng 2: tỉa ngược ------------------
+cho mỗi pi trong Pi_D (theo thứ tự thêm):
+    suff(Pi_D \ {pi}) >= theta_s
+        -> Pi_D <- Pi_D \ {pi}   đường thừa
+      \end{dia}
+    \end{bx}
+  \end{column}
+  \begin{column}{0.44\textwidth}
+    \begin{keyb}[title={cạnh dùng chung tự thành miễn phí}]
+      đặt $\mathrm{ig} = 0$ cho cạnh đã lấy, nên vòng sau \yes{không trả tiền lại}
+      cho cạnh đó. hội tụ nhiều seed xử lý \emph{tự nhiên}, không cần luật riêng.
+    \end{keyb}
+    \begin{bx}[title={$n_{\max}$ không phải hằng số chọn tay}]
+      \[ n_{\max} = \Bigl\lceil \frac{\theta_s}{\tilde\varepsilon} \Bigr\rceil \]
+      \dd{$\tilde\varepsilon$: ngưỡng gain tương đối. mỗi đường được nhận phải góp
+          $\ge \tilde\varepsilon$, nên quá $\theta_s/\tilde\varepsilon$ đường là
+          không thể còn đủ}
+      \vspace{0.3em}
+
+      \no{không} phải $|V_q| + 1$ — số seed không bằng số đường độc lập.
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+% ════════════════════════════════════════════════════════════════════
+\section{nối hai tầng}
+
+\begin{frame}[fragile]{chỉ một thứ đi qua ranh giới}
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{keyb}[title={giao diện}]
+      \begin{dia}
+TẦNG A  ->  T = {D_2, D_7, D_15}  ->  TẦNG B
+
+KHÔNG qua: v(S) · tau_q · beta_i · PGI
+           g_theta · W · entropy
+      \end{dia}
+      \vspace{0.25em}
+      điểm của tầng a đo trên \emph{pool}; tầng b định tuyến trên \emph{đồ thị} — hai
+      không gian khác nhau. và nhãn $(q \to T)$ \hl{không phụ thuộc kiến trúc gfm}:
+      đào một lần, dùng cho mọi lần train.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{bx}[title={ba hàm mất mát}]
+      \begin{align*}
+        \mathcal{L}_{\text{node}} &= \mathrm{bce}\bigl(p(v),\; \mathbf{1}[v \in T]\bigr)\\[0.2em]
+        \mathcal{L}_{\text{hop}}  &= \sum_{l}\;\sum_{v \,\in\, V_{\text{hop}}(l)}
+          \mathrm{bce}\bigl(p^{(l)}(v),\; \mathbf{1}[(v,l) \in \Pi]\bigr)\\[0.2em]
+        \mathcal{L}_{\text{edge}} &= \sum_{(e,l) \,\in\, \Pi}
+          -\log \hat g_e^{(l)}
+      \end{align*}
+      \vspace{-0.3em}
+      \begin{dia}
+V_hop(l) = { v : (v,l) thuộc Pi }   dương
+         + { v : (v,l') thuộc Pi }  âm KHÓ
+                 đúng node, SAI tầng
+         + V_neg                    âm thường
+      \end{dia}
+      \dd{không có $V_{\text{hop}}(l)$ thì tỉ lệ dương:âm thành \no{$1 : 10^6$}}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{bảng chẩn đoán — và nó cũng là nguồn nhãn}
+  \[
+    k_{\text{top}}(q) = \bigl\lceil \beta \,\bigl|T(q)\bigr| \bigr\rceil,
+    \quad \beta \approx 1{,}5
+    \qquad\qquad
+    \mathrm{rank}_{\text{gfm}}(D) \;\text{đọc từ \emph{một} lượt forward}
+  \]
+  \dd{ngưỡng hạng theo \emph{từng ví dụ}, không phải một $k$ cố định toàn cục}
+
+  \vspace{0.7em}
+  \begin{center}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.11\linewidth}
+                     >{\raggedright\arraybackslash}p{0.355\linewidth}
+                     >{\raggedright\arraybackslash}p{0.355\linewidth}@{}}
+    \toprule
+    & \textbf{$\mathrm{rank}$ tốt} & \textbf{$\mathrm{rank}$ kém}\\
+    \midrule
+    \hl{$\mathrm{suff}$ cao}
+      & \yes{lành} — truy hồi tìm đúng, và đường giải thích được
+      & \no{lỗi model} — đường có đó mà gfm không xếp $D$ lên cao\\[0.6em]
+    \hl{$\mathrm{suff}$ thấp}
+      & \no{đường tắt} — xếp đúng \emph{nhờ} lối khác, không nhờ bằng chứng
+      & \no{lỗi đồ thị} — thiếu cạnh, hoặc entity linking hỏng\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \begin{keyb}
+    $\mathrm{suff}$ kiểm \hl{đồ thị}, $\mathrm{rank}$ kiểm \hl{model} — hai trục độc lập.
+    ô \emph{đường tắt} là ô dễ bỏ sót nhất: chỉ số đẹp mà lời giải thích rỗng.
+    và mỗi ô \yes{tự nó là một lô nhãn} để train vòng sau.
+  \end{keyb}
+\end{frame}

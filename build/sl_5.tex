@@ -1,0 +1,204 @@
+% ════════════════════════════════════════════════════════════════════
+\section{thi hành}
+
+\begin{frame}[fragile]{hai pha — mô hình ở pha 1, nhãn ở pha 2}
+  chạy pipeline đầy đủ cho $200{,}000$ truy vấn thì không trả nổi. nên tách hai pha
+  có \emph{mục đích} khác nhau:
+
+  \vspace{0.5em}
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{bx}[title={pha 1 · $N_1 = 10{,}000$ · llm đầy đủ}]
+      \begin{dia}
+A0  chẻ câu hỏi + bảng phủ       400
+A1  vòng 0  v(rỗng)·v(R)·v(C)
+            + 40 singleton    44.500
+A2  vòng 1  greedy biên       27.000
+A3  vòng 2  active learning  ~37.000
+A4  vòng 3  xác nhận         ~15.000
+                            ---------
+                            ~123.900 token
+      \end{dia}
+      \vspace{0.2em}
+      sản phẩm là \hl{$g_\theta$}, \no{không phải} nhãn cho tầng b.
+    \end{bx}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{bx}[title={pha 2 · $N_2 = 200{,}000$ · đường rẻ}]
+      \begin{dia}
+C0  chẻ + bảng phủ               400
+      thiếu mảnh -> THOÁT SỚM
+C1  v(rỗng)                      500
+C2  g_theta chấm 40 đoạn đơn       0
+C3  v(R)                       3.500
+C4  v(C)                      10.500
+      v_ref = max(v(R), v(C)); tau_q chốt
+C5  tìm theo tầng bằng g_theta     0
+C6  verification bằng llm THẬT ~7.400
+C7  ba nhánh (slide sau)
+                              --------
+                               ~22.300 token
+      \end{dia}
+      \vspace{0.2em}
+      \dd{\texttt{c2} phải đứng trước \texttt{c5} — hợp lệ vì $g_\theta$ không nhận $\tau_q$}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{$\mathtt{c7}$ — ba nhánh}
+  \begin{columns}[t]
+  \begin{column}{0.52\textwidth}
+    \begin{bx}[title={ba nhánh}]
+      \begin{dia}
+(1) v(T) >= tau_q, adq phủ hết, tối tiểu
+    -> XUẤT T sang tầng b
+
+(2) v(T) < tau_q        T KHÔNG đủ
+    -> thử ứng viên kế của beam, tối đa 3
+       mỗi lần CHỈ 1 lượt (hết đủ thì dừng,
+       không kiểm tối tiểu)
+    -> qua: nhánh (1)
+       3 lần trượt: nhánh (3)
+
+(3) |T| >= 11 · tỉa kẹt ở >= 6 · thử hết
+    -> HÀNG CỨU có phân tầng
+      \end{dia}
+    \end{bx}
+    \begin{keyb}[title={nhánh 2 rẻ hơn tưởng}]
+      một ca trượt chỉ tốn \hl{1 lượt} ($1{,}250$ token). một lượt cứu tốn
+      $113{,}000$ — \yes{mua được 90 lần thử bằng giá một lần cứu}.
+      \vspace{0.2em}
+
+      $30\%$ qua mỗi lần thử $\Rightarrow$ 3 lần vớt $1 - 0{,}7^3 = 66\%$ số ca:
+      $p$ hiệu dụng $0{,}75 \to 0{,}91$.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.44\textwidth}
+    \begin{bx}[title={«đủ mà không tối tiểu» KHÔNG vào hàng cứu}]
+      quét hết thì \texttt{c6} đo \emph{trọn} dàn tập con dưới $T$ — nên phần tử tối tiểu
+      đọc ra ngay, 0 lượt thêm:
+      \begin{dia}
+v({a,b,c}) = 0,80 >= tau_q   T đủ
+v({a,b})   = 0,78 >= tau_q   con cũng đủ
+                             -> T KHÔNG tối tiểu
+v({a}) = 0,30  v({b}) = 0,22
+                             -> T = {a,b}
+      \end{dia}
+      \vspace{0.2em}
+      ca này xảy ra \emph{thường xuyên}, vì lỗi hay gặp nhất của $g_\theta$ là
+      đề xuất tập \no{phình}.
+    \end{bx}
+    \begin{bx}[title={cứu là gì}]
+      chạy \texttt{a1}--\texttt{a4} lên truy vấn đó. đã có $v(\emptyset), v(R), v(C)$
+      trong cache nên còn $113{,}000$ token.
+      \vspace{0.2em}
+
+      \dd{$\tau_q$ \emph{tăng} khi cứu — cứu quan sát thêm 40 singleton và hàng chục tập
+          con, nên $v_{\mathrm{ref}}$ lên. đúng, không nghịch lý: pha 2 đang đo trần thiếu.}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{năm cổng — và chúng nằm trước 75\% chi phí}
+  \vspace{0.3em}
+  \begin{center}
+  \footnotesize
+  \begin{tabular}{@{}llrrl@{}}
+    \toprule
+    & \textbf{giai đoạn} & \textbf{chi phí} & \textbf{tích lũy} & \textbf{cổng chặn sau đó}\\
+    \midrule
+    \texttt{0}    & hạ tầng · index test có sẵn & \$0 & \$0 &\\
+    \texttt{0.5}  & chạy thử bốn cổng trên test index & \$18 & \$18
+      & \hl{cổng 0.5} — chặn \$1.100\\
+    \texttt{1}    & hiệu chuẩn chuẩn ngoài & \$7 & \$25 & \hl{cổng 1} — $\mathrm{adq}$ đáng tin?\\
+    \texttt{2.0}  & index phần pha 1 & \$74 & \$99 &\\
+    \texttt{2}    & pha 1 đào nhãn & \$103 & \$202 &\\
+    \texttt{3}    & surrogate & \$0 & \$202 & \hl{cổng 2} — vượt gbm?\\
+    \texttt{4}    & cổng $p$ trên $N_1$ đủ & \$0 & \$202 & \hl{cổng 3} — chặn \$918\\
+    \texttt{5.0}  & index phần pha 2 & \$815 & \$1.017 &\\
+    \texttt{5}    & pha 2 $+$ cứu & \$103 & \$1.120 & \hl{cổng 4} $\times\,10$ lô\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{keyb}
+    tiêu trước \hl{cổng 0.5} là \$18; tiêu trước \hl{cổng 3} là \$202. nếu thiết kế sai
+    hoặc $p$ thấp thì \yes{không bao giờ trả \$918 còn lại.}
+    \vspace{0.2em}
+
+    \dd{sinh chạy local (qwen3-8b) nên \$0 tiền, nhưng ${\sim}53$ giờ gpu ở 20 sinh/giây —
+        ràng buộc thật là \hl{giờ gpu}, không phải tiền. $800+$ của bảng trên là OpenIE
+        dựng index cho train, vì index dựng sẵn chỉ có cho \emph{test} set.}
+  \end{keyb}
+\end{frame}
+
+\begin{frame}[fragile]{những gì chưa chắc — và cổng nào đo nó}
+  \begin{center}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.30\linewidth}
+                     >{\raggedright\arraybackslash}p{0.21\linewidth}
+                     >{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+    \toprule
+    \textbf{con số} & \textbf{trạng thái} & \textbf{ai đo}\\
+    \midrule
+    độ dài đoạn thật & giả định $250$ tok
+      & \texttt{0.b} — sai thì \no{mọi} bảng chi phí sai, và \no{không cổng nào bắt được}\\[0.4em]
+    $p$ (tỉ lệ qua verification) & giả định $0{,}75$
+      & \texttt{cổng 0.5} đo rẻ, \texttt{cổng 3} đo thật\\[0.4em]
+    $45\%$ thoát ở \texttt{a0}/\texttt{c0} & suy từ musique
+      & \texttt{2.1} — và chắc chắn \emph{lạc quan}, vì ta cố ý dùng checkpoint chưa fine-tune\\[0.4em]
+    $\mathrm{adq}$ sai bao nhiêu & chưa biết
+      & \texttt{cổng 1}, đối chiếu \texttt{supporting\_documents}\\[0.4em]
+    cỡ rò rỉ nhãn vàng & chưa biết
+      & \texttt{1.3} — chênh giữa pool chỉ-bm25 và pool đầy đủ\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \begin{keyb}
+    hai cổng \yes{miễn phí} phải chạy trước khi cam kết ngân sách:
+    \hl{cổng $p$} ($500$ truy vấn pha 1 giữ lại, 0 lượt llm) và
+    \hl{chuẩn ngoài} ($500$ truy vấn test, \$7).
+    không cổng nào được bỏ qua để «chạy nhanh hơn» — chúng rẻ \emph{chính vì} nằm trước chi phí.
+  \end{keyb}
+\end{frame}
+
+\begin{frame}{tóm lại}
+  \vspace{0.4em}
+  \begin{columns}[t]
+  \begin{column}{0.48\textwidth}
+    \begin{keyb}[title={ba quyết định thiết kế}]
+      \textbf{1}\; «đủ» có \emph{hai} thành phần. $v$ đo \emph{trả lời đúng},
+      $\mathrm{adq}$ đo \emph{có bằng chứng}. chỉ dùng $v$ thì nhận cả ca mồi tham số.
+      \vspace{0.4em}
+
+      \textbf{2}\; tối tiểu, không phải điểm số. mwc cho cả \emph{họ} lời giải thích;
+      cái giá là mất completeness.
+      \vspace{0.4em}
+
+      \textbf{3}\; chỉ $T$ qua ranh giới. hai tầng đo trên hai không gian khác nhau,
+      nên điểm không mang qua được.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{bx}[title={hai thứ còn phải chứng minh}]
+      \textbf{$p$} — tỉ lệ truy vấn mà đường rẻ qua được verification. cả bảng chi phí
+      treo vào nó, và nó \no{chưa được đo}.
+      \vspace{0.4em}
+
+      \textbf{$\mathrm{adq}$} — model nli loại đúng hay loại bừa. chưa biết, và nó đang
+      được giao quyền bỏ ${\sim}45\%$ truy vấn.
+    \end{bx}
+    \begin{bx}[title={bước tiếp theo}]
+      \texttt{0.a}--\texttt{0.j} trên test index (đã dựng sẵn, \$0), rồi
+      \texttt{cổng 0.5} với \$18.
+      \vspace{0.2em}
+
+      \dd{github.com/pqvu0307/minimal\_set\_rag-graph\_learning}
+    \end{bx}
+  \end{column}
+  \end{columns}
+\end{frame}
