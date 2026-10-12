@@ -99,9 +99,14 @@ class Server:
             if o.get("output_type") == "stream":
                 parts.append("".join(o.get("text") or []))
             elif o.get("output_type") == "error":
-                tb = [l for l in (o.get("traceback") or [])]
+                # Traceback cua Colab day ma mau ANSI — de nguyen thi mot loi
+                # nho cung chiem ca man hinh.  Boc ra truoc khi in.
+                import re as _re
+                strip = lambda s: _re.sub(r"\x1b\[[0-9;]*m", "", s)
+                tb = [strip(l).rstrip() for l in (o.get("traceback") or [])]
+                tb = [l for l in tb if l.strip()]
                 parts.append("%s: %s\n%s" % (o.get("ename"), o.get("evalue"),
-                                             "\n".join(tb[-6:])))
+                                             "\n".join(tb[-5:])))
             elif o.get("output_type") in ("execute_result", "display_data"):
                 parts.append("".join((o.get("data") or {}).get("text/plain") or []))
         return "".join(parts).strip() or "(khong co output)"

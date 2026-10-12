@@ -167,6 +167,13 @@ _REL_VERB = {
     "award received":            "{ent} received the award {ans}.",
     "notable work":              "{ans} is a notable work of {ent}.",
     "place served by transport hub": "{ent} serves {ans}.",
+    # 2Wiki dung nhieu quan he thoi gian — "{ans} is the date of birth of {ent}"
+    # doc duoc nhung gong; dang chu dong gan voi cau trong doan hon.
+    "date of birth":    "{ent} was born on {ans}.",
+    "date of death":    "{ent} died on {ans}.",
+    "publication date": "{ent} was published on {ans}.",
+    "inception":        "{ent} was founded in {ans}.",
+    "dissolved, abolished or demolished date": "{ent} was dissolved in {ans}.",
 }
 _REL_DEFAULT = "{ans} is the {rel} of {ent}."
 _ARROW = re.compile(r"^(?P<ent>.+?)\s*>>\s*(?P<rel>[^>]+?)\s*\?*$")
@@ -215,6 +222,36 @@ def from_annotation(row: Dict[str, Any],
             stats["pattern" if matched else "fallback"] = \
                 stats.get("pattern" if matched else "fallback", 0) + 1
         answers.append(sa)
+        out.append(claim)
+    return out or None
+
+
+def from_evidences(row: Dict[str, Any],
+                   stats: Optional[Dict[str, int]] = None) -> Optional[List[str]]:
+    """2Wiki: evidences = [[chu the, quan he, doi tuong], ...].
+
+    Cung hinh dang voi dang 'X >> quan he' cua MuSiQue, nen dung lai y
+    nguyen declarativize — khong can bang mau thu hai.
+    """
+    ev = row.get("evidences")
+    if isinstance(ev, str):
+        try:
+            ev = json.loads(ev)
+        except Exception:
+            return None
+    if not ev:
+        return None
+    out: List[str] = []
+    for t in ev:
+        if not (hasattr(t, "__len__") and not isinstance(t, str) and len(t) == 3):
+            continue
+        s, rel, o = (str(x).strip() for x in t)
+        if not s or not rel or not o:
+            continue
+        claim, matched = declarativize("%s >> %s" % (s, rel), o)
+        if stats is not None:
+            k = "pattern" if matched else "fallback"
+            stats[k] = stats.get(k, 0) + 1
         out.append(claim)
     return out or None
 
