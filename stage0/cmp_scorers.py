@@ -190,17 +190,26 @@ def main() -> int:
     for j in jobs:
         byq[j["key"]][j["kind"]] = j
     print("\n" + "=" * 64)
-    print("%-26s %7s %7s %7s" % ("so sanh trong 1 truy van", "A sinh", "B hoi", "C nli"))
+    SC = {"A": lambda r: r["A"], "B": lambda r: r["B"], "C": lambda r: r["C"],
+          "BxC": lambda r: r["B"] * r["C"],
+          "(B+C)/2": lambda r: (r["B"] + r["C"]) / 2,
+          "min(B,C)": lambda r: min(r["B"], r["C"])}
     pairs = [("gold", "gold_m1"), ("gold", "rand")]
-    for pos, neg in pairs:
-        row = []
-        for tag in ("A", "B", "C"):
-            ok = tot = 0
-            for g in byq.values():
-                if pos in g and neg in g and g[pos][tag] == g[pos][tag]:
-                    tot += 1; ok += int(g[pos][tag] > g[neg][tag])
-            row.append(100 * ok / max(1, tot))
-        print("%-26s %6.1f%% %6.1f%% %6.1f%%" % ("%s > %s" % (pos, neg), *row))
+
+    def acc(f, pos, neg):
+        ok = tot = 0
+        for g in byq.values():
+            if pos in g and neg in g:
+                x, z = f(g[pos]), f(g[neg])
+                if x == x and z == z:
+                    tot += 1; ok += int(x > z)
+        return 100 * ok / max(1, tot)
+
+    print("%-10s %13s %13s %10s"
+          % ("bo cham", "gold>gold_m1", "gold>rand", "trung binh"))
+    for k, f in SC.items():
+        xs = [acc(f, pos, neg) for pos, neg in pairs]
+        print("%-10s %12.1f%% %12.1f%% %9.1f%%" % (k, xs[0], xs[1], sum(xs) / 2))
     print()
     for tag in ("A", "B", "C"):
         m = {k: [g[k][tag] for g in byq.values() if k in g] for k in
@@ -208,7 +217,8 @@ def main() -> int:
         print("   %s  trung binh: %s" % (tag, {k: round(sum(v) / max(1, len(v)), 3)
                                                for k, v in m.items()}))
     print("=" * 64)
-    out = pathlib.Path("artifacts/reports/cmp_scorers.json")
+    out = pathlib.Path("artifacts/reports/cmp_scorers_%s.json"
+                       % arg.get("corpus", "musique"))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps([{k: j[k] for k in
                                 ("q", "y", "kind", "S", "ans", "A", "B", "C")}
