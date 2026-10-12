@@ -66,27 +66,30 @@ pool:
 # Rang buoc chuyen tu TIEN sang THONG LUONG + gioi han session Colab,
 # nen DiskCache (cache/judge) la BAT BUOC de chay lai duoc nhieu phien.
 gen:
-  # CHU Y: "Qwen 3.5-9B" KHONG ton tai.  Qwen3 (4/2025) dense co:
-  #   0.6B · 1.7B · 4B · 8B · 14B · 32B      — khong co 9B, khong co dong 3.5
-  # Gan nhat voi "9B" la Qwen3-8B.
-  model: "Qwen/Qwen3-8B"
+  # Qwen3.5-9B CO THAT tren DeepInfra (kiem 10/2026).  Ghi chu cu trong file
+  # nay noi "khong ton tai" la dung voi Qwen3 thang 4/2025 va nay DA SAI.
+  model: "Qwen/Qwen3.5-9B"
   max_tokens: 80
   temperature: 0.0
-  dtype: "auto"
-  gpu_mem_util: 0.90
-  max_model_len: 8192
-  # vLLM neu co (nhanh + prefix caching), khong thi transformers
+  # chay qua API nen khong con can cau hinh vLLM/GPU o day
   prefer_vllm: true
+  dtype: "auto"
+  gpu_mem_util: 0.85
+  max_model_len: 8192
 
 # ── 0.E  judge ─────────────────────────────────────────────────────
 judge:
   # split_local_gen = sinh LOCAL (khoi gen tren) + judge qua API
-  provider: "split_local_gen"        # split_local_gen | openai_compat | dummy
-  base_url: "https://api.deepseek.com/v1"
+  # sinh LOCAL (Qwen3.5-9B open weight tren A100), cham qua DeepInfra.
+  # Qwen3.5-9B qua API bi rong content: no la model THINKING, toan bo
+  # dau ra vao reasoning_content.  Chay local thi tat duoc bang
+  # apply_chat_template(enable_thinking=False).
+  provider: "split_local_gen"
+  base_url: "https://api.deepinfra.com/v1/openai"
   # PHAI la deepseek-chat.  deepseek-reasoner (thinking mode) NHAN tham so
   # logprobs nhung KHONG CO TAC DUNG — loi IM LANG, khong bao gi.
-  judge_model: "deepseek-chat"
-  api_key_env: "DEEPSEEK_API_KEY"    # CHO BAN cung cap
+  judge_model: "deepseek-ai/DeepSeek-V4-Flash"
+  api_key_env: "DEEPINFRA_API_KEY"
   gen_max_tokens: 80
   temperature: 0.0
   # DeepSeek V3.2 co bao cao tra logprobs toan 0 / -9999.
@@ -108,8 +111,8 @@ decompose:
   provider: "openai_compat"
   # de trong -> lay theo judge.judge_model (deepseek-chat).
   # Che cau hoi la 1 luot MOI TRUY VAN nen re, khong can chay local.
-  model: null
-  max_claims: 4
+  model: "deepseek-ai/DeepSeek-V4-Flash"
+  max_claims: 6
   # Dua DOAN vao prompt che cau hoi, va bat trich nguyen van.
   # Vi sao: thuc the bac cau ("Forrest Gump") khong nam trong cau hoi lan dap
   # an.  Khong co doan thi LLM phai lay tu tri nho tham so; co doan thi no chi

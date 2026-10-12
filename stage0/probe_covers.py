@@ -68,7 +68,9 @@ def load_2wiki(n: int) -> List[Tuple[List[str], List[str], set, Dict]]:
         ps = ["%s. %s" % (c[0], " ".join(c[1])) for c in ctx]
         titles = {c[0]: k for k, c in enumerate(ctx)}
         gold = {titles[t] for t, _ in J(r["supporting_facts"]) if t in titles}
-        out.append((cl, ps, gold, {"type": r["type"]}))
+        out.append((cl, ps, gold,
+                    {"type": r["type"], "question": r["question"],
+                     "answer": r["answer"], "answer_aliases": []}))
         if len(out) >= n:
             break
     return out

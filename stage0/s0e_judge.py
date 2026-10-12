@@ -90,6 +90,12 @@ class OpenAICompatBackend:
                 getattr(u, "prompt_tokens_details", None), "cached_tokens", 0) or 0,
         }
 
+    # Co endpoint tra DU top_logprobs, co endpoint chi tra logprob cua token
+    # DA CHON.  DeepInfra (10/2026) thuoc loai thu hai: no NHAN top_logprobs
+    # ma khong bao gio tra — dung kieu hong im lang ma check_logprobs_sane
+    # duoc viet ra de bat.  Nen o day ghi ro dang dung che do nao.
+    degraded = False
+
     def first_token_logprobs(self, prompt: str) -> Dict[str, float]:
         r = self.cli.chat.completions.create(
             model=self.judge_model, max_tokens=1, temperature=0.0,
@@ -98,7 +104,23 @@ class OpenAICompatBackend:
         lp = r.choices[0].logprobs
         if not lp or not lp.content:
             raise RuntimeError("endpoint khong tra logprobs — judge khong dung duoc")
-        return {t.token: t.logprob for t in lp.content[0].top_logprobs}
+        c = lp.content[0]
+        top = getattr(c, "top_logprobs", None)
+        if top:
+            return {t.token: t.logprob for t in top}
+
+        # XAP XI MOT TOKEN.  Chi biet token da chon va xac suat cua no, nen
+        # don phan con lai sang phia doi lap:  p(Yes) = p  hoac  1 - p.
+        # Dung duoc vi prompt ep tra loi MOT TU trong {Yes, No}, nen khoi
+        # luong roi ra ngoai hai tu do rat nho.  Van la xap xi — v(S) o che
+        # do nay co do phan giai thap hon, nhat la khi model rat chac.
+        import math as _m
+        type(self).degraded = True
+        p = min(max(_m.exp(c.logprob), 1e-6), 1 - 1e-6)
+        tok = (c.token or "").strip()
+        yes = tok in ("Yes", "yes", "YES")
+        return {"Yes": _m.log(p if yes else 1 - p),
+                "No": _m.log(1 - p if yes else p)}
 
 
 class LocalHFBackend:
@@ -120,6 +142,16 @@ class LocalHFBackend:
         self.error: Optional[str] = None
         self.max_tokens = g["max_tokens"]
         self.temperature = g["temperature"]
+        # Chat template PHAI co.  Dua prompt tho vao model instruct la sai tu
+        # goc; voi ho Qwen3/3.5 con te hon vi chung MAC DINH BAT thinking —
+        # toan bo dau ra chay vao <think> va `content` ve RONG.  Da gap dung
+        # loi do khi goi Qwen3.5-9B qua API: 400 token van chua nghi xong.
+        self.chat_tok = None
+        try:
+            from transformers import AutoTokenizer
+            self.chat_tok = AutoTokenizer.from_pretrained(self.model_id)
+        except Exception as e:
+            self.error = "tokenizer: %s" % repr(e)[:120]
         try:
             from vllm import LLM, SamplingParams        # type: ignore
             self._LLM = LLM(model=self.model_id,
@@ -144,11 +176,32 @@ class LocalHFBackend:
         except Exception as e:
             self.error = (self.error or "") + " | transformers: %s" % repr(e)[:120]
 
+    def _chat(self, prompt: str) -> str:
+        """Boc prompt vao chat template, va TAT thinking neu model co."""
+        if self.chat_tok is None:
+            return prompt
+        msgs = [{"role": "user", "content": prompt}]
+        for kw in ({"enable_thinking": False}, {}):
+            try:
+                return self.chat_tok.apply_chat_template(
+                    msgs, tokenize=False, add_generation_prompt=True, **kw)
+            except TypeError:
+                continue          # template khong nhan enable_thinking
+        return prompt
+
+    @staticmethod
+    def _strip_think(t: str) -> str:
+        """Phong khi thinking van lot ra: bo phan <think>...</think>."""
+        if "</think>" in t:
+            t = t.rsplit("</think>", 1)[1]
+        return t.strip()
+
     def generate(self, prompt: str, max_tokens: int, temperature: float):
+        prompt = self._chat(prompt)
         if self.impl == "vllm":
             sp = self._SP(temperature=temperature, max_tokens=max_tokens)
             out = self._LLM.generate([prompt], sp, use_tqdm=False)
-            txt = out[0].outputs[0].text.strip()
+            txt = self._strip_think(out[0].outputs[0].text)
             return txt, {"prompt_tokens": len(out[0].prompt_token_ids),
                          "output_tokens": len(out[0].outputs[0].token_ids),
                          "cached_prompt_tokens": 0, "local": True}
@@ -160,7 +213,8 @@ class LocalHFBackend:
                     do_sample=temperature > 0, temperature=max(temperature, 1e-5),
                     pad_token_id=self.tok.eos_token_id)
             new = out[0][enc["input_ids"].shape[1]:]
-            return self.tok.decode(new, skip_special_tokens=True).strip(), {
+            return self._strip_think(
+                self.tok.decode(new, skip_special_tokens=True)), {
                 "prompt_tokens": int(enc["input_ids"].shape[1]),
                 "output_tokens": int(new.shape[0]),
                 "cached_prompt_tokens": 0, "local": True}

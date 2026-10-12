@@ -64,10 +64,19 @@ class Server:
                        {"name": "open_colab_browser_connection", "arguments": {}})
         return (r.get("structuredContent") or {}).get("result")
 
-    def call(self, name, args):
+    def call(self, name, args, _retry=True):
         r = self.m.rpc("tools/call", {"name": name, "arguments": args})
         txt = "".join(c.get("text", "") for c in r.get("content", []))
         if r.get("isError"):
+            # Doi runtime Colab (vd T4 -> A100) la KHOI DONG LAI, va cau noi
+            # rung — nhung `ready` cu van con True nen daemon bao trang thai
+            # OI.  Dau hieu la cong cu notebook bien mat khoi danh sach.
+            # Tu bat tay lai mot lan roi thu lai, thay vi bao loi la lam.
+            if _retry and ("Unknown tool" in txt or "not found" in txt.lower()):
+                self.ready = bool(self.connect())
+                self.note = "da noi lai" if self.ready else "noi lai that bai"
+                if self.ready:
+                    return self.call(name, args, _retry=False)
             raise RuntimeError(txt or str(r))
         return txt
 
