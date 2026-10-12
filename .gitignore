@@ -10,9 +10,10 @@ build/user-backup.pptx
 
 # ── hien vat tai ve / sinh ra ───────────────────────────────────────
 # do thi · checkpoint · raw data (hang GB)
-stage0/artifacts/
+stage0/# git khong bo qua duoc con khi CHA bi chan — phai chan artifacts/*
+# roi mo lai reports, khong thi ! vo tac dung
+artifacts/*
 !artifacts/reports/
-!artifacts/reports/**
 artifacts/
 # dau ra moi lan chay 0.A-0.J
 stage0/reports/
