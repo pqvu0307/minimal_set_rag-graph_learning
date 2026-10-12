@@ -131,10 +131,56 @@ _PAT = [
 ]
 _FALLBACK = 'The answer to "{q}" is {ans}.'
 
+# MuSiQue: 36% cau hoi con o dang "<thuc the> >> <quan he Wikidata>".
+# Phan lon hop khuon "{ans} is the {rel} of {ent}." — nhung mot nhom thi
+# NGUOC NGHIA neu dung khuon do: "X >> member of sports team" nghia la X
+# thuoc doi ANS, chu khong phai ANS la "member of sports team" cua X.
+_REL_VERB = {
+    "located in the administrative territorial entity": "{ent} is located in {ans}.",
+    "contains administrative territorial entity": "{ent} contains {ans}.",
+    "located on terrain feature": "{ent} is located on {ans}.",
+    "located in or next to body of water": "{ent} is located next to {ans}.",
+    "shares border with":        "{ent} shares a border with {ans}.",
+    "member of sports team":     "{ent} is a member of the sports team {ans}.",
+    "member of political party": "{ent} is a member of the political party {ans}.",
+    "member of":                 "{ent} is a member of {ans}.",
+    "educated at":               "{ent} was educated at {ans}.",
+    "owned by":                  "{ent} is owned by {ans}.",
+    "capital of":                "{ent} is the capital of {ans}.",
+    "instance of":               "{ent} is a {ans}.",
+    "part of":                   "{ent} is part of {ans}.",
+    "part of the series":        "{ent} is part of the series {ans}.",
+    "has part":                  "{ent} has {ans} as a part.",
+    "licensed to broadcast to":  "{ent} is licensed to broadcast to {ans}.",
+    "named after":               "{ent} is named after {ans}.",
+    "followed by":               "{ent} is followed by {ans}.",
+    "follows":                   "{ent} follows {ans}.",
+    "founded by":                "{ent} was founded by {ans}.",
+    "participant in":            "{ent} participated in {ans}.",
+    "based on":                  "{ent} is based on {ans}.",
+    "crosses":                   "{ent} crosses {ans}.",
+    "distributed by":            "{ent} is distributed by {ans}.",
+    "drafted by":                "{ent} was drafted by {ans}.",
+    "present in work":           "{ent} appears in {ans}.",
+    "work location":             "{ent} worked in {ans}.",
+    "position held":             "{ent} held the position of {ans}.",
+    "award received":            "{ent} received the award {ans}.",
+    "notable work":              "{ans} is a notable work of {ent}.",
+    "place served by transport hub": "{ent} serves {ans}.",
+}
+_REL_DEFAULT = "{ans} is the {rel} of {ent}."
+_ARROW = re.compile(r"^(?P<ent>.+?)\s*>>\s*(?P<rel>[^>]+?)\s*\?*$")
+
 
 def declarativize(sub_q: str, sub_a: str) -> Tuple[str, bool]:
     """(cau hoi con, dap an con) -> mot MENH DE, kem co da khop mau hay chua."""
     q = sub_q.strip().rstrip("?").strip() + "?"
+    m = _ARROW.match(q.rstrip("?"))
+    if m:
+        ent, rel = m.group("ent").strip(), m.group("rel").strip().lower()
+        tmpl = _REL_VERB.get(rel, _REL_DEFAULT)
+        out = tmpl.format(ans=sub_a, ent=ent, rel=rel)
+        return (out[:1].upper() + out[1:]), True
     for rx, tmpl in _PAT:
         m = rx.match(q)
         if m:

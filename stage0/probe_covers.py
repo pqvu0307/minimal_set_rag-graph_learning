@@ -32,6 +32,11 @@ def main() -> int:
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 300
     cfg = load_config()
     cfg["nli"]["max_length"] = 256          # doan ~100 tu, manh 1 cau — 256 du
+    if len(sys.argv) > 2:                   # cho phep quet nguong entail
+        cfg["nli"]["entail_threshold"] = float(sys.argv[2])
+    if len(sys.argv) > 3:                   # cho phep doi model NLI
+        cfg["nli"]["model"] = sys.argv[3]
+    print("   nguong entail = %.2f" % cfg["nli"]["entail_threshold"])
 
     rows = [json.loads(l) for l in DEV.read_text(encoding="utf-8").splitlines()]
     rows = [r for r in rows if r.get("question_decomposition") and r.get("paragraphs")]

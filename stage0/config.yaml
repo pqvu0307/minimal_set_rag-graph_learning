@@ -118,7 +118,13 @@ decompose:
 
 # ── 0.G  NLI / bang phu ────────────────────────────────────────────
 nli:
-  model: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"   # CON TREO — quyet dinh #3
+  # DA CHOT bang do that tren 200 truy van MuSiQue dev (probe_covers.py):
+  #                                         base    large
+  #   recall tren cap (manh, doan vang)     77.0%   86.5%
+  #   truy van co manh MO COI               36%     18.5%
+  #   tap vang nam trong mot nghiem phu     42%     54%
+  # Nguong KHONG phai don bay: 0.3 / 0.5 / 0.7 deu cho 42%.  Model moi la.
+  model: "MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli"
   batch_size: 32
   max_length: 512
   entail_threshold: 0.50
