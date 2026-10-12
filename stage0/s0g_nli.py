@@ -14,6 +14,8 @@ thap, khong phai chi khi nhan la neutral.  NLI hay bo sot bang chung dien dat la
 from __future__ import annotations
 
 import itertools
+import re
+import math
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from s0_common import (ASK, MISSING, OK, banner, load_config, verdict,
@@ -72,6 +74,15 @@ class NLI:
 
 
 # ── bang phu ────────────────────────────────────────────────────────
+_STOP = set(("the a an of in on at to is was were are and or for by with as "
+             "from that this it its his her their be been has have had not").split())
+
+
+def _words(s):
+    return {w for w in re.findall(r"[a-z0-9]+", s.lower())
+            if w not in _STOP and len(w) > 1}
+
+
 def coverage_table(nli: NLI, doc_ids: Sequence[str], doc_texts: Sequence[str],
                    claims: Sequence[str], cfg: Dict[str, Any]) -> Dict[str, Any]:
     """|doc| x |claim| diem entail.  0 luot LLM."""
@@ -106,11 +117,42 @@ def coverage_table(nli: NLI, doc_ids: Sequence[str], doc_texts: Sequence[str],
     n = max(1, len(doc_ids))
     vac = cfg["nli"].get("vacuous_fraction", 0.5)
     orphan = [j for j in range(J) if not covered_by[j]]
+
+    # ── cuu manh mo coi bang TRUNG KHOP TU ──────────────────────────
+    #
+    # Do tren 200 truy van MuSiQue (doan vang CHAC CHAN nam trong pool):
+    # khi NLI mo coi mot manh, diem no cham cho doan vang co trung vi
+    # 0,0028 — khong phai luong lu ma SAI HAN.  Nen ha nguong vo ich:
+    # lay top-1 theo diem NLI chi cuu 21%.
+    # Cung tap do, trung khop tu co trong so idf cuu 82% o top-1 va
+    # 100% o top-2.  Mien phi, va la y kien DOC LAP voi NLI.
+    #
+    # Luu y: claim cua MuSiQue sinh tu chinh doan nen tu vung trung
+    # nhieu.  Tren corpus ma claim do LLM dien dat lai, phai do lai.
+    rescued: Dict[int, List[str]] = {}
+    if orphan and cfg["nli"].get("rescue_orphan_lexical", True):
+        k = cfg["nli"].get("rescue_top_k", 2)
+        toks = [_words(t) for t in doc_texts]
+        df: Dict[str, int] = {}
+        for t in toks:
+            for w in t:
+                df[w] = df.get(w, 0) + 1
+        for j in list(orphan):
+            c = _words(claims[j])
+            sc = [sum(math.log(1 + len(doc_texts) / (1 + df.get(w, 0)))
+                      for w in c & t) for t in toks]
+            top = sorted(range(len(doc_ids)), key=lambda i: -sc[i])[:k]
+            got = [doc_ids[i] for i in top if sc[i] > 0]
+            if got:
+                covered_by[j] = got
+                rescued[j] = got
+        orphan = [j for j in range(J) if not covered_by[j]]
     vacuous = [j for j in range(J) if len(covered_by[j]) > vac * n]
     return {"claims": list(claims), "J": J, "threshold": thr,
             "grid": grid, "covered_by": covered_by,
             "orphan_claims": orphan, "vacuous_claims": vacuous,
             "coverage_count": [len(covered_by[j]) for j in range(J)],
+            "rescued_claims": rescued,
             "max_entail_per_claim": [
                 round(max([grid[d][j] for d in doc_ids], default=0.0), 4)
                 for j in range(J)]}
