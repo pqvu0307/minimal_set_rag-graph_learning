@@ -110,6 +110,11 @@ decompose:
   # Che cau hoi la 1 luot MOI TRUY VAN nen re, khong can chay local.
   model: null
   max_claims: 4
+  # Dua DOAN vao prompt che cau hoi, va bat trich nguyen van.
+  # Vi sao: thuc the bac cau ("Forrest Gump") khong nam trong cau hoi lan dap
+  # an.  Khong co doan thi LLM phai lay tu tri nho tham so; co doan thi no chi
+  # can DOC.  Quote nao khong tim thay trong doan -> loai manh do.
+  grounding_passages: 12
 
 # ── 0.G  NLI / bang phu ────────────────────────────────────────────
 nli:
@@ -118,6 +123,9 @@ nli:
   max_length: 512
   entail_threshold: 0.50
   exit_max_entail: 0.20   # cua thoat THAN TRONG: chi thoat khi MOI doan deu rat thap
+  # Manh ma qua nua pool phu duoc la manh RONG: no khong loc duoc gi, nen adq
+  # thanh luon-dung va ca moi tham so lot qua.  Hong am tham hon la manh mo coi.
+  vacuous_fraction: 0.50
 
 # ── 0.J  chia tap ──────────────────────────────────────────────────
 splits:

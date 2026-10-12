@@ -299,9 +299,8 @@ ngẫu nhiên   5 đoạn   lấy bừa trong kho
 
 \begin{frame}[fragile]{c0 · chẻ câu hỏi thành mảnh}
   \framesubtitle{c0}
-  \lead{chẻ \hl{câu hỏi \emph{và} đáp án vàng} thành những mẩu sự thật nhỏ cần
-        phải có — ta gọi là \hl{mảnh}. tầng a chạy \emph{offline để đào nhãn},
-        nên có $y$ trong tay.}
+  \lead{chẻ \hl{câu hỏi \emph{và} đáp án vàng} thành những mẩu sự thật nhỏ — ta
+        gọi là \hl{mảnh}. được đọc $y$ vì tầng a chạy \emph{offline để đào nhãn}.}
 
   \begin{columns}[t]
   \begin{column}{0.49\textwidth}
@@ -319,19 +318,19 @@ ra    J = 2 mảnh
     \end{bx}
   \end{column}
   \begin{column}{0.47\textwidth}
-    \begin{bx}[title={lấy mảnh ở đâu}]
-      \hl{musique} cho sẵn \emph{(câu hỏi con, đáp án con)} — nhưng đó chưa phải
-      mệnh đề, phải viết lại.
-      \vspace{0.25em}
-
-      \hl{corpus khác} thì nhờ llm, \textbf{1 lượt cho cả truy vấn} — không phải
-      mỗi tập con.
-    \end{bx}
-    \begin{badb}[title={được đọc $y$, nhưng vẫn còn một lỗ}]
-      \no{«Forrest Gump» không nằm trong $q$ lẫn $y$} — nó là thực thể bắc cầu.
-      musique cho sẵn; corpus khác thì llm phải tự biết, mà đoán sai thì truy vấn
+    \begin{badb}[title={chỗ dễ hỏng: thực thể bắc cầu}]
+      \no{«Forrest Gump» không nằm trong $q$ lẫn $y$.} bắt llm \emph{nhớ} thì
+      đoán sai $\Rightarrow$ mảnh vô nghĩa $\Rightarrow$ truy vấn
       \no{thoát ở c0 như thể pool thiếu}.
     \end{badb}
+    \begin{keyb}[title={chữa: cho llm \emph{đọc} thay vì \emph{nhớ}}]
+      «Forrest Gump» nằm sẵn trong \hl{đoạn 3 của pool} — nên đưa pool vào prompt,
+      và bắt mỗi mảnh kèm \hl{trích nguyên văn}.
+      \vspace{0.25em}
+
+      \dd{trích không có trong pool = llm đang bịa, loại bằng phép so chuỗi.
+          vẫn \textbf{1 lượt mỗi truy vấn}}
+    \end{keyb}
   \end{column}
   \end{columns}
 \end{frame}
@@ -450,10 +449,17 @@ hypothesis  mảnh j              1 câu
 
   \begin{columns}[t]
   \begin{column}{0.46\textwidth}
-    \begin{keyb}[title={1 · cửa thoát}]
-      mảnh nào \emph{không đoạn nào} nói ra $\Rightarrow$ trong pool
-      \no{không tồn tại} tập đủ. bỏ truy vấn ngay, \yes{trước khi tiêu một lượt
-      llm nào}.
+    \begin{keyb}[title={1 · cửa thoát, và sức khoẻ của mảnh}]
+      \begin{dia}
+mảnh MỒ CÔI  không đoạn nào phủ
+             -> pool thiếu, hoặc mảnh bịa
+mảnh RỖNG    quá nửa pool phủ được
+             -> quá chung chung, adq
+                thành LUÔN ĐÚNG
+      \end{dia}
+      \vspace{0.25em}
+      mồ côi thì thoát ngay, \yes{trước khi tiêu một lượt llm nào}. rỗng thì
+      \no{âm thầm hơn}: không ai thoát, bộ lọc chỉ lặng lẽ ngừng lọc.
     \end{keyb}
     \begin{bx}[title={3 · đoán trước cỡ đáp số}]
       $J$ mảnh thì đáp số \emph{nên} có khoảng $J$ đoạn. ví dụ: $J = 2$, và đáp số

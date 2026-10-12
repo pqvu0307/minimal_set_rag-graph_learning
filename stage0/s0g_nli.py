@@ -92,8 +92,25 @@ def coverage_table(nli: NLI, doc_ids: Sequence[str], doc_texts: Sequence[str],
     for j in range(J):
         covered_by.append([did for did in doc_ids if grid[did][j] >= thr])
 
+    # ── suc khoe cua MANH — doc mien phi tu chinh bang vua tinh ──────
+    #
+    # Mot manh hong co hai dang, va hai dang HONG NGUOC NHAU:
+    #
+    #   mo coi   khong doan nao phu.  Co the pool thieu THAT, cung co the
+    #            LLM bia sai thuc the bac cau.  Hai nguyen nhan khac han
+    #            nhau ma cung mot bieu hien -> phai bao ca hai kha nang.
+    #   rong     qua nua pool phu duoc.  Manh qua chung chung nen khong
+    #            loc duoc gi — adq thanh luon-dung, va ca ca moi tham so
+    #            cung lot.  Day la kieu hong AM THAM hon, vi no khong
+    #            lam truy van thoat, no chi lam bo loc ngung lam viec.
+    n = max(1, len(doc_ids))
+    vac = cfg["nli"].get("vacuous_fraction", 0.5)
+    orphan = [j for j in range(J) if not covered_by[j]]
+    vacuous = [j for j in range(J) if len(covered_by[j]) > vac * n]
     return {"claims": list(claims), "J": J, "threshold": thr,
             "grid": grid, "covered_by": covered_by,
+            "orphan_claims": orphan, "vacuous_claims": vacuous,
+            "coverage_count": [len(covered_by[j]) for j in range(J)],
             "max_entail_per_claim": [
                 round(max([grid[d][j] for d in doc_ids], default=0.0), 4)
                 for j in range(J)]}

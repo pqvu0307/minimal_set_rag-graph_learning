@@ -14,17 +14,58 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from s0_common import (ASK, MISSING, OK, banner, load_config, resolve,
                        verdict, write_report)
 
+# Khong co doan kem theo: LLM phai TU NHO thuc the bac cau.  Giu lam duong lui,
+# khong phai duong chinh.
 PROMPT = (
     "Decompose the question into the minimal set of atomic factual claims that "
     "together entail the gold answer. Each claim must be a single standalone "
     "sentence stating one fact, verifiable against one passage.\n"
     "Return ONLY a JSON array of strings, no prose.\n\n"
     "Question: {q}\nGold answer: {y}\n\nClaims:")
+
+# Co doan kem theo: viec cua LLM tu NHO thanh DOC.
+#
+# Vi sao quan trong: voi "ai dao dien phim thang oscar 1994?" + "Zemeckis",
+# thuc the bac cau "Forrest Gump" KHONG nam trong q lan y.  Khong dua doan vao
+# thi LLM phai lay tu tri nho tham so — dung thi may, sai thi manh vo nghia,
+# khong doan nao phu, va truy van thoat o c0 NHU THE pool thieu.
+# Dua doan vao thi "Forrest Gump" nam san trong doan 3: chi can doc ra.
+#
+# Bat trich nguyen van de KIEM DUOC: quote nao khong tim thay trong doan la
+# LLM dang bia, va ta loai manh do bang mot phep so chuoi, khong can model.
+PROMPT_GROUNDED = (
+    "Below are candidate passages, then a question and its gold answer.\n"
+    "Decompose into the minimal set of atomic factual claims that together "
+    "entail the gold answer. Each claim must be one standalone sentence "
+    "stating one fact, verifiable against ONE passage.\n"
+    "Every claim MUST be supported by a verbatim quote from the passages. "
+    "Do not use outside knowledge.\n"
+    'Return ONLY a JSON array of objects: [{{"claim": "...", "quote": "..."}}]\n\n'
+    "Passages:\n{passages}\n\nQuestion: {q}\nGold answer: {y}\n\nClaims:")
+
+
+def _norm(s: str) -> str:
+    """Chuan hoa de so trich dan: thuong hoa, gom khoang trang."""
+    return re.sub(r"\s+", " ", s.lower()).strip()
+
+
+def passages_of(row: Dict[str, Any]) -> List[str]:
+    """Doan ung vien kem theo mot row — MuSiQue `paragraphs`, HotpotQA `context`."""
+    out: List[str] = []
+    for p in row.get("paragraphs") or []:
+        if isinstance(p, dict):
+            t = (p.get("paragraph_text") or p.get("text") or "").strip()
+            if t:
+                out.append(("%s. %s" % (p.get("title", ""), t)).strip(". "))
+    for c in row.get("context") or []:            # HotpotQA: [title, [sents]]
+        if isinstance(c, (list, tuple)) and len(c) == 2:
+            out.append(("%s. %s" % (c[0], " ".join(c[1]))).strip())
+    return out
 
 
 # ── nhanh 1: phan ra gan san (MuSiQue) ──────────────────────────────
@@ -120,39 +161,76 @@ class LLMDecomposer:
         except Exception as e:
             self.error = repr(e)[:200]
 
-    def __call__(self, q: str, y: str) -> Tuple[List[str], Dict[str, int]]:
+    def __call__(self, q: str, y: str,
+                 passages: Optional[Sequence[str]] = None
+                 ) -> Tuple[List[str], Dict[str, int]]:
         if self.cli is None:
-            return [], {"prompt_tokens": 0, "output_tokens": 0}
+            return [], {"prompt_tokens": 0, "output_tokens": 0, "ungrounded": 0}
+        if passages:
+            k = self.cfg["decompose"].get("grounding_passages", 12)
+            body = "\n".join("[%d] %s" % (i + 1, p.strip().replace("\n", " ")[:600])
+                             for i, p in enumerate(passages[:k]))
+            prompt = PROMPT_GROUNDED.format(passages=body, q=q, y=y)
+        else:
+            prompt = PROMPT.format(q=q, y=y)
         r = self.cli.chat.completions.create(
-            model=self.model, temperature=0.0, max_tokens=300,
-            messages=[{"role": "user", "content": PROMPT.format(q=q, y=y)}])
+            model=self.model, temperature=0.0, max_tokens=600,
+            messages=[{"role": "user", "content": prompt}])
         txt = (r.choices[0].message.content or "").strip()
         m = re.search(r"\[.*\]", txt, re.S)
         claims: List[str] = []
+        quotes: List[str] = []
         if m:
             try:
-                claims = [str(c).strip() for c in json.loads(m.group(0)) if str(c).strip()]
+                for c in json.loads(m.group(0)):
+                    if isinstance(c, dict):
+                        s = str(c.get("claim", "")).strip()
+                        if s:
+                            claims.append(s)
+                            quotes.append(str(c.get("quote", "")).strip())
+                    elif str(c).strip():
+                        claims.append(str(c).strip()); quotes.append("")
             except Exception:
                 pass
         if not claims:
             claims = [ln.strip("-* ").strip() for ln in txt.splitlines()
                       if len(ln.strip()) > 10]
+            quotes = [""] * len(claims)
+
+        # Loai manh khong neo duoc vao doan nao — do la LLM dang bia.  Phep so
+        # chuoi thuan tuy, 0 model, nen khong them mot nguon sai nao.
+        ungrounded = 0
+        if passages:
+            blob = _norm(" ".join(passages))
+            keep_c, keep_q = [], []
+            for c, qt in zip(claims, quotes):
+                if qt and _norm(qt) not in blob:
+                    ungrounded += 1
+                    continue
+                keep_c.append(c); keep_q.append(qt)
+            if keep_c:                      # khong bao gio tra ve rong vi loc
+                claims = keep_c
         u = r.usage
         return claims[: self.cfg["decompose"]["max_claims"]], {
             "prompt_tokens": getattr(u, "prompt_tokens", 0),
-            "output_tokens": getattr(u, "completion_tokens", 0)}
+            "output_tokens": getattr(u, "completion_tokens", 0),
+            "ungrounded": ungrounded}
 
 
 def decompose(row: Dict[str, Any], llm: Optional[LLMDecomposer],
-              cfg: Dict[str, Any]) -> Dict[str, Any]:
+              cfg: Dict[str, Any],
+              passages: Optional[Sequence[str]] = None) -> Dict[str, Any]:
     if cfg["decompose"]["use_annotated_when_available"]:
         ann = from_annotation(row)
         if ann:
             return {"claims": ann, "source": "annotated", "usage": {}}
     if llm is None or llm.cli is None:
         return {"claims": [], "source": "none", "usage": {}}
-    claims, usage = llm(row.get("question", ""), str(row.get("answer", "")))
-    return {"claims": claims, "source": "llm", "usage": usage}
+    # uu tien doan that (pool cua c0); khong co thi lay doan kem theo row
+    ps = list(passages) if passages else passages_of(row)
+    claims, usage = llm(row.get("question", ""), str(row.get("answer", "")), ps)
+    return {"claims": claims, "source": "llm_grounded" if ps else "llm",
+            "usage": usage}
 
 
 # ── kiem: LLM che co sot hop khong (do tren MuSiQue) ────────────────
@@ -233,20 +311,50 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
         write_report(cfg, "s0f_decompose", rep)
         return rep
 
-    # do khop: so manh LLM sinh vs so manh gan san
+    # Do HAI thu, tren CUNG mot bo co dap so:
+    #   1. so manh co khop khong          (sot hop)
+    #   2. co bat duoc THUC THE BAC CAU khong
+    # (2) moi la rui ro that cua corpus khong co phan ra san: thuc the bac cau
+    # khong nam trong q lan y, nen LLM phai doc ra tu doan — hoac bia.
+    # Chay CA HAI che do de thay dua doan vao co an thua gi khong.
+    def bridges(row: Dict[str, Any]) -> List[str]:
+        """Dap an TRUNG GIAN — khong tinh dap an cuoi, vi no da nam trong y."""
+        dec = row.get("question_decomposition") or []
+        return [str(s.get("answer", "")).strip() for s in dec[:-1]
+                if isinstance(s, dict) and str(s.get("answer", "")).strip()]
+
+    def hit(claims: List[str], bs: List[str]) -> Optional[bool]:
+        if not bs:
+            return None
+        blob = _norm(" ".join(claims))
+        return all(_norm(b) in blob for b in bs)
+
     rows_out = []
     agree = 0
+    br = {"grounded_hit": 0, "grounded_tot": 0, "bare_hit": 0, "bare_tot": 0}
     for r in have:
         ann = from_annotation(r) or []
-        got, usage = llm(r["question"], str(r["answer"]))
+        bs = bridges(r)
+        ps = passages_of(r)
+        got, usage = llm(r["question"], str(r["answer"]), ps)
+        bare, _ = llm(r["question"], str(r["answer"]))      # khong dua doan
         ok = len(got) == len(ann)
         agree += int(ok)
+        hg, hb = hit(got, bs), hit(bare, bs)
+        for k, h in (("grounded", hg), ("bare", hb)):
+            if h is not None:
+                br[k + "_tot"] += 1
+                br[k + "_hit"] += int(h)
         rows_out.append({"question": r["question"][:90],
                          "J_annotated": len(ann), "J_llm": len(got),
                          "match": ok, "llm_claims": got,
-                         "usage": usage})
+                         "bridges": bs, "bridge_ok_grounded": hg,
+                         "bridge_ok_bare": hb,
+                         "n_passages": len(ps), "usage": usage})
     rep["probe"] = rows_out
     rep["J_match_rate"] = round(agree / max(1, len(have)), 3)
+    rep["bridge_entity"] = br
+    rep["ungrounded_claims"] = sum(x["usage"].get("ungrounded", 0) for x in rows_out)
     tok = sum(x["usage"].get("prompt_tokens", 0) + x["usage"].get("output_tokens", 0)
               for x in rows_out)
     rep["mean_tokens_per_query"] = round(tok / max(1, len(rows_out)), 1)
@@ -267,6 +375,29 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
         verdict(ASK, "khop chi %.0f%% — chua dung duoc.  Phai sua buoc nay TRUOC GD 1,\n"
                      "           khong thi bang phu sai o goc va moi thu sau sai theo"
                 % (100 * rep["J_match_rate"]))
+
+    # ── thuc the bac cau: phep do quan trong nhat cua buoc nay ──────
+    if br["grounded_tot"]:
+        rg = br["grounded_hit"] / br["grounded_tot"]
+        rb = br["bare_hit"] / max(1, br["bare_tot"])
+        print("\n     bat duoc THUC THE BAC CAU:")
+        print("       co dua doan vao    %3d/%3d = %.0f%%"
+              % (br["grounded_hit"], br["grounded_tot"], 100 * rg))
+        print("       chi q + y          %3d/%3d = %.0f%%"
+              % (br["bare_hit"], br["bare_tot"], 100 * rb))
+        print("     manh bi loai vi trich dan khong co trong doan: %d"
+              % rep["ungrounded_claims"])
+        if rg >= 0.9:
+            verdict(OK, "neo vao doan thi LLM doc duoc thuc the bac cau\n"
+                        "           ->  dung duoc cho corpus khong co phan ra san")
+        else:
+            verdict(ASK, "chi %.0f%% bat duoc thuc the bac cau DU DA dua doan vao.\n"
+                         "           Hau qua: manh vo nghia -> khong doan nao phu ->\n"
+                         "           truy van thoat o c0 NHU THE pool thieu, khong\n"
+                         "           phan biet duoc.  Phai sua truoc GD 1." % (100 * rg))
+        if rb < rg - 0.05:
+            print("     -> dua doan vao an them %.0f diem.  Giu che do grounded."
+                  % (100 * (rg - rb)))
 
     p = write_report(cfg, "s0f_decompose", rep)
     print("\n  -> %s" % p)

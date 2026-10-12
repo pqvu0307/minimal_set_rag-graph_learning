@@ -132,6 +132,38 @@ check("mau 'the <rel> of X' ra menh de",
 check("khuon bao phu van la cau hoan chinh",
       declarativize("How many ducks?", "7")[0].endswith("."), True)
 
+print("\n== suc khoe manh  (mo coi vs rong) ==")
+# Hai kieu manh hong, HONG NGUOC NHAU.  Mo coi lam truy van thoat oan; rong
+# lam adq thanh luon-dung nen bo loc ngung lam viec — kieu thu hai am tham hon.
+
+
+class _FakeNLI:
+    def entail_probs(self, prem, hyp):
+        return [0.9 if ("Gump" in h and "Gump" in p) else 0.05
+                for p, h in zip(prem, hyp)]
+
+
+from s0g_nli import coverage_table as _cov
+_cfg = {"nli": {"entail_threshold": 0.5, "vacuous_fraction": 0.5}}
+_tb = _cov(_FakeNLI(), ["d1", "d2", "d3"],
+                     ["Forrest Gump won.", "Zemeckis directed Forrest Gump.",
+                      "Unrelated text."],
+                     ["Forrest Gump won Best Picture.", "Nothing matches this."],
+                     _cfg)
+check("dem duoc so doan phu moi manh", _tb["coverage_count"], [2, 0])
+check("bat manh MO COI", _tb["orphan_claims"], [1])
+check("bat manh RONG (qua nua pool phu)", _tb["vacuous_claims"], [0])
+
+print("\n== neo manh vao doan ==")
+from s0f_decompose import passages_of
+check("doc duoc doan kieu MuSiQue",
+      len(passages_of({"paragraphs": [
+          {"title": "A", "paragraph_text": "x"},
+          {"title": "B", "paragraph_text": "y"}]})), 2)
+check("doc duoc doan kieu HotpotQA",
+      len(passages_of({"context": [["A", ["x", "y"]], ["B", ["z"]]]})), 2)
+check("khong co doan -> rong, khong no", passages_of({}), [])
+
 print("\n" + "=" * 62)
 if fails:
     print("  %d TEST FAIL: %s" % (len(fails), fails))
