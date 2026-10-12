@@ -46,3 +46,4 @@ desktop.ini
 #   *.pdf   la ban giao cho giao su, va tectonic bi gitignore nen
 #           khong phai luc nao cung dung lai duoc
 #   *.pptx  ban SUA TAY, khong sinh lai tu deck.py duoc
+artifacts/kg/
