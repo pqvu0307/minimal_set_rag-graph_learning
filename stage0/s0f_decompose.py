@@ -72,6 +72,22 @@ def reaches_answer(claims: Sequence[str], y: str,
     return False
 
 
+def locate_quotes(quotes: Sequence[str],
+                  passages: Sequence[str]) -> List[Optional[int]]:
+    """Moi trich dan nam o DOAN NAO.  Phep so chuoi, 0 model.
+
+    Day la thong tin dang bi vut di: prompt da bat LLM trich nguyen van, nen
+    ta biet manh j <- doan k ma khong phai hoi them gi.  Hop lai duoc mot tap
+    ung vien, va tap do chinh la thu c5 dang di tim.
+    """
+    norm = [_norm(p) for p in passages]
+    out: List[Optional[int]] = []
+    for q in quotes:
+        nq = _norm(q)
+        out.append(next((i for i, p in enumerate(norm) if nq and nq in p), None))
+    return out
+
+
 def passages_of(row: Dict[str, Any]) -> List[str]:
     """Doan ung vien kem theo mot row — MuSiQue `paragraphs`, HotpotQA `context`."""
     out: List[str] = []
@@ -231,11 +247,15 @@ class LLMDecomposer:
 
         claims = claims[: self.cfg["decompose"]["max_claims"]]
         u = r.usage
+        quotes = quotes[: len(claims)]
         return claims, {
             "prompt_tokens": getattr(u, "prompt_tokens", 0),
             "output_tokens": getattr(u, "completion_tokens", 0),
             "ungrounded": ungrounded,
-            "reaches_answer": int(reaches_answer(claims, y))}
+            "reaches_answer": int(reaches_answer(claims, y)),
+            # tap ung vien doc thang tu trich dan — khong ton luot nao them
+            "quotes": quotes,
+            "quote_passage": locate_quotes(quotes, passages or [])}
 
 
 def decompose(row: Dict[str, Any], llm: Optional[LLMDecomposer],
@@ -350,9 +370,20 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
         blob = _norm(" ".join(claims))
         return all(_norm(b) in blob for b in bs)
 
+    def gold_support(row: Dict[str, Any]) -> Optional[set]:
+        """Doan vang do chinh MuSiQue gan, mot doan moi manh."""
+        idx = {s.get("paragraph_support_idx")
+               for s in (row.get("question_decomposition") or [])
+               if isinstance(s, dict) and s.get("paragraph_support_idx") is not None}
+        return idx or None
+
     rows_out = []
     agree = 0
     br = {"grounded_hit": 0, "grounded_tot": 0, "bare_hit": 0, "bare_tot": 0}
+    # Tap doc THANG tu trich dan, khong qua NLI / v(S) / g_theta / c5 gi het.
+    # Neu no dung gan het thi phan lon co may o giua la thua — day la phep do
+    # quyet dinh dieu do, va no mien phi vi MuSiQue gan san doan vang.
+    qd = {"exact": 0, "tot": 0, "inter": 0, "pred": 0, "goldn": 0}
     for r in have:
         ann = from_annotation(r) or []
         bs = bridges(r)
@@ -366,11 +397,23 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
             if h is not None:
                 br[k + "_tot"] += 1
                 br[k + "_hit"] += int(h)
+
+        t_llm = {i for i in usage.get("quote_passage", []) if i is not None}
+        gold = gold_support(r)
+        if gold is not None and t_llm:
+            qd["tot"] += 1
+            qd["exact"] += int(t_llm == gold)
+            qd["inter"] += len(t_llm & gold)
+            qd["pred"] += len(t_llm)
+            qd["goldn"] += len(gold)
+
         rows_out.append({"question": r["question"][:90],
                          "J_annotated": len(ann), "J_llm": len(got),
                          "match": ok, "llm_claims": got,
                          "bridges": bs, "bridge_ok_grounded": hg,
                          "bridge_ok_bare": hb,
+                         "T_from_quotes": sorted(t_llm),
+                         "T_gold": sorted(gold) if gold else None,
                          "n_passages": len(ps), "usage": usage})
     rep["probe"] = rows_out
     rep["J_match_rate"] = round(agree / max(1, len(have)), 3)
@@ -428,6 +471,35 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
         if rb < rg - 0.05:
             print("     -> dua doan vao an them %.0f diem.  Giu che do grounded."
                   % (100 * (rg - rb)))
+
+    # ── CAU HOI LON: doc thang tap tu trich dan co du khong? ────────
+    #
+    # Neu du, thi NLI + v(S) + tau_q + g_theta + c5 phan lon la thua, va
+    # pipeline co the rut con mot luot LLM.  Day la phep do quyet dinh, va
+    # no mien phi: MuSiQue gan san doan vang cho tung manh.
+    if qd["tot"]:
+        ex = qd["exact"] / qd["tot"]
+        prec = qd["inter"] / max(1, qd["pred"])
+        rec = qd["inter"] / max(1, qd["goldn"])
+        rep["T_from_quotes"] = {"n": qd["tot"], "exact_set_match": round(ex, 3),
+                                "precision": round(prec, 3), "recall": round(rec, 3)}
+        print("\n     TAP DOC THANG TU TRICH DAN (0 luot LLM them):")
+        print("       khop y nguyen tap vang   %.0f%%  (%d/%d)"
+              % (100 * ex, qd["exact"], qd["tot"]))
+        print("       precision %.2f   recall %.2f" % (prec, rec))
+        if ex >= 0.9:
+            verdict(ASK, "tap doc thang dung %.0f%% — CAO.  Neu cong 0.5 xac nhan lai\n"
+                         "           tren pool THAT (khong phai doan gan san cua bo du\n"
+                         "           lieu), thi nen cho c5 THU TAP NAY TRUOC, va phan\n"
+                         "           lon may o giua chi con lam nhiem vu XAC MINH."
+                    % (100 * ex))
+        elif ex >= 0.6:
+            verdict(OK, "dung %.0f%% — du tot de lam UNG VIEN DAU cho c5, chua du de\n"
+                        "           bo xac minh.  Dung sai %d%% ca la dung sai that, vi\n"
+                        "           khong co ai kiem lai." % (100 * ex, round(100 * (1 - ex))))
+        else:
+            verdict(OK, "chi dung %.0f%% — doc thang KHONG thay duoc pipeline.\n"
+                        "           Van dung lam ung vien dau cho c5." % (100 * ex))
 
     p = write_report(cfg, "s0f_decompose", rep)
     print("\n  -> %s" % p)

@@ -164,6 +164,21 @@ check("doc duoc doan kieu HotpotQA",
       len(passages_of({"context": [["A", ["x", "y"]], ["B", ["z"]]]})), 2)
 check("khong co doan -> rong, khong no", passages_of({}), [])
 
+print("\n== tap doc thang tu trich dan ==")
+from s0f_decompose import locate_quotes, reaches_answer
+_ps = ["Forrest Gump. Forrest Gump won Best Picture in 1994.",
+       "Zemeckis. Robert Zemeckis directed Forrest Gump.",
+       "Noise. Something else entirely."]
+check("trich dan -> dung chi so doan",
+      locate_quotes(["Forrest Gump won Best Picture in 1994",
+                     "Robert Zemeckis directed Forrest Gump"], _ps), [0, 1])
+check("trich khong co trong doan nao -> None",
+      locate_quotes(["this text appears nowhere"], _ps), [None])
+check("so khong phan biet hoa thuong / khoang trang",
+      locate_quotes(["ROBERT   ZEMECKIS  DIRECTED   forrest gump"], _ps), [1])
+check("manh cham toi dap an", reaches_answer(["X do Zemeckis dao dien."], "Zemeckis"), True)
+check("manh troi khoi dap an", reaches_answer(["X la phim 1994."], "Zemeckis"), False)
+
 print("\n" + "=" * 62)
 if fails:
     print("  %d TEST FAIL: %s" % (len(fails), fails))

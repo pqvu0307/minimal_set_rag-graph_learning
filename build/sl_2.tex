@@ -117,6 +117,52 @@ hypothesis  mảnh j              1 câu
   \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{vì sao không dừng ngay ở đây?}
+  \framesubtitle{c0}
+  \lead{trích dẫn đã chỉ thẳng mảnh nào ← đoạn nào. hợp lại là một tập ứng viên,
+        \hl{miễn phí}. vậy sao không trả luôn nó rồi xong?}
+
+  \begin{columns}[t]
+  \begin{column}{0.46\textwidth}
+    \begin{keyb}[title={và ta có dùng nó thật}]
+      \begin{dia}
+mảnh 1 <- trích trong đoạn  3
+mảnh 2 <- trích trong đoạn 12
+                 |
+                 v
+        T_llm = {3, 12}     0 lượt thêm
+      \end{dia}
+      \vspace{0.25em}
+      đây thành \hl{ứng viên đầu tiên} mà \texttt{c5} thử — trước cả danh sách
+      nghiệm phủ. đúng ngay thì phần tìm kiếm \yes{bỏ qua được}.
+    \end{keyb}
+  \end{column}
+  \begin{column}{0.50\textwidth}
+    \begin{badb}[title={nhưng nó là một \emph{lời khai}, không phải một \emph{phép đo}}]
+      \textbf{1}\; chưa ai kiểm. cả thiết kế này đứng trên chỗ đó: $v(S)$ là
+      \emph{chạy thật} model trên $S$ rồi đối đáp án. llm tự khai nó dùng đoạn nào
+      là đúng loại việc \no{model vốn làm kém} — $35$–$62\%$ ca nó trả lời đúng
+      \emph{khi ngữ cảnh không đủ}.
+      \vspace{0.3em}
+
+      \textbf{2}\; mỗi mảnh nó chỉ trích \emph{một} đoạn. mà mảnh 1 còn được đoạn 7
+      đỡ nữa — nên ta \no{mất cả họ} $W$, mất luôn độ tin cậy và chỉ số cấu trúc.
+      \vspace{0.3em}
+
+      \textbf{3}\; không có gì nói tập con của nó không cũng đủ.
+    \end{badb}
+  \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \begin{keyb}
+    và đây là \emph{câu hỏi thực nghiệm}, không phải câu hỏi quan điểm: musique gắn
+    sẵn đoạn vàng cho từng mảnh, nên \hl{\texttt{0.f} đo thẳng được} $T_{\text{llm}}$
+    đúng bao nhiêu \%. \yes{đúng gần hết thì phần lớn máy móc ở giữa rút về vai trò
+    xác minh} — và đó là kết quả tốt, không phải thất bại.
+  \end{keyb}
+\end{frame}
+
 \begin{frame}[fragile]{c0 · bảng phủ, và nó bắt ngay cái bẫy}
   \framesubtitle{c0}
   \begin{columns}[t]
