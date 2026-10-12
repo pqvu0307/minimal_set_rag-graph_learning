@@ -182,29 +182,37 @@ def serve() -> int:
     srv.listen(8)
     print("daemon san sang tren %s:%d — mot tien trinh MCP duy nhat" % (HOST, PORT))
     sys.stdout.flush()
-    while True:
-        conn, _ = srv.accept()
-        stop = False
+    # MOI KET NOI MOT THREAD.  Vong accept don luong thi mot client treo giua
+    # chung (bi timeout cat, nua goi tin) la chan luon moi client sau — ke ca
+    # lenh `status` von khong dung toi MCP.  Da dinh dung cho nay.
+    halt = threading.Event()
+
+    def serve_one(conn):
         try:
+            conn.settimeout(120)          # khong cho mot client treo mai
             req = json.loads(_recv_all(conn) or "{}")
-            stop = req.get("op") == "stop"
             try:
                 res = s.handle(req)
             except Exception as e:
                 res = {"ok": False, "out": "%s: %s" % (type(e).__name__, e)}
             conn.sendall((json.dumps(res) + "\n").encode("utf-8"))
+            if req.get("op") == "stop":
+                halt.set()
         except Exception as e:
-            # Client ngat giua chung (bi timeout cat, Ctrl-C, ...) thi KHONG
-            # duoc lam sap daemon — job dang chay se chet theo.  Da mat mot
-            # me 90 phut vi thieu dung cho nay.
             print("  (bo qua loi client: %s)" % type(e).__name__, flush=True)
         finally:
             try:
                 conn.close()
             except Exception:
                 pass
-        if stop:
-            break
+
+    srv.settimeout(1.0)
+    while not halt.is_set():
+        try:
+            conn, _ = srv.accept()
+        except socket.timeout:
+            continue
+        threading.Thread(target=serve_one, args=(conn,), daemon=True).start()
     s.m.close()
     return 0
 

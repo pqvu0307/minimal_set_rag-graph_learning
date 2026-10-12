@@ -32,7 +32,33 @@ class MCP:
             errors="replace", bufsize=1)
         self._id = 0
         self.err: list = []
+        # MOT thread doc stdout duy nhat, phan phat theo id.
+        #
+        # Ban cu sinh mot thread doc cho MOI lenh.  Lenh nao timeout thi
+        # thread doc cua no VAN SONG va nuot phan hoi cua lenh sau — tu do
+        # moi RPC tiep theo deu treo.  Da mat mot me vi dung chuyen nay.
+        self._box: Dict[int, Dict[str, Any]] = {}
+        self._ev: Dict[int, threading.Event] = {}
+        self._send_lock = threading.Lock()
         threading.Thread(target=self._drain, daemon=True).start()
+        threading.Thread(target=self._pump, daemon=True).start()
+
+    def _pump(self):
+        for line in self.p.stdout:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                m = json.loads(line)
+            except Exception:
+                continue
+            i = m.get("id")
+            if i is None:
+                continue
+            self._box[i] = m
+            ev = self._ev.get(i)
+            if ev:
+                ev.set()
 
     def _drain(self):
         for line in self.p.stderr:
@@ -42,32 +68,22 @@ class MCP:
         self.p.stdin.write(json.dumps(obj) + "\n")
         self.p.stdin.flush()
 
-    def rpc(self, method: str, params: Optional[Dict[str, Any]] = None):
-        self._id += 1
-        mid = self._id
-        self._send({"jsonrpc": "2.0", "id": mid, "method": method,
-                    "params": params or {}})
-        box: Dict[str, Any] = {}
-
-        def rd():
-            for line in self.p.stdout:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    m = json.loads(line)
-                except Exception:
-                    continue
-                if m.get("id") == mid:
-                    box["r"] = m
-                    return
-        t = threading.Thread(target=rd, daemon=True)
-        t.start()
-        t.join(self.timeout)
-        if "r" not in box:
+    def rpc(self, method: str, params: Optional[Dict[str, Any]] = None,
+            timeout: Optional[float] = None):
+        with self._send_lock:
+            self._id += 1
+            mid = self._id
+            ev = threading.Event()
+            self._ev[mid] = ev
+            self._send({"jsonrpc": "2.0", "id": mid, "method": method,
+                        "params": params or {}})
+        got = ev.wait(timeout or self.timeout)
+        self._ev.pop(mid, None)
+        r = self._box.pop(mid, None)
+        if not got or r is None:
             raise TimeoutError("khong co phan hoi cho %s sau %.0fs.  stderr:\n%s"
-                               % (method, self.timeout, "\n".join(self.err[-12:])))
-        r = box["r"]
+                               % (method, timeout or self.timeout,
+                                  "\n".join(self.err[-12:])))
         if "error" in r:
             raise RuntimeError("%s -> %s" % (method, r["error"]))
         return r.get("result")
