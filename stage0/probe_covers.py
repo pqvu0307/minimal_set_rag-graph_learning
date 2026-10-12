@@ -76,7 +76,51 @@ def load_2wiki(n: int) -> List[Tuple[List[str], List[str], set, Dict]]:
     return out
 
 
-LOADERS = {"musique": load_musique, "2wiki": load_2wiki}
+def load_musique_pool(n: int) -> List[Tuple[List[str], List[str], set, Dict]]:
+    """POOL THAT: bm25 tren toan corpus + mo rong theo lien ket tieu de.
+
+    Khac han hai loader tren — chung dung doan KEM SAN cua bo du lieu, tuc
+    doan vang CHAC CHAN co mat.  O day doan vang CO THE KHONG duoc lay ve,
+    va do moi la dieu kien that.
+
+    Ti le 12 bm25 + 8 lien ket la toi uu do duoc o pool_sources.py:
+        bm25 20 + lien ket 0  ->  32.5%
+        bm25 12 + lien ket 8  ->  51.0%
+    `gold` tra ve la chi so TRONG POOL, nen no co the THIEU hoac RONG —
+    dung vay, vi do chinh la tran cua tang A.
+    """
+    import collections as _c
+    from build_pool import BM25
+    from pool_sources import link_graph, load as load_titles
+    k_bm, k_lk = 12, 8
+    items, titles, texts = load_titles(n)
+    docs = ["%s. %s" % (a, b) for a, b in zip(titles, texts)]
+    bm = BM25(docs)
+    g = link_graph(titles, texts)
+    out = []
+    for it in items:
+        seed = bm.top(it["q"], k_bm)
+        s = list(seed)
+        cnt: Dict[int, int] = _c.Counter()
+        for j in seed:
+            for kk in g.get(j, []):
+                if kk not in set(s):
+                    cnt[kk] += 1
+        s += [kk for kk, _ in cnt.most_common(k_lk)]
+        ps = [docs[j] for j in s]
+        gold = {s.index(j) for j in it["gold"] if j in s}
+        cl = from_annotation(it["row"])
+        if not cl:
+            continue
+        out.append((cl, ps, gold,
+                    {"question": it["q"], "answer": it["y"],
+                     "answer_aliases": it["row"].get("answer_aliases") or [],
+                     "gold_in_pool": len(gold), "gold_total": len(it["gold"])}))
+    return out
+
+
+LOADERS = {"musique": load_musique, "2wiki": load_2wiki,
+           "musique_pool": load_musique_pool}
 
 
 def main() -> int:

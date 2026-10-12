@@ -180,7 +180,7 @@ def main() -> int:
 
     for tag, fn in (("A", score_A), ("B", score_B)):
         t1 = time.time()
-        with ThreadPoolExecutor(max_workers=12) as ex:
+        with ThreadPoolExecutor(max_workers=int(arg.get("workers", 48))) as ex:
             for j, v in zip(jobs, ex.map(fn, jobs)):
                 j[tag] = v
         print("   %s xong %.0fs" % (tag, time.time() - t1))
