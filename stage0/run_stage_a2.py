@@ -46,6 +46,7 @@ from s0_common import load_config                       # noqa: E402
 from s0e_judge import _aliases_line                     # noqa: E402
 from s0g_nli import NLI, coverage_table, minimal_covers  # noqa: E402
 from cmp_scorers import SUFF_TMPL, block, p_yes         # noqa: E402
+from run_stage_a import rank_by_question                # noqa: E402
 from probe_covers import LOADERS, LARGE                 # noqa: E402
 
 
@@ -103,13 +104,27 @@ def main() -> int:
             print("   dot0 %4d/%d  %.0fs" % (i, len(data), time.time() - t0), flush=True)
 
     # ── dot 1: TRAN cho moi truy van, song song ─────────────────────
+    #
+    # Tran phai la CUC DAI tren nhieu moc, khong chi ca pool.  Ban v1 lay
+    # max(v(rong), v(R), v(C)) chinh vi nhoi ca pool vao lam model phan tan
+    # — v(C) < v(R) la chuyen thuong gap.  Sang v2 toi bo moc R di, do la
+    # mot hoi quy tu minh gay ra: tran bi dim thi tau_q sai VA tran_thap
+    # bat oan.  Dua R tro lai: top-12 theo trung khop tu voi cau hoi.
     t1 = time.time()
+    for r in recs:
+        order = rank_by_question(r["q"], [r["txt"][i] for i in r["ids"]])
+        r["R"] = [r["ids"][k] for k in order[:12]]
     with ThreadPoolExecutor(max_workers=W) as ex:
-        ceil_b = list(ex.map(B, [(r["q"], r["y"], r["al"], r["ids"], r["txt"])
+        ceil_all = list(ex.map(B, [(r["q"], r["y"], r["al"], r["ids"], r["txt"])
+                                   for r in recs]))
+        ceil_R = list(ex.map(B, [(r["q"], r["y"], r["al"], r["R"], r["txt"])
                                  for r in recs]))
-    calls = len(recs)
-    for r, b in zip(recs, ceil_b):
-        r["suff_C"] = (b or 0.0) * c_score(r["tb"], r["ids"])
+    calls = 2 * len(recs)
+    for r, ba, br in zip(recs, ceil_all, ceil_R):
+        sa = (ba or 0.0) * c_score(r["tb"], r["ids"])
+        sr = (br or 0.0) * c_score(r["tb"], r["R"])
+        r["suff_C"] = max(sa, sr)
+        r["suff_all"], r["suff_R"] = round(sa, 3), round(sr, 3)
         r["tau"] = theta * r["suff_C"]
     print("   dot1 tran: %d luot, %.0fs" % (calls, time.time() - t1))
 

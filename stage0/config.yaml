@@ -135,6 +135,10 @@ nli:
   # Manh ma qua nua pool phu duoc la manh RONG: no khong loc duoc gi, nen adq
   # thanh luon-dung va ca moi tham so lot qua.  Hong am tham hon la manh mo coi.
   vacuous_fraction: 0.50
+  # Manh duoc cuu bang trung khop tu phai co diem trong GRID, khong chi
+  # trong covered_by — c_score doc grid.  Dat dung bang nguong: bang
+  # chung co that nhung chua duoc entailment xac nhan.
+  rescue_score: 0.50
 
 # ── 0.J  chia tap ──────────────────────────────────────────────────
 splits:

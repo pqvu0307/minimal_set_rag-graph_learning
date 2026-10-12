@@ -146,6 +146,22 @@ def coverage_table(nli: NLI, doc_ids: Sequence[str], doc_texts: Sequence[str],
             if got:
                 covered_by[j] = got
                 rescued[j] = got
+                # PHAI ghi ca vao grid, khong chi covered_by.
+                #
+                # c_score doc GRID chu khong doc covered_by.  Manh duoc cuu
+                # von mo coi CHINH VI moi o grid cua no duoi nguong (trung
+                # vi 0,0028), nen neu khong ghi lai thi
+                #     C = min qua cac manh ~ 0.003
+                #     suff = B x C < suff_min  ->  tran_thap, CHAC CHAN
+                # Phep cuu bat o 18-20% truy van, nen bug nay mot minh nem
+                # ngan ay truy van vao "pool thieu" mot cach oan uong.
+                #
+                # Gia tri dat DUNG BANG NGUONG: bang chung co that nhung la
+                # trung khop tu, chua duoc entailment xac nhan — "vua du dat",
+                # khong phai "chac chan".
+                for d in got:
+                    grid[d][j] = max(grid[d][j],
+                                     cfg["nli"].get("rescue_score", thr))
         orphan = [j for j in range(J) if not covered_by[j]]
     vacuous = [j for j in range(J) if len(covered_by[j]) > vac * n]
     return {"claims": list(claims), "J": J, "threshold": thr,
