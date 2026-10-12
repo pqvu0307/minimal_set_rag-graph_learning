@@ -299,41 +299,75 @@ ngẫu nhiên   5 đoạn   lấy bừa trong kho
 
 \begin{frame}[fragile]{c0 · chẻ câu hỏi thành mảnh}
   \framesubtitle{c0}
-  \lead{bước đầu tiên không gọi model lớn lần nào. nó chỉ \emph{chẻ} câu hỏi ra
-        thành những mẩu sự thật nhỏ cần phải có — ta gọi là \hl{mảnh}.}
+  \lead{chẻ \hl{câu hỏi \emph{và} đáp án vàng} thành những mẩu sự thật nhỏ cần
+        phải có — ta gọi là \hl{mảnh}. tầng a chạy \emph{offline để đào nhãn},
+        nên có $y$ trong tay.}
 
   \begin{columns}[t]
   \begin{column}{0.49\textwidth}
-    \begin{bx}[title={chẻ câu hỏi ví dụ}]
+    \begin{bx}[title={vào là $q$ \emph{và} $y$ — ra là $J$ mệnh đề}]
       \begin{dia}
-câu hỏi
-  ai đạo diễn phim thắng oscar 1994?
+vào   q  ai đạo diễn phim thắng oscar 1994?
+      y  Robert Zemeckis
 
-chẻ ra  ->  J = 2 mảnh
-
-mảnh 1  phim thắng oscar 1994 là
-        Forrest Gump
-mảnh 2  Forrest Gump do Zemeckis
-        đạo diễn
+ra    J = 2 mảnh
+  mảnh 1  phim thắng oscar 1994 là
+          Forrest Gump
+  mảnh 2  Forrest Gump do Zemeckis
+          đạo diễn
       \end{dia}
-      \vspace{0.25em}
-      \dd{bộ dữ liệu musique có sẵn phân rã này. corpus riêng thì nhờ llm,
-          \textbf{1 lượt cho cả truy vấn} — không phải mỗi tập con}
     \end{bx}
   \end{column}
   \begin{column}{0.47\textwidth}
-    \begin{keyb}[title={đối chiếu đoạn với mảnh — bằng model nhỏ}]
-      với từng cặp (đoạn $k$, mảnh $j$), hỏi một model nhỏ \hl{chạy trên máy mình}:
-      \emph{«đọc đoạn này có suy ra được câu kia không?»}
-      \vspace{0.3em}
+    \begin{bx}[title={lấy mảnh ở đâu}]
+      \hl{musique} cho sẵn \emph{(câu hỏi con, đáp án con)} — nhưng đó chưa phải
+      mệnh đề, phải viết lại.
+      \vspace{0.25em}
 
-      \dd{tên kỹ thuật là \textbf{nli} (natural language inference). model
-          ${\sim}400$M tham số, \yes{0 lượt gọi api}, $40 \times J$ lượt chạy —
-          vài giây}
+      \hl{corpus khác} thì nhờ llm, \textbf{1 lượt cho cả truy vấn} — không phải
+      mỗi tập con.
+    \end{bx}
+    \begin{badb}[title={được đọc $y$, nhưng vẫn còn một lỗ}]
+      \no{«Forrest Gump» không nằm trong $q$ lẫn $y$} — nó là thực thể bắc cầu.
+      musique cho sẵn; corpus khác thì llm phải tự biết, mà đoán sai thì truy vấn
+      \no{thoát ở c0 như thể pool thiếu}.
+    \end{badb}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{c0 · đối chiếu từng đoạn với từng mảnh}
+  \framesubtitle{c0}
+  \lead{với mỗi cặp (đoạn $k$, mảnh $j$), hỏi một model nhỏ \hl{chạy trên máy mình}:
+        \emph{«đọc đoạn này có suy ra được câu kia không?»}}
+
+  \begin{columns}[t]
+  \begin{column}{0.49\textwidth}
+    \begin{keyb}[title={công cụ: một model nli nhỏ}]
+      \begin{dia}
+premise     nội dung đoạn k     ~100 chữ
+hypothesis  mảnh j              1 câu
+                 |
+                 v
+         entail / neutral / contradict
+      \end{dia}
+      \vspace{0.25em}
+      \dd{model ${\sim}400$M tham số, \yes{0 lượt gọi api}, $40 \times J$ lượt
+          chạy — vài giây trên máy mình}
     \end{keyb}
+  \end{column}
+  \begin{column}{0.47\textwidth}
+    \begin{badb}[title={nên mảnh PHẢI là câu khẳng định}]
+      nli chỉ được huấn luyện trên mệnh đề. đưa thẳng
+      \texttt{"Who directed X? -> Y"} vào ô \emph{hypothesis} là ngoài phân phối —
+      \no{bảng phủ thành rác, mà không một cảnh báo nào}.
+      \vspace{0.25em}
+
+      đây là lý do bước viết lại ở slide trước \hl{không bỏ qua được}.
+    \end{badb}
     \begin{bx}[title={kết quả gọi là bảng phủ}]
-      một bảng tích: ô $(k, j)$ đánh dấu nếu đoạn $k$ \emph{nói ra} mảnh $j$.
-      slide sau là bảng phủ thật của ví dụ.
+      ô $(k, j)$ đánh dấu nếu đoạn $k$ \emph{nói ra} mảnh $j$ — slide sau là bảng
+      thật của ví dụ.
     \end{bx}
   \end{column}
   \end{columns}
@@ -418,11 +452,8 @@ mảnh 2  Forrest Gump do Zemeckis
   \begin{column}{0.46\textwidth}
     \begin{keyb}[title={1 · cửa thoát}]
       mảnh nào \emph{không đoạn nào} nói ra $\Rightarrow$ trong pool
-      \no{không tồn tại} tập đủ. bỏ truy vấn ngay.
-      \vspace{0.25em}
-
-      \dd{ước tính ${\sim}45\%$ truy vấn thoát ở đây — và chúng thoát \yes{trước}
-          khi tiêu một lượt llm nào}
+      \no{không tồn tại} tập đủ. bỏ truy vấn ngay, \yes{trước khi tiêu một lượt
+      llm nào}.
     \end{keyb}
     \begin{bx}[title={3 · đoán trước cỡ đáp số}]
       $J$ mảnh thì đáp số \emph{nên} có khoảng $J$ đoạn. ví dụ: $J = 2$, và đáp số

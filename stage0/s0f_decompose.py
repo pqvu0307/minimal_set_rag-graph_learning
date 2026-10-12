@@ -28,15 +28,55 @@ PROMPT = (
 
 
 # ── nhanh 1: phan ra gan san (MuSiQue) ──────────────────────────────
-def from_annotation(row: Dict[str, Any]) -> Optional[List[str]]:
-    """MuSiQue: question_decomposition = [{question, answer, paragraph_support_idx}].
+#
+# MuSiQue KHONG cho san "manh".  No cho (cau hoi con, dap an con).  Model NLI
+# duoc huan luyen tren CAU KHANG DINH, nen dua thang "Who directed X? -> Y"
+# vao lam hypothesis la ngoai phan phoi — bang phu se la rac, va khong co
+# canh bao nao.  Phai chuyen ve menh de truoc.
+#
+# Phu bang mau cho cac dang hay gap cua MuSiQue (sinh tu quan he Wikidata),
+# con lai dung khuon bao phu.  Ti le dung mau duoc DEM va bao o 0.F — thap
+# thi nen chuyen han sang nhanh LLM.
+_PAT = [
+    # "Who is the director of X?"  ·  "What is the capital of X?"
+    (re.compile(r"^(?:who|what|which)\s+(?:is|was|are|were)\s+the\s+"
+                r"(?P<rel>[\w\s\-]+?)\s+(?:of|for|in)\s+(?P<ent>.+?)\s*\?*$", re.I),
+     "{ans} is the {rel} of {ent}."),
+    # "Who directed X?"  ·  "Who founded X?"  ·  "Who wrote X?"
+    (re.compile(r"^who\s+(?P<verb>\w+ed|wrote|led|won)\s+(?P<ent>.+?)\s*\?*$", re.I),
+     "{ans} {verb} {ent}."),
+    # "When was X born / released / founded?" — chi bat dang BI DONG ("was"),
+    # vi "When did X die?" doi chia lai dong tu ("die" -> "died") ma lam bang
+    # tay thi sai nhieu hon dung.  De no roi xuong khuon bao phu.
+    (re.compile(r"^when\s+was\s+(?P<ent>.+?)\s+(?P<verb>\w+)\s*\?*$", re.I),
+     "{ent} was {verb} in {ans}."),
+    # "Where is X located?"
+    (re.compile(r"^where\s+(?:is|was)\s+(?P<ent>.+?)\s+located\s*\?*$", re.I),
+     "{ent} is located in {ans}."),
+]
+_FALLBACK = 'The answer to "{q}" is {ans}.'
 
-    Ghep (cau hoi con, dap an trung gian) thanh mot khang dinh.
-    """
+
+def declarativize(sub_q: str, sub_a: str) -> Tuple[str, bool]:
+    """(cau hoi con, dap an con) -> mot MENH DE, kem co da khop mau hay chua."""
+    q = sub_q.strip().rstrip("?").strip() + "?"
+    for rx, tmpl in _PAT:
+        m = rx.match(q)
+        if m:
+            g = {k: v.strip() for k, v in m.groupdict().items() if v}
+            out = tmpl.format(ans=sub_a, **g)
+            return (out[:1].upper() + out[1:]), True
+    return _FALLBACK.format(q=q, ans=sub_a), False
+
+
+def from_annotation(row: Dict[str, Any],
+                    stats: Optional[Dict[str, int]] = None) -> Optional[List[str]]:
+    """MuSiQue: question_decomposition = [{question, answer, paragraph_support_idx}]."""
     dec = row.get("question_decomposition") or row.get("decomposition")
     if not dec:
         return None
     out: List[str] = []
+    answers: List[str] = []
     for step in dec:
         if not isinstance(step, dict):
             return None
@@ -44,11 +84,17 @@ def from_annotation(row: Dict[str, Any]) -> Optional[List[str]]:
         sa = (step.get("answer") or "").strip()
         if not sq or not sa:
             continue
-        # giai tham chieu kieu "#1" ve dap an trung gian truoc do
+        # giai tham chieu kieu "#1" ve DAP AN con truoc do (khong phai ve ca
+        # menh de — menh de da duoc viet lai nen khong con tach bang " -> ")
         sq = re.sub(r"#(\d+)",
-                    lambda m: out[int(m.group(1)) - 1].split(" -> ")[-1]
-                    if 0 < int(m.group(1)) <= len(out) else m.group(0), sq)
-        out.append("%s -> %s" % (sq, sa))
+                    lambda m: answers[int(m.group(1)) - 1]
+                    if 0 < int(m.group(1)) <= len(answers) else m.group(0), sq)
+        claim, matched = declarativize(sq, sa)
+        if stats is not None:
+            stats["pattern" if matched else "fallback"] = \
+                stats.get("pattern" if matched else "fallback", 0) + 1
+        answers.append(sa)
+        out.append(claim)
     return out or None
 
 
@@ -153,12 +199,30 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
                    or r.get("decomposition")), len(have)))
 
     # phan bo so manh J — day la PRIOR cho |T|
-    js = [len(from_annotation(r) or []) for r in rows[:5000]]
+    dstat: Dict[str, int] = {}
+    js = [len(from_annotation(r, dstat) or []) for r in rows[:5000]]
     js = [x for x in js if x]
     from collections import Counter
     rep["J_distribution_annotated"] = dict(sorted(Counter(js).items()))
     print("     phan bo so manh J (gan san): %s" % rep["J_distribution_annotated"])
     print("     -> J chinh la PRIOR cho |T|.  |T| lech xa J  =>  phinh, chac chan.")
+
+    # MuSiQue cho (cau hoi con, dap an con), KHONG cho menh de.  Ta phai viet
+    # lai thanh cau khang dinh truoc khi dua vao NLI.  Ti le dung mau sach cao
+    # thi nhanh nay dung duoc mien phi; thap thi nen chuyen han sang LLM.
+    npat, nfb = dstat.get("pattern", 0), dstat.get("fallback", 0)
+    rate = npat / max(1, npat + nfb)
+    rep["declarativize"] = {"pattern": npat, "fallback": nfb,
+                            "pattern_rate": round(rate, 3)}
+    print("     viet lai thanh menh de: %d theo mau sach, %d theo khuon bao phu"
+          % (npat, nfb))
+    if rate < 0.6:
+        verdict(ASK, "chi %.0f%% cau hoi con khop mau sach; phan con lai dung\n"
+                     "           khuon 'The answer to \"...\" is X.' — NLI doc duoc\n"
+                     "           nhung yeu hon.  Can thi them mau, hoac cho ca\n"
+                     "           MuSiQue chay nhanh LLM." % (100 * rate))
+    else:
+        verdict(OK, "%.0f%% cau hoi con khop mau sach" % (100 * rate))
 
     llm = LLMDecomposer(cfg)
     rep["llm_error"] = llm.error

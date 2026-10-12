@@ -102,6 +102,36 @@ check("hai tap chung tien to -> chung 2 phan tu dau",
       Judge.canonical(["c1", "c3", "c7"])[:2] == Judge.canonical(["c1", "c3", "c9"])[:2],
       True)
 
+print("\n== declarativize  (manh phai la CAU KHANG DINH) ==")
+# Vi sao can test nay: model NLI duoc huan luyen tren cau khang dinh.  Ban
+# dau from_annotation tra ve "Who directed X? -> Y" va dua thang vao NLI lam
+# hypothesis — ngoai phan phoi, bang phu thanh rac, khong mot canh bao nao.
+# test_logic cu khong bat duoc vi no test coverage_table bang claim viet tay.
+from s0f_decompose import declarativize, from_annotation
+_row = {"question_decomposition": [
+    {"question": "Which film won Best Picture in 1994?", "answer": "Forrest Gump"},
+    {"question": "Who directed #1 ?", "answer": "Robert Zemeckis"}]}
+_st: dict = {}
+_claims = from_annotation(_row, _st)
+check("sinh dung J manh", len(_claims), 2)
+check("khong con dau '->' trong manh",
+      any("->" in c for c in _claims), False)
+check("khong con dau '?' cuoi manh",
+      any(c.rstrip().endswith("?") for c in _claims), False)
+check("manh nao cung ket thuc bang dau cham",
+      all(c.rstrip().endswith(".") for c in _claims), True)
+check("giai duoc tham chieu #1 ve dap an con truoc",
+      "Forrest Gump" in _claims[1], True)
+check("dem duoc mau / khuon", sorted(_st), ["fallback", "pattern"])
+check("mau 'who <verb>ed X' ra menh de",
+      declarativize("Who directed Forrest Gump?", "Zemeckis")[0],
+      "Zemeckis directed Forrest Gump.")
+check("mau 'the <rel> of X' ra menh de",
+      declarativize("What is the capital of France?", "Paris")[0],
+      "Paris is the capital of France.")
+check("khuon bao phu van la cau hoan chinh",
+      declarativize("How many ducks?", "7")[0].endswith("."), True)
+
 print("\n" + "=" * 62)
 if fails:
     print("  %d TEST FAIL: %s" % (len(fails), fails))
