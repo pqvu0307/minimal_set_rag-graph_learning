@@ -54,6 +54,24 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", s.lower()).strip()
 
 
+def reaches_answer(claims: Sequence[str], y: str,
+                   aliases: Optional[Sequence[str]] = None) -> bool:
+    """Tap manh co CHAM toi dap an khong.
+
+    Can vi khi dua pool vao prompt, manh tro nen PHU THUOC POOL: neu pool
+    thieu su that bac cau, LLM co the che ra mot phan ra chi bao phu nhung gi
+    DANG CO trong pool — khi do adq thanh de thoa, va ta nhan mot tap khong he
+    chung minh duoc y.  Chot nay bat ca phan ra "troi" hoan toan khoi dap an.
+    Can, nhung chua du: no khong bat duoc phan ra DUNG HUONG ma THIEU chang.
+    """
+    blob = _norm(" ".join(claims))
+    for cand in [y] + list(aliases or []):
+        c = _norm(str(cand))
+        if c and c in blob:
+            return True
+    return False
+
+
 def passages_of(row: Dict[str, Any]) -> List[str]:
     """Doan ung vien kem theo mot row — MuSiQue `paragraphs`, HotpotQA `context`."""
     out: List[str] = []
@@ -210,11 +228,14 @@ class LLMDecomposer:
                 keep_c.append(c); keep_q.append(qt)
             if keep_c:                      # khong bao gio tra ve rong vi loc
                 claims = keep_c
+
+        claims = claims[: self.cfg["decompose"]["max_claims"]]
         u = r.usage
-        return claims[: self.cfg["decompose"]["max_claims"]], {
+        return claims, {
             "prompt_tokens": getattr(u, "prompt_tokens", 0),
             "output_tokens": getattr(u, "completion_tokens", 0),
-            "ungrounded": ungrounded}
+            "ungrounded": ungrounded,
+            "reaches_answer": int(reaches_answer(claims, y))}
 
 
 def decompose(row: Dict[str, Any], llm: Optional[LLMDecomposer],
@@ -355,6 +376,7 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
     rep["J_match_rate"] = round(agree / max(1, len(have)), 3)
     rep["bridge_entity"] = br
     rep["ungrounded_claims"] = sum(x["usage"].get("ungrounded", 0) for x in rows_out)
+    rep["reaches_answer"] = sum(x["usage"].get("reaches_answer", 0) for x in rows_out)
     tok = sum(x["usage"].get("prompt_tokens", 0) + x["usage"].get("output_tokens", 0)
               for x in rows_out)
     rep["mean_tokens_per_query"] = round(tok / max(1, len(rows_out)), 1)
@@ -387,6 +409,14 @@ def run(cfg: Dict[str, Any], n_probe: int = 20) -> Dict[str, Any]:
               % (br["bare_hit"], br["bare_tot"], 100 * rb))
         print("     manh bi loai vi trich dan khong co trong doan: %d"
               % rep["ungrounded_claims"])
+        print("     phan ra CHAM toi dap an: %d/%d"
+              % (rep["reaches_answer"], len(rows_out)))
+        if rep["reaches_answer"] < len(rows_out):
+            verdict(ASK, "%d phan ra khong he nhac toi dap an — chung troi khoi y.\n"
+                         "           Dua pool vao prompt lam manh PHU THUOC POOL, nen\n"
+                         "           pool thieu thi LLM de che ra phan ra chi bao phu\n"
+                         "           nhung gi dang co -> adq de thoa, nhan tap sai."
+                    % (len(rows_out) - rep["reaches_answer"]))
         if rg >= 0.9:
             verdict(OK, "neo vao doan thi LLM doc duoc thuc the bac cau\n"
                         "           ->  dung duoc cho corpus khong co phan ra san")

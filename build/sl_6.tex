@@ -12,7 +12,7 @@
   \begin{column}{0.46\textwidth}
     \begin{bx}[title={pha 1 · $10{,}000$ truy vấn · llm đầy đủ}]
       \begin{dia}
-a0  chẻ câu hỏi + bảng phủ       400
+a0  chẻ câu hỏi + bảng phủ  0 .. 2.150
 a1  vòng 0  ba mốc + 40 đoạn
             đơn lẻ            44.500
 a2  vòng 1  greedy biên       27.000
@@ -28,7 +28,9 @@ a4  vòng 3  xác nhận lại     ~15.000
   \begin{column}{0.50\textwidth}
     \begin{bx}[title={pha 2 · $200{,}000$ truy vấn · đường rẻ}]
       \begin{dia}
-c0  chẻ + bảng phủ               400
+c0  chẻ + bảng phủ
+      musique có phân rã sẵn ->     0
+      corpus khác, neo vào pool -> 2.150
       thiếu mảnh -> THOÁT SỚM
 c1  v(rỗng)                      500
 c2  g_theta chấm 40 đoạn đơn       0
@@ -43,7 +45,8 @@ c7  ba nhánh
       \end{dia}
       \vspace{0.25em}
       \dd{\textbf{rẻ hơn 5,5 lần.} sản phẩm của pha 2 mới là nhãn $(q \to T)$
-          cho tầng b}
+          cho tầng b. neo \texttt{c0} vào pool thêm ${\sim}\$85$ — đổi lấy việc
+          llm \emph{đọc} thay vì \emph{nhớ} thực thể bắc cầu}
     \end{bx}
   \end{column}
   \end{columns}
