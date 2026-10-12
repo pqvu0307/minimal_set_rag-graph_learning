@@ -20,6 +20,7 @@ import socket
 import sys
 import threading
 import time
+from typing import Any, Dict
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from mcp_stdio import MCP  # noqa: E402
@@ -120,10 +121,44 @@ class Server:
                 parts.append("".join((o.get("data") or {}).get("text/plain") or []))
         return "".join(parts).strip() or "(khong co output)"
 
+    # Viec DAI khong duoc buoc client phai om socket ca tieng.  Truoc day
+    # mot client bi timeout cat la daemon sap theo, keo chet luon job dang
+    # chay — da mat mot me 90 phut vi dung chuyen do.  Gio: submit tra ve
+    # ma job ngay, poll hoi ket qua sau.
+    jobs: Dict[str, Dict[str, Any]] = {}
+
+    def submit(self, code: str) -> str:
+        jid = "j%d" % (len(self.jobs) + 1)
+        self.jobs[jid] = {"state": "dang chay", "out": "", "t0": time.time()}
+
+        def work():
+            try:
+                out = self.run(code)
+                self.jobs[jid].update(state="xong", out=out)
+            except Exception as e:
+                self.jobs[jid].update(state="hong",
+                                      out="%s: %s" % (type(e).__name__, e))
+            self.jobs[jid]["dt"] = time.time() - self.jobs[jid]["t0"]
+        threading.Thread(target=work, daemon=True).start()
+        return jid
+
     def handle(self, req: dict) -> dict:
         op = req.get("op")
         if op == "status":
             return {"ok": True, "out": "ready=%s  %s" % (self.ready, self.note)}
+        if op == "submit":
+            return {"ok": True, "out": self.submit(req["code"])}
+        if op == "poll":
+            j = self.jobs.get(req.get("jid"), {})
+            if not j:
+                return {"ok": False, "out": "khong co job %r" % req.get("jid")}
+            return {"ok": True, "out": "[%s %.0fs]\n%s"
+                    % (j["state"], j.get("dt", time.time() - j["t0"]), j["out"])}
+        if op == "jobs":
+            return {"ok": True, "out": "\n".join(
+                "%s  %-10s %.0fs" % (k, v["state"],
+                                     v.get("dt", time.time() - v["t0"]))
+                for k, v in self.jobs.items()) or "(chua co job)"}
         with self.lock:
             if op == "run":
                 return {"ok": True, "out": self.run(req["code"])}
@@ -149,20 +184,27 @@ def serve() -> int:
     sys.stdout.flush()
     while True:
         conn, _ = srv.accept()
+        stop = False
         try:
             req = json.loads(_recv_all(conn) or "{}")
+            stop = req.get("op") == "stop"
             try:
                 res = s.handle(req)
             except Exception as e:
                 res = {"ok": False, "out": "%s: %s" % (type(e).__name__, e)}
             conn.sendall((json.dumps(res) + "\n").encode("utf-8"))
-            if req.get("op") == "stop":
-                conn.close(); break
+        except Exception as e:
+            # Client ngat giua chung (bi timeout cat, Ctrl-C, ...) thi KHONG
+            # duoc lam sap daemon — job dang chay se chet theo.  Da mat mot
+            # me 90 phut vi thieu dung cho nay.
+            print("  (bo qua loi client: %s)" % type(e).__name__, flush=True)
         finally:
             try:
                 conn.close()
             except Exception:
                 pass
+        if stop:
+            break
     s.m.close()
     return 0
 
@@ -185,6 +227,11 @@ def main() -> int:
     if a == "runf":
         return client({"op": "run",
                        "code": pathlib.Path(sys.argv[2]).read_text(encoding="utf-8")})
+    if a == "submitf":        # viec dai: tra ma job ngay, poll sau
+        return client({"op": "submit",
+                       "code": pathlib.Path(sys.argv[2]).read_text(encoding="utf-8")})
+    if a == "poll":
+        return client({"op": "poll", "jid": sys.argv[2]})
     return client({"op": a})
 
 
