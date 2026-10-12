@@ -1,0 +1,814 @@
+{
+  "stats": {
+    "mau_so_nho": 11,
+    "c7_moi_cover_truot": 7,
+    "xong": 7,
+    "T_dung_tap_vang": 6,
+    "T_khac_tap_vang": 1
+  },
+  "sizes": {
+    "2": 6,
+    "1": 1
+  },
+  "rows": [
+    {
+      "q": "Who is the spouse of the Green performer?",
+      "y": "Miquette Giraudy",
+      "gold": [
+        5,
+        10
+      ],
+      "J": 1,
+      "claims": [
+        "Steve Hillage is the performer of the album Green."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.06,
+      "vR": 0.047,
+      "vC": 0.06,
+      "tau": 0.06,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "Who founded the company that distributed the film UHF?",
+      "y": "Mike Medavoy",
+      "gold": [
+        6,
+        10
+      ],
+      "J": 1,
+      "claims": [
+        "Mike Medavoy is a co-founder of Orion Pictures."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.076,
+      "vR": 0.971,
+      "vC": 0.014,
+      "tau": 0.926,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p6"
+          ],
+          0.037,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "What administrative territorial entity is the owner of Ciudad Deportiva located?",
+      "y": "Tamaulipas",
+      "gold": [
+        3,
+        11
+      ],
+      "J": 2,
+      "claims": [
+        "Ciudad Deportiva is located in Nuevo Laredo, Mexico.",
+        "Nuevo Laredo is a municipality in the Mexican state of Tamaulipas."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Nuevo Laredo Municipality",
+      "v0": 0.004,
+      "vR": 0.009,
+      "vC": 0.003,
+      "tau": 0.008,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "Where is Ulrich Walter's employer headquartered?",
+      "y": "Cologne",
+      "gold": [
+        11,
+        14
+      ],
+      "J": 2,
+      "claims": [
+        "Ulrich Walter's employer is the DLR (German Aerospace Center).",
+        "The DLR's Lander Control Center is located in Cologne, Germany."
+      ],
+      "rescued": 1,
+      "a0": "INSUFFICIENT",
+      "aC": "Cologne, Germany",
+      "v0": 0.018,
+      "vR": 0.018,
+      "vC": 0.999,
+      "tau": 0.95,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p11"
+          ],
+          0.018,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "Which company owns the manufacturer of Learjet 60?",
+      "y": "Bombardier Inc.",
+      "gold": [
+        5,
+        10
+      ],
+      "J": 2,
+      "claims": [
+        "The Learjet 60 is manufactured by Bombardier Aerospace.",
+        "Bombardier Aerospace is the aerospace division of Bombardier Inc."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Bombardier Aerospace",
+      "v0": 0.182,
+      "vR": 0.996,
+      "vC": 0.995,
+      "tau": 0.955,
+      "n_cover": 21,
+      "do": [
+        [
+          [
+            "p0",
+            "p14"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p0",
+            "p16"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p0",
+            "p5"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p10",
+            "p14"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p10",
+            "p16"
+          ],
+          0.095,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p10",
+            "p5"
+          ],
+          1.0,
+          "Bombardier Inc."
+        ],
+        [
+          [
+            "p11",
+            "p14"
+          ],
+          0.321,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p11",
+            "p16"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p10",
+        "p5"
+      ],
+      "vT": 1.0
+    },
+    {
+      "q": "Who is the child of Caroline LeRoy's spouse?",
+      "y": "Fletcher Webster",
+      "gold": [
+        0,
+        10
+      ],
+      "J": 2,
+      "claims": [
+        "Caroline LeRoy was the second wife of Daniel Webster.",
+        "Fletcher Webster was the son of Daniel Webster."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Fletcher Webster",
+      "v0": 0.029,
+      "vR": 0.014,
+      "vC": 1.0,
+      "tau": 0.951,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p0",
+            "p10"
+          ],
+          1.0,
+          "Fletcher Webster"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p0",
+        "p10"
+      ],
+      "vT": 1.0
+    },
+    {
+      "q": "Who is the grandmother of Philippe, Duke of Orléans?",
+      "y": "Marie de' Medici",
+      "gold": [
+        8,
+        14
+      ],
+      "J": 2,
+      "claims": [
+        "Philippe, Duke of Orléans was the younger son of Louis XIII of France.",
+        "Louis XIII of France was the son of Marie de' Medici."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.029,
+      "vR": 0.014,
+      "vC": 0.014,
+      "tau": 0.029,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "What is the goal of the group that European Movement Germany is a member of?",
+      "y": "European integration",
+      "gold": [
+        4,
+        17
+      ],
+      "J": 2,
+      "claims": [
+        "\"claim\": \"European Movement Germany is a member of the European Movement International.\",",
+        "\"quote\": \"Bernd Hüttemann ... is Vice President of the European Movement International and Secretary General of the European Movement Germany\""
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "The goal of the group that European Movement Germany is a member of is to promote European",
+      "v0": 0.047,
+      "vR": 0.989,
+      "vC": 0.989,
+      "tau": 0.942,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p4"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "What company succeeded the owner of Empire Sports Network?",
+      "y": "Time Warner Cable",
+      "gold": [
+        2,
+        16
+      ],
+      "J": 2,
+      "claims": [
+        "Empire Sports Network was owned by the Adelphia Communications Corporation.",
+        "Adelphia's financial collapse and bankruptcy led to the network ceasing operations."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.037,
+      "vR": 0.037,
+      "vC": 0.037,
+      "tau": 0.037,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "What province shares a border with the province where Lago District is located?",
+      "y": "Cabo Delgado Province",
+      "gold": [
+        0,
+        16
+      ],
+      "J": 3,
+      "claims": [
+        "Lago Verde is located in Italy.",
+        "Niassa Reserve is a nature reserve in Cabo Delgado Province and Niassa Province, Mozambique.",
+        "Niassa Reserve is the largest protected area in the country."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Tanzania",
+      "v0": 0.047,
+      "vR": 0.002,
+      "vC": 0.002,
+      "tau": 0.047,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "What league does the team that plays in Stadio Ciro Vigorito play for?",
+      "y": "Lega Pro Prima Divisione",
+      "gold": [
+        11,
+        13
+      ],
+      "J": 2,
+      "claims": [
+        "Stadio Ciro Vigorito is the home stadium of Benevento Calcio.",
+        "Benevento Calcio plays in Lega Pro Prima Divisione."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Serie A",
+      "v0": 0.011,
+      "vR": 0.0,
+      "vC": 0.0,
+      "tau": 0.011,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "What is a notable work written by the author of The Timothy files?",
+      "y": "Anderson Tapes",
+      "gold": [
+        3,
+        15
+      ],
+      "J": 2,
+      "claims": [
+        "The author of The Timothy Files is Lawrence Sanders.",
+        "Lawrence Sanders wrote a notable work titled Anderson Tapes."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "The Anderson Tapes",
+      "v0": 0.037,
+      "vR": 0.0,
+      "vC": 1.0,
+      "tau": 0.952,
+      "n_cover": 2,
+      "do": [
+        [
+          [
+            "p15",
+            "p3"
+          ],
+          1.0,
+          "The Anderson Tapes"
+        ],
+        [
+          [
+            "p17",
+            "p3"
+          ],
+          0.001,
+          "The Timothy Files"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p15",
+        "p3"
+      ],
+      "vT": 1.0
+    },
+    {
+      "q": "In which borough was Callum McManaman born?",
+      "y": "Knowsley",
+      "gold": [
+        17,
+        18
+      ],
+      "J": 1,
+      "claims": [
+        "Callum Kane is a fictional character from the British Channel 4 soap opera, \"Hollyoaks\", played by Laurie Duncan."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Based on passage [10], Callum McManaman was born in **Whiston**, which passage [11] identi",
+      "v0": 0.182,
+      "vR": 0.993,
+      "vC": 0.999,
+      "tau": 0.958,
+      "n_cover": 2,
+      "do": [
+        [
+          [
+            "p10"
+          ],
+          0.182,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p8"
+          ],
+          0.06,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "What other county does the county where Imperial is located share a border with?",
+      "y": "Crockett County",
+      "gold": [
+        12,
+        17
+      ],
+      "J": 2,
+      "claims": [
+        "Imperial is located in Pecos County.",
+        "Pecos County shares a border with Crockett County."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Pecos County",
+      "v0": 0.029,
+      "vR": 0.037,
+      "vC": 0.023,
+      "tau": 0.037,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "In what county is William W. Blair's birthplace located?",
+      "y": "Orleans County",
+      "gold": [
+        15,
+        17
+      ],
+      "J": 1,
+      "claims": [
+        "William W. Blair's birthplace is located in Orleans County."
+      ],
+      "rescued": 1,
+      "a0": "INSUFFICIENT",
+      "aC": "Orleans County",
+      "v0": 0.011,
+      "vR": 0.982,
+      "vC": 1.0,
+      "tau": 0.951,
+      "n_cover": 2,
+      "do": [
+        [
+          [
+            "p15"
+          ],
+          0.06,
+          "Holley, New York"
+        ],
+        [
+          [
+            "p17"
+          ],
+          0.007,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "What award did the author of The Red Tree receive?",
+      "y": "Academy Award for Best Animated Short Film",
+      "gold": [
+        4,
+        13
+      ],
+      "J": 2,
+      "claims": [
+        "The author of The Red Tree is Shaun Tan.",
+        "Shaun Tan won an Academy Award for Best Animated Short Film."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.029,
+      "vR": 0.029,
+      "vC": 0.029,
+      "tau": 0.029,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "Where was Tyler MacDuff's child educated?",
+      "y": "Blair High School",
+      "gold": [
+        8,
+        14
+      ],
+      "J": 1,
+      "claims": [
+        "Tyler MacDuff's child was educated at Blair High School."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.076,
+      "vR": 0.562,
+      "vC": 0.014,
+      "tau": 0.538,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p14"
+          ],
+          0.001,
+          "Pasadena, California"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "Who is the spouse of the Rabbit Hole's producer?",
+      "y": "Keith Urban",
+      "gold": [
+        3,
+        9
+      ],
+      "J": 2,
+      "claims": [
+        "The producer of Rabbit Hole (film) is Nicole Kidman.",
+        "Nicole Kidman's spouse is Keith Urban."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.06,
+      "vR": 0.037,
+      "vC": 0.037,
+      "tau": 0.06,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "Who is the child of Sigrid Eskilsdotter's child?",
+      "y": "Svante Stensson Sture",
+      "gold": [
+        4,
+        15
+      ],
+      "J": 2,
+      "claims": [
+        "Sigrid Sture was the daughter of Svante Stensson Sture.",
+        "Svante Stensson Sture is the child of Sigrid Eskilsdotter."
+      ],
+      "rescued": 1,
+      "a0": "INSUFFICIENT",
+      "aC": "King Gustav Vasa of Sweden",
+      "v0": 0.562,
+      "vR": 0.007,
+      "vC": 0.011,
+      "tau": 0.562,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "In which county is Kimbrough Memorial Stadium located?",
+      "y": "Randall County",
+      "gold": [
+        4,
+        16
+      ],
+      "J": 2,
+      "claims": [
+        "Kimbrough Memorial Stadium is located in Canyon, Texas.",
+        "Canyon, Texas is in Randall County."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Randall County",
+      "v0": 0.06,
+      "vR": 1.0,
+      "vC": 1.0,
+      "tau": 0.953,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p16",
+            "p4"
+          ],
+          1.0,
+          "Randall County"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p16",
+        "p4"
+      ],
+      "vT": 1.0
+    },
+    {
+      "q": "What record label is the performer of Almost Made Ya signed to?",
+      "y": "Derrty Entertainment",
+      "gold": [
+        7,
+        10
+      ],
+      "J": 2,
+      "claims": [
+        "Almost Made Ya is a song by American duo Ali & Gipp.",
+        "Kinfolk is the debut and only album by American rap duo Ali & Gipp, released on August 14, 2007, through Derrty Entertainment and Universal Records."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.029,
+      "vR": 0.06,
+      "vC": 0.119,
+      "tau": 0.115,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p10"
+          ],
+          0.679,
+          "Derrty Entertainment and Universal Records"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p10"
+      ],
+      "vT": 0.679
+    },
+    {
+      "q": "Where was the author of Hannibal and Scipio educated at?",
+      "y": "Exeter College",
+      "gold": [
+        9,
+        12
+      ],
+      "J": 3,
+      "claims": [
+        "The author of Hannibal (Leckie novel) is Ross Leckie.",
+        "The author of Scipio is not directly named in the passages, but the passage about S. A. Kenner mentions Scipio Africanus Kenner.",
+        "Thomas Nabbes was educated at Exeter College, Oxford."
+      ],
+      "rescued": 1,
+      "a0": "INSUFFICIENT",
+      "aC": "Exeter College, Oxford",
+      "v0": 0.007,
+      "vR": 0.995,
+      "vC": 0.999,
+      "tau": 0.949,
+      "n_cover": 2,
+      "do": [
+        [
+          [
+            "p1",
+            "p14",
+            "p9"
+          ],
+          0.023,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p1",
+            "p4",
+            "p9"
+          ],
+          0.029,
+          "INSUFFICIENT"
+        ]
+      ],
+      "ket": "c7_moi_cover_truot"
+    },
+    {
+      "q": "In which county is Southern Maryland Electric Cooperative headquartered?",
+      "y": "Charles County",
+      "gold": [
+        3,
+        7
+      ],
+      "J": 2,
+      "claims": [
+        "Southern Maryland Electric Cooperative is headquartered in Hughesville, Maryland.",
+        "Hughesville is a census-designated place in Charles County, Maryland."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "Charles County",
+      "v0": 0.182,
+      "vR": 0.0,
+      "vC": 1.0,
+      "tau": 0.959,
+      "n_cover": 1,
+      "do": [
+        [
+          [
+            "p3",
+            "p7"
+          ],
+          1.0,
+          "Charles County"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p3",
+        "p7"
+      ],
+      "vT": 1.0
+    },
+    {
+      "q": "Who is the child of the Victim of Romance performer?",
+      "y": "Chynna Phillips",
+      "gold": [
+        8,
+        15
+      ],
+      "J": 2,
+      "claims": [
+        "Wilson Phillips is an American vocal group consisting of Carnie Wilson, Wendy Wilson, and Chynna Phillips.",
+        "Chynna Phillips is the daughter of John and Michelle Phillips of The Mamas & the Papas."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "INSUFFICIENT",
+      "v0": 0.223,
+      "vR": 0.076,
+      "vC": 0.029,
+      "tau": 0.223,
+      "ket": "mau_so_nho"
+    },
+    {
+      "q": "What county was Tim Dubois born in?",
+      "y": "McDonald County",
+      "gold": [
+        6,
+        17
+      ],
+      "J": 2,
+      "claims": [
+        "Tim DuBois was born in Southwest City, Missouri.",
+        "Southwest City is in McDonald County."
+      ],
+      "rescued": 0,
+      "a0": "INSUFFICIENT",
+      "aC": "McDonald County",
+      "v0": 0.002,
+      "vR": 1.0,
+      "vC": 1.0,
+      "tau": 0.95,
+      "n_cover": 2,
+      "do": [
+        [
+          [
+            "p12",
+            "p6"
+          ],
+          0.005,
+          "INSUFFICIENT"
+        ],
+        [
+          [
+            "p17",
+            "p6"
+          ],
+          1.0,
+          "McDonald County"
+        ]
+      ],
+      "ket": "xong",
+      "T": [
+        "p17",
+        "p6"
+      ],
+      "vT": 1.0
+    }
+  ]
+}

@@ -1,0 +1,7802 @@
+[
+ {
+  "q": "Who is the spouse of the Green performer?",
+  "y": "Miquette Giraudy",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p10"
+  ],
+  "ans": "Steve Hillage",
+  "A": 0.014064894119401483,
+  "B": 0.9913957627317138,
+  "C": 0.0054
+ },
+ {
+  "q": "Who is the spouse of the Green performer?",
+  "y": "Miquette Giraudy",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14805943954523848,
+  "B": 0.85185257662134,
+  "C": 0.0054
+ },
+ {
+  "q": "Who is the spouse of the Green performer?",
+  "y": "Miquette Giraudy",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1480524319296206,
+  "B": 0.00027243818140232356,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the spouse of the Green performer?",
+  "y": "Miquette Giraudy",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p10",
+   "p1"
+  ],
+  "ans": "Miquette Giraudy",
+  "A": 0.9999889136593714,
+  "B": 0.9240995577086479,
+  "C": 0.0054
+ },
+ {
+  "q": "Who founded the company that distributed the film UHF?",
+  "y": "Mike Medavoy",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p10"
+  ],
+  "ans": "Mike Medavoy",
+  "A": 0.9999790196052284,
+  "B": 0.9046057387944176,
+  "C": 0.0088
+ },
+ {
+  "q": "Who founded the company that distributed the film UHF?",
+  "y": "Mike Medavoy",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02298622768592673,
+  "B": 0.017996243943087853,
+  "C": 0.0004
+ },
+ {
+  "q": "Who founded the company that distributed the film UHF?",
+  "y": "Mike Medavoy",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017996589647563677,
+  "B": 0.0006604598228722169,
+  "C": 0.0073
+ },
+ {
+  "q": "Who founded the company that distributed the film UHF?",
+  "y": "Mike Medavoy",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p10",
+   "p17"
+  ],
+  "ans": "Mike Medavoy",
+  "A": 0.9999756818971167,
+  "B": 0.8806749806589533,
+  "C": 0.0088
+ },
+ {
+  "q": "What administrative territorial entity is the owner of Ciudad Deportiva located?",
+  "y": "Tamaulipas",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p11"
+  ],
+  "ans": "Nuevo Laredo Municipality",
+  "A": 0.0031753954667140816,
+  "B": 0.004076365965569817,
+  "C": 0.0003
+ },
+ {
+  "q": "What administrative territorial entity is the owner of Ciudad Deportiva located?",
+  "y": "Tamaulipas",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.010994402783772173,
+  "B": 0.011008744866896292,
+  "C": 0.0003
+ },
+ {
+  "q": "What administrative territorial entity is the owner of Ciudad Deportiva located?",
+  "y": "Tamaulipas",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008587833620369856,
+  "B": 6.937499162051886e-05,
+  "C": 0.0396
+ },
+ {
+  "q": "What administrative territorial entity is the owner of Ciudad Deportiva located?",
+  "y": "Tamaulipas",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p11",
+   "p17"
+  ],
+  "ans": "Nuevo Laredo Municipality",
+  "A": 0.001927705731768925,
+  "B": 0.01798980723276189,
+  "C": 0.0003
+ },
+ {
+  "q": "Where is Ulrich Walter's employer headquartered?",
+  "y": "Cologne",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017990612052501853,
+  "B": 0.060105841386442815,
+  "C": 0.0055
+ },
+ {
+  "q": "Where is Ulrich Walter's employer headquartered?",
+  "y": "Cologne",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0758758071530673,
+  "B": 0.14807000163957607,
+  "C": 0.0003
+ },
+ {
+  "q": "Where is Ulrich Walter's employer headquartered?",
+  "y": "Cologne",
+  "kind": "rand",
+  "S": [
+   "p12",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0758758071530673,
+  "B": 0.00024062564229687666,
+  "C": 0.0009
+ },
+ {
+  "q": "Where is Ulrich Walter's employer headquartered?",
+  "y": "Cologne",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p14",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0600903616642221,
+  "B": 0.37756094574732024,
+  "C": 0.0066
+ },
+ {
+  "q": "Which company owns the manufacturer of Learjet 60?",
+  "y": "Bombardier Inc.",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p10"
+  ],
+  "ans": "Bombardier Inc.",
+  "A": 0.9999878408000585,
+  "B": 0.9990812643660706,
+  "C": 0.9941
+ },
+ {
+  "q": "Which company owns the manufacturer of Learjet 60?",
+  "y": "Bombardier Inc.",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18249249873670437,
+  "B": 0.5621544545193939,
+  "C": 0.002
+ },
+ {
+  "q": "Which company owns the manufacturer of Learjet 60?",
+  "y": "Bombardier Inc.",
+  "kind": "rand",
+  "S": [
+   "p4",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244939835307428,
+  "B": 0.0004351628816271491,
+  "C": 0.0098
+ },
+ {
+  "q": "Which company owns the manufacturer of Learjet 60?",
+  "y": "Bombardier Inc.",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p10",
+   "p4"
+  ],
+  "ans": "Bombardier Inc.",
+  "A": 0.9999793772183819,
+  "B": 0.9988206245104351,
+  "C": 0.9941
+ },
+ {
+  "q": "Who is the child of Caroline LeRoy's spouse?",
+  "y": "Fletcher Webster",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p10"
+  ],
+  "ans": "Fletcher Webster",
+  "A": 0.9999696025551995,
+  "B": 0.817544632266602,
+  "C": 0.9985
+ },
+ {
+  "q": "Who is the child of Caroline LeRoy's spouse?",
+  "y": "Fletcher Webster",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931807038090606,
+  "B": 0.03733643043121293,
+  "C": 0.0017
+ },
+ {
+  "q": "Who is the child of Caroline LeRoy's spouse?",
+  "y": "Fletcher Webster",
+  "kind": "rand",
+  "S": [
+   "p4",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931807038090606,
+  "B": 0.0005078119655180791,
+  "C": 0.0014
+ },
+ {
+  "q": "Who is the child of Caroline LeRoy's spouse?",
+  "y": "Fletcher Webster",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p10",
+   "p19"
+  ],
+  "ans": "Fletcher Webster",
+  "A": 0.9999623312833917,
+  "B": 0.9819923753100175,
+  "C": 0.9985
+ },
+ {
+  "q": "Who is the grandmother of Philippe, Duke of Orléans?",
+  "y": "Marie de' Medici",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022988504290558875,
+  "B": 0.07588302976445016,
+  "C": 0.9995
+ },
+ {
+  "q": "Who is the grandmother of Philippe, Duke of Orléans?",
+  "y": "Marie de' Medici",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02298383824626249,
+  "B": 0.0601046824294148,
+  "C": 0.0841
+ },
+ {
+  "q": "Who is the grandmother of Philippe, Duke of Orléans?",
+  "y": "Marie de' Medici",
+  "kind": "rand",
+  "S": [
+   "p4",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022988504290558875,
+  "B": 0.00026326399790599364,
+  "C": 0.0124
+ },
+ {
+  "q": "Who is the grandmother of Philippe, Duke of Orléans?",
+  "y": "Marie de' Medici",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p14",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022988504290558875,
+  "B": 0.023046762454256853,
+  "C": 0.9995
+ },
+ {
+  "q": "What is the goal of the group that European Movement Germany is a member of?",
+  "y": "European integration",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p17"
+  ],
+  "ans": "promoting European integration, and disseminating information about it",
+  "A": 0.9996508387251318,
+  "B": 0.9994842091723022,
+  "C": 0.9517
+ },
+ {
+  "q": "What is the goal of the group that European Movement Germany is a member of?",
+  "y": "European integration",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06013406207420646,
+  "B": 0.5621314021646622,
+  "C": 0.0056
+ },
+ {
+  "q": "What is the goal of the group that European Movement Germany is a member of?",
+  "y": "European integration",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06013406207420646,
+  "B": 0.005227513289951968,
+  "C": 0.0012
+ },
+ {
+  "q": "What is the goal of the group that European Movement Germany is a member of?",
+  "y": "European integration",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p17",
+   "p16"
+  ],
+  "ans": "The goal of the group that European Movement Germany is a member of is promoting European integration, and disseminating information about it.",
+  "A": 0.9997024229848472,
+  "B": 0.9997015890012473,
+  "C": 0.9517
+ },
+ {
+  "q": "What company succeeded the owner of Empire Sports Network?",
+  "y": "Time Warner Cable",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017995900067615422,
+  "B": 0.37756307900854125,
+  "C": 0.77
+ },
+ {
+  "q": "What company succeeded the owner of Empire Sports Network?",
+  "y": "Time Warner Cable",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017995900067615422,
+  "B": 0.02298588737766427,
+  "C": 0.0006
+ },
+ {
+  "q": "What company succeeded the owner of Empire Sports Network?",
+  "y": "Time Warner Cable",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02932357402684993,
+  "B": 0.004075065573040382,
+  "C": 0.0011
+ },
+ {
+  "q": "What company succeeded the owner of Empire Sports Network?",
+  "y": "Time Warner Cable",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p16",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06011605485229843,
+  "B": 0.37756302335834135,
+  "C": 0.77
+ },
+ {
+  "q": "What province shares a border with the province where Lago District is located?",
+  "y": "Cabo Delgado Province",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p16"
+  ],
+  "ans": "Tanzania",
+  "A": 0.004076839003800625,
+  "B": 0.18244620654407928,
+  "C": 0.9761
+ },
+ {
+  "q": "What province shares a border with the province where Lago District is located?",
+  "y": "Cabo Delgado Province",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587173106910405,
+  "B": 0.02931638528990288,
+  "C": 0.001
+ },
+ {
+  "q": "What province shares a border with the province where Lago District is located?",
+  "y": "Cabo Delgado Province",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587173106910405,
+  "B": 0.0005605653129684418,
+  "C": 0.0353
+ },
+ {
+  "q": "What province shares a border with the province where Lago District is located?",
+  "y": "Cabo Delgado Province",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p16",
+   "p7"
+  ],
+  "ans": "Tanzania",
+  "A": 0.0015109562954205291,
+  "B": 0.037357638991815545,
+  "C": 0.9761
+ },
+ {
+  "q": "What league does the team that plays in Stadio Ciro Vigorito play for?",
+  "y": "Lega Pro Prima Divisione",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733775373856696,
+  "B": 0.26895312119962755,
+  "C": 0.0408
+ },
+ {
+  "q": "What league does the team that plays in Stadio Ciro Vigorito play for?",
+  "y": "Lega Pro Prima Divisione",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733775373856696,
+  "B": 0.0019326932140051323,
+  "C": 0.0014
+ },
+ {
+  "q": "What league does the team that plays in Stadio Ciro Vigorito play for?",
+  "y": "Lega Pro Prima Divisione",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022987024771125686,
+  "B": 0.0001698443914698311,
+  "C": 0.0089
+ },
+ {
+  "q": "What league does the team that plays in Stadio Ciro Vigorito play for?",
+  "y": "Lega Pro Prima Divisione",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p13",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733775373856696,
+  "B": 0.5621633004413665,
+  "C": 0.0408
+ },
+ {
+  "q": "What is a notable work written by the author of The Timothy files?",
+  "y": "Anderson Tapes",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p15"
+  ],
+  "ans": "The Anderson Tapes",
+  "A": 0.9999102434642076,
+  "B": 0.9994028797945221,
+  "C": 0.9937
+ },
+ {
+  "q": "What is a notable work written by the author of The Timothy files?",
+  "y": "Anderson Tapes",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "The Timothy Files",
+  "A": 0.0001606683062306269,
+  "B": 0.09535836411635334,
+  "C": 0.0017
+ },
+ {
+  "q": "What is a notable work written by the author of The Timothy files?",
+  "y": "Anderson Tapes",
+  "kind": "rand",
+  "S": [
+   "p18",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536782717486747,
+  "B": 0.004084997486638153,
+  "C": 0.0008
+ },
+ {
+  "q": "What is a notable work written by the author of The Timothy files?",
+  "y": "Anderson Tapes",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p15",
+   "p1"
+  ],
+  "ans": "The Anderson Tapes",
+  "A": 0.9997643787626572,
+  "B": 0.9998317048053932,
+  "C": 0.9937
+ },
+ {
+  "q": "In which borough was Callum McManaman born?",
+  "y": "Knowsley",
+  "kind": "gold",
+  "S": [
+   "p17",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244580452145198,
+  "B": 0.9959174854824756,
+  "C": 0.999
+ },
+ {
+  "q": "In which borough was Callum McManaman born?",
+  "y": "Knowsley",
+  "kind": "gold_m1",
+  "S": [
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244994656328895,
+  "B": 0.6791581723247265,
+  "C": 0.0838
+ },
+ {
+  "q": "In which borough was Callum McManaman born?",
+  "y": "Knowsley",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047430071621737735,
+  "B": 0.00012968288647163817,
+  "C": 0.0002
+ },
+ {
+  "q": "In which borough was Callum McManaman born?",
+  "y": "Knowsley",
+  "kind": "gold_p1",
+  "S": [
+   "p17",
+   "p18",
+   "p2"
+  ],
+  "ans": "The Metropolitan Borough of Knowsley",
+  "A": 0.9999717481958249,
+  "B": 0.9706522782817841,
+  "C": 0.999
+ },
+ {
+  "q": "What other county does the county where Imperial is located share a border with?",
+  "y": "Crockett County",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p17"
+  ],
+  "ans": "Crockett County",
+  "A": 0.9999868871505255,
+  "B": 0.26896808864310573,
+  "C": 0.9966
+ },
+ {
+  "q": "What other county does the county where Imperial is located share a border with?",
+  "y": "Crockett County",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587122155734449,
+  "B": 0.029331661292278377,
+  "C": 0.0004
+ },
+ {
+  "q": "What other county does the county where Imperial is located share a border with?",
+  "y": "Crockett County",
+  "kind": "rand",
+  "S": [
+   "p13",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587122155734449,
+  "B": 0.0002542087637315005,
+  "C": 0.0762
+ },
+ {
+  "q": "What other county does the county where Imperial is located share a border with?",
+  "y": "Crockett County",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p17",
+   "p16"
+  ],
+  "ans": "Crockett County",
+  "A": 0.9999868871505255,
+  "B": 0.6791631717443558,
+  "C": 0.9966
+ },
+ {
+  "q": "In what county is William W. Blair's birthplace located?",
+  "y": "Orleans County",
+  "kind": "gold",
+  "S": [
+   "p15",
+   "p17"
+  ],
+  "ans": "Orleans County",
+  "A": 0.9999862911193472,
+  "B": 0.9967938076520815,
+  "C": 0.999
+ },
+ {
+  "q": "In what county is William W. Blair's birthplace located?",
+  "y": "Orleans County",
+  "kind": "gold_m1",
+  "S": [
+   "p15"
+  ],
+  "ans": "Holley, New York",
+  "A": 0.047430501002181935,
+  "B": 0.9626217015796026,
+  "C": 0.0008
+ },
+ {
+  "q": "In what county is William W. Blair's birthplace located?",
+  "y": "Orleans County",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.00858947436670432,
+  "B": 0.001932336974399762,
+  "C": 0.0005
+ },
+ {
+  "q": "In what county is William W. Blair's birthplace located?",
+  "y": "Orleans County",
+  "kind": "gold_p1",
+  "S": [
+   "p15",
+   "p17",
+   "p10"
+  ],
+  "ans": "Orleans County",
+  "A": 0.9999941587791524,
+  "B": 0.9980500885738095,
+  "C": 0.999
+ },
+ {
+  "q": "What award did the author of The Red Tree receive?",
+  "y": "Academy Award for Best Animated Short Film",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p13"
+  ],
+  "ans": "An Academy Award for Best Animated Short Film in 2011",
+  "A": 0.81749379684073,
+  "B": 0.8519017911012767,
+  "C": 0.8896
+ },
+ {
+  "q": "What award did the author of The Red Tree receive?",
+  "y": "Academy Award for Best Animated Short Film",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02300329754186714,
+  "B": 0.09537719577488613,
+  "C": 0.0002
+ },
+ {
+  "q": "What award did the author of The Red Tree receive?",
+  "y": "Academy Award for Best Animated Short Film",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029341994018276196,
+  "B": 0.00035547490103071677,
+  "C": 0.0048
+ },
+ {
+  "q": "What award did the author of The Red Tree receive?",
+  "y": "Academy Award for Best Animated Short Film",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p13",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029343228875635008,
+  "B": 0.320861784505988,
+  "C": 0.8896
+ },
+ {
+  "q": "Where was Tyler MacDuff's child educated?",
+  "y": "Blair High School",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p14"
+  ],
+  "ans": "Blair International Baccalaureate School in Pasadena",
+  "A": 0.22270629548081988,
+  "B": 0.2689580885947568,
+  "C": 0.9282
+ },
+ {
+  "q": "Where was Tyler MacDuff's child educated?",
+  "y": "Blair High School",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.010994402783772173,
+  "B": 0.0015117882206270306,
+  "C": 0.0005
+ },
+ {
+  "q": "Where was Tyler MacDuff's child educated?",
+  "y": "Blair High School",
+  "kind": "rand",
+  "S": [
+   "p7",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.010994402783772173,
+  "B": 9.964903856607421e-05,
+  "C": 0.001
+ },
+ {
+  "q": "Where was Tyler MacDuff's child educated?",
+  "y": "Blair High School",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p14",
+   "p19"
+  ],
+  "ans": "Blair International Baccalaureate School in Pasadena",
+  "A": 0.7310163777840102,
+  "B": 0.14805476780789772,
+  "C": 0.9282
+ },
+ {
+  "q": "Who is the spouse of the Rabbit Hole's producer?",
+  "y": "Keith Urban",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060096047979502965,
+  "B": 0.11922274524164311,
+  "C": 0.0161
+ },
+ {
+  "q": "Who is the spouse of the Rabbit Hole's producer?",
+  "y": "Keith Urban",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535807429177379,
+  "B": 0.0019716413106026787,
+  "C": 0.0028
+ },
+ {
+  "q": "Who is the spouse of the Rabbit Hole's producer?",
+  "y": "Keith Urban",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824379954972657,
+  "B": 4.7919836606014066e-05,
+  "C": 0.01
+ },
+ {
+  "q": "Who is the spouse of the Rabbit Hole's producer?",
+  "y": "Keith Urban",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p9",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060096047979502965,
+  "B": 0.03734393990735396,
+  "C": 0.7251
+ },
+ {
+  "q": "Who is the child of Sigrid Eskilsdotter's child?",
+  "y": "Svante Stensson Sture",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p15"
+  ],
+  "ans": "King Gustav Vasa of Sweden",
+  "A": 0.03732913607022181,
+  "B": 0.3208508346339558,
+  "C": 0.2112
+ },
+ {
+  "q": "Who is the child of Sigrid Eskilsdotter's child?",
+  "y": "Svante Stensson Sture",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921229799502031,
+  "B": 0.011009094873389524,
+  "C": 0.0004
+ },
+ {
+  "q": "Who is the child of Sigrid Eskilsdotter's child?",
+  "y": "Svante Stensson Sture",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921229799502031,
+  "B": 1.5139350575510413e-05,
+  "C": 0.0005
+ },
+ {
+  "q": "Who is the child of Sigrid Eskilsdotter's child?",
+  "y": "Svante Stensson Sture",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p15",
+   "p17"
+  ],
+  "ans": "King Gustav Vasa of Sweden",
+  "A": 0.010987873203135545,
+  "B": 0.2689673261170036,
+  "C": 0.2112
+ },
+ {
+  "q": "In which county is Kimbrough Memorial Stadium located?",
+  "y": "Randall County",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p16"
+  ],
+  "ans": "Randall County",
+  "A": 0.999994397195003,
+  "B": 0.9996866969655822,
+  "C": 0.9995
+ },
+ {
+  "q": "In which county is Kimbrough Memorial Stadium located?",
+  "y": "Randall County",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01801820050851244,
+  "B": 0.7772577530260707,
+  "C": 0.0008
+ },
+ {
+  "q": "In which county is Kimbrough Memorial Stadium located?",
+  "y": "Randall County",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.011094088440720462,
+  "B": 0.0009277788011470278,
+  "C": 0.0031
+ },
+ {
+  "q": "In which county is Kimbrough Memorial Stadium located?",
+  "y": "Randall County",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p16",
+   "p19"
+  ],
+  "ans": "Randall County",
+  "A": 0.9999969005680498,
+  "B": 0.9995605493515878,
+  "C": 0.9995
+ },
+ {
+  "q": "What record label is the performer of Almost Made Ya signed to?",
+  "y": "Derrty Entertainment",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07588751202396693,
+  "B": 0.8807698525128912,
+  "C": 0.9912
+ },
+ {
+  "q": "What record label is the performer of Almost Made Ya signed to?",
+  "y": "Derrty Entertainment",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060113635422869516,
+  "B": 0.002483621598013741,
+  "C": 0.0005
+ },
+ {
+  "q": "What record label is the performer of Almost Made Ya signed to?",
+  "y": "Derrty Entertainment",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029318968974375914,
+  "B": 3.564230572727922e-05,
+  "C": 0.0023
+ },
+ {
+  "q": "What record label is the performer of Almost Made Ya signed to?",
+  "y": "Derrty Entertainment",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p10",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014074280156579966,
+  "B": 0.9046258304745114,
+  "C": 0.9912
+ },
+ {
+  "q": "Where was the author of Hannibal and Scipio educated at?",
+  "y": "Exeter College",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p12"
+  ],
+  "ans": "Exeter College, Oxford",
+  "A": 0.9990816213746666,
+  "B": 0.9990610364522873,
+  "C": 0.9995
+ },
+ {
+  "q": "Where was the author of Hannibal and Scipio educated at?",
+  "y": "Exeter College",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "Exeter College, Oxford",
+  "A": 0.9889834426492219,
+  "B": 0.9975054658513295,
+  "C": 0.0004
+ },
+ {
+  "q": "Where was the author of Hannibal and Scipio educated at?",
+  "y": "Exeter College",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017992106454678525,
+  "B": 0.0011982846754650112,
+  "C": 0.006
+ },
+ {
+  "q": "Where was the author of Hannibal and Scipio educated at?",
+  "y": "Exeter College",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p12",
+   "p19"
+  ],
+  "ans": "Exeter College, Oxford",
+  "A": 0.9975102104945879,
+  "B": 0.9974977558831986,
+  "C": 0.9995
+ },
+ {
+  "q": "In which county is Southern Maryland Electric Cooperative headquartered?",
+  "y": "Charles County",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p7"
+  ],
+  "ans": "Charles County",
+  "A": 0.9999691257472011,
+  "B": 0.999823243875558,
+  "C": 0.999
+ },
+ {
+  "q": "In which county is Southern Maryland Electric Cooperative headquartered?",
+  "y": "Charles County",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "Hughesville, Maryland",
+  "A": 0.0031806072956427345,
+  "B": 0.9706343071194181,
+  "C": 0.0012
+ },
+ {
+  "q": "In which county is Southern Maryland Electric Cooperative headquartered?",
+  "y": "Charles County",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.22270895946937552,
+  "B": 0.0003854933988325371,
+  "C": 0.0728
+ },
+ {
+  "q": "In which county is Southern Maryland Electric Cooperative headquartered?",
+  "y": "Charles County",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p7",
+   "p2"
+  ],
+  "ans": "Charles County",
+  "A": 0.9999839070045525,
+  "B": 0.9996508387251318,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the child of the Victim of Romance performer?",
+  "y": "Chynna Phillips",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p15"
+  ],
+  "ans": "Carnie Wilson, Wendy Wilson, and Chynna Phillips",
+  "A": 0.07586704905858188,
+  "B": 0.9398974219040687,
+  "C": 0.9873
+ },
+ {
+  "q": "Who is the child of the Victim of Romance performer?",
+  "y": "Chynna Phillips",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2227058785078717,
+  "B": 0.22272818624646695,
+  "C": 0.0027
+ },
+ {
+  "q": "Who is the child of the Victim of Romance performer?",
+  "y": "Chynna Phillips",
+  "kind": "rand",
+  "S": [
+   "p13",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2227058785078717,
+  "B": 3.206627180030175e-05,
+  "C": 0.0005
+ },
+ {
+  "q": "Who is the child of the Victim of Romance performer?",
+  "y": "Chynna Phillips",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p15",
+   "p7"
+  ],
+  "ans": "Carnie Wilson, Wendy Wilson, and Chynna Phillips",
+  "A": 0.14806263865494396,
+  "B": 0.9398958427781682,
+  "C": 0.9873
+ },
+ {
+  "q": "What county was Tim Dubois born in?",
+  "y": "McDonald County",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p17"
+  ],
+  "ans": "McDonald County",
+  "A": 0.9999854566779314,
+  "B": 0.9994675373456471,
+  "C": 0.999
+ },
+ {
+  "q": "What county was Tim Dubois born in?",
+  "y": "McDonald County",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.004083578846656777,
+  "B": 0.04743915599317272,
+  "C": 0.0004
+ },
+ {
+  "q": "What county was Tim Dubois born in?",
+  "y": "McDonald County",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006725783527122942,
+  "B": 0.004079913283062564,
+  "C": 0.0005
+ },
+ {
+  "q": "What county was Tim Dubois born in?",
+  "y": "McDonald County",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p17",
+   "p7"
+  ],
+  "ans": "McDonald County",
+  "A": 0.9999672185211188,
+  "B": 0.999876276066191,
+  "C": 0.999
+ },
+ {
+  "q": "What record label did the person who is part of The Bruce Lee Band start?",
+  "y": "Asian Man Records",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p18"
+  ],
+  "ans": "Asian Man Records",
+  "A": 0.9999547025218425,
+  "B": 0.9992439506792993,
+  "C": 0.9961
+ },
+ {
+  "q": "What record label did the person who is part of The Bruce Lee Band start?",
+  "y": "Asian Man Records",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.7309654221393335,
+  "B": 0.37757573002483935,
+  "C": 0.0007
+ },
+ {
+  "q": "What record label did the person who is part of The Bruce Lee Band start?",
+  "y": "Asian Man Records",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.7309654221393335,
+  "B": 0.0025253731991573547,
+  "C": 0.0013
+ },
+ {
+  "q": "What record label did the person who is part of The Bruce Lee Band start?",
+  "y": "Asian Man Records",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p18",
+   "p8"
+  ],
+  "ans": "Asian Man Records",
+  "A": 0.9999867679437158,
+  "B": 0.9984378222566919,
+  "C": 0.9961
+ },
+ {
+  "q": "What is another notable work made by the author of Miss Sara Sampson?",
+  "y": "Emilia Galotti",
+  "kind": "gold",
+  "S": [
+   "p15",
+   "p17"
+  ],
+  "ans": "Emilia Galotti",
+  "A": 0.999994397195003,
+  "B": 0.999552688517828,
+  "C": 0.05
+ },
+ {
+  "q": "What is another notable work made by the author of Miss Sara Sampson?",
+  "y": "Emilia Galotti",
+  "kind": "gold_m1",
+  "S": [
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.37755319174495006,
+  "B": 0.32086182498577887,
+  "C": 0.0058
+ },
+ {
+  "q": "What is another notable work made by the author of Miss Sara Sampson?",
+  "y": "Emilia Galotti",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791572412627878,
+  "B": 0.001508935819719448,
+  "C": 0.0121
+ },
+ {
+  "q": "What is another notable work made by the author of Miss Sara Sampson?",
+  "y": "Emilia Galotti",
+  "kind": "gold_p1",
+  "S": [
+   "p15",
+   "p17",
+   "p2"
+  ],
+  "ans": "Emilia Galotti",
+  "A": 0.9999972581939645,
+  "B": 0.9999256189345929,
+  "C": 0.05
+ },
+ {
+  "q": "What instrument is played by the person from The Blackout All-Stars?",
+  "y": "conga",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p16"
+  ],
+  "ans": "Based on the passages provided, the person from The Blackout All-Stars mentioned is Ray Barretto, who played the conga (as noted in passage [2] regarding his appearance on the Kenny Burrell album *Midnight Blue*).\n\nAnswer: conga",
+  "A": 0.9995007624181653,
+  "B": 0.9398948974047302,
+  "C": 0.9995
+ },
+ {
+  "q": "What instrument is played by the person from The Blackout All-Stars?",
+  "y": "conga",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008582092371810623,
+  "B": 0.11922505516889159,
+  "C": 0.0013
+ },
+ {
+  "q": "What instrument is played by the person from The Blackout All-Stars?",
+  "y": "conga",
+  "kind": "rand",
+  "S": [
+   "p4",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.010996501930246372,
+  "B": 0.0011824675500050619,
+  "C": 0.0016
+ },
+ {
+  "q": "What instrument is played by the person from The Blackout All-Stars?",
+  "y": "conga",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p16",
+   "p1"
+  ],
+  "ans": "Based on the passages provided, the person from The Blackout All-Stars mentioned is Ray Barretto, who played the conga.\n\nAnswer: conga",
+  "A": 0.9999123888519666,
+  "B": 0.9399061649174288,
+  "C": 0.9995
+ },
+ {
+  "q": "What is the seat of the county where Van Hook Township is located?",
+  "y": "Stanley",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p8"
+  ],
+  "ans": "Stanley",
+  "A": 0.9999902249342363,
+  "B": 0.9932898588761441,
+  "C": 0.0003
+ },
+ {
+  "q": "What is the seat of the county where Van Hook Township is located?",
+  "y": "Stanley",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244238122985967,
+  "B": 0.7309888408166716,
+  "C": 0.0003
+ },
+ {
+  "q": "What is the seat of the county where Van Hook Township is located?",
+  "y": "Stanley",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06009394012526481,
+  "B": 0.001172715410954095,
+  "C": 0.0118
+ },
+ {
+  "q": "What is the seat of the county where Van Hook Township is located?",
+  "y": "Stanley",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p8",
+   "p18"
+  ],
+  "ans": "Stanley",
+  "A": 0.9999753242852847,
+  "B": 0.9706601394139515,
+  "C": 0.0024
+ },
+ {
+  "q": "Who is the father of Edward Baring, 1st Baron Revelstoke's father?",
+  "y": "Sir Francis Baring, 1st Baronet",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p17"
+  ],
+  "ans": "Henry Baring",
+  "A": 0.00407199127881408,
+  "B": 0.22270536887396464,
+  "C": 0.8569
+ },
+ {
+  "q": "Who is the father of Edward Baring, 1st Baron Revelstoke's father?",
+  "y": "Sir Francis Baring, 1st Baronet",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689526636746944,
+  "B": 0.022990096636769097,
+  "C": 0.0023
+ },
+ {
+  "q": "Who is the father of Edward Baring, 1st Baron Revelstoke's father?",
+  "y": "Sir Francis Baring, 1st Baronet",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689526636746944,
+  "B": 0.00034427707605144686,
+  "C": 0.0376
+ },
+ {
+  "q": "Who is the father of Edward Baring, 1st Baron Revelstoke's father?",
+  "y": "Sir Francis Baring, 1st Baronet",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p17",
+   "p8"
+  ],
+  "ans": "Henry Baring",
+  "A": 0.0040713999781123444,
+  "B": 0.04742974515052656,
+  "C": 0.8569
+ },
+ {
+  "q": "What group was the performer of Be the One a member of?",
+  "y": "Jackson 5",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p17"
+  ],
+  "ans": "The Jackson 5",
+  "A": 0.9999055951592553,
+  "B": 0.9398934233243408,
+  "C": 0.9951
+ },
+ {
+  "q": "What group was the performer of Be the One a member of?",
+  "y": "Jackson 5",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "Jackie Jackson",
+  "A": 0.008585490219939929,
+  "B": 0.8175282958792317,
+  "C": 0.0094
+ },
+ {
+  "q": "What group was the performer of Be the One a member of?",
+  "y": "Jackson 5",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008585022093185457,
+  "B": 7.6293363239221534e-06,
+  "C": 0.0076
+ },
+ {
+  "q": "What group was the performer of Be the One a member of?",
+  "y": "Jackson 5",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p17",
+   "p9"
+  ],
+  "ans": "The Jackson 5",
+  "A": 0.9999487426325072,
+  "B": 0.9947524328873107,
+  "C": 0.9951
+ },
+ {
+  "q": "Who is the lead singer of the band performing Bang Bang Rock & Roll?",
+  "y": "Eddie Argos",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p8"
+  ],
+  "ans": "Eddie Argos",
+  "A": 0.9999905825550351,
+  "B": 0.9996486944658739,
+  "C": 0.9854
+ },
+ {
+  "q": "Who is the lead singer of the band performing Bang Bang Rock & Roll?",
+  "y": "Eddie Argos",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.22271185509875435,
+  "B": 0.562156800015447,
+  "C": 0.0022
+ },
+ {
+  "q": "Who is the lead singer of the band performing Bang Bang Rock & Roll?",
+  "y": "Eddie Argos",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.26899503798339197,
+  "B": 1.621220099257137e-05,
+  "C": 0.0013
+ },
+ {
+  "q": "Who is the lead singer of the band performing Bang Bang Rock & Roll?",
+  "y": "Eddie Argos",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p8",
+   "p13"
+  ],
+  "ans": "Eddie Argos",
+  "A": 0.9999853374722015,
+  "B": 0.9998313473105228,
+  "C": 0.9854
+ },
+ {
+  "q": "What is the network which National Cycle Route 57 is part of an example of?",
+  "y": "national cycling route network",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p14"
+  ],
+  "ans": "The network which National Cycle Route 57 is part of is an example of the United Kingdom's National Cycle Network.",
+  "A": 0.995882251923148,
+  "B": 0.999245140999168,
+  "C": 0.999
+ },
+ {
+  "q": "What is the network which National Cycle Route 57 is part of an example of?",
+  "y": "national cycling route network",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824897090972134,
+  "B": 0.9967483264637911,
+  "C": 0.9956
+ },
+ {
+  "q": "What is the network which National Cycle Route 57 is part of an example of?",
+  "y": "national cycling route network",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09537026706421603,
+  "B": 0.010993936715543384,
+  "C": 0.0007
+ },
+ {
+  "q": "What is the network which National Cycle Route 57 is part of an example of?",
+  "y": "national cycling route network",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p14",
+   "p3"
+  ],
+  "ans": "The network which National Cycle Route 57 is part of is an example of the National Cycle Network.",
+  "A": 0.9984604019077915,
+  "B": 0.9992822795168371,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the spouse of the child of Peter Andreas Heiberg?",
+  "y": "Johanne Luise Heiberg",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p16"
+  ],
+  "ans": "Baroness Gyllembourg-Ehrensvärd",
+  "A": 0.03732891731026278,
+  "B": 0.3208230239990152,
+  "C": 0.9961
+ },
+ {
+  "q": "Who is the spouse of the child of Peter Andreas Heiberg?",
+  "y": "Johanne Luise Heiberg",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931728388493282,
+  "B": 0.060096047979502965,
+  "C": 0.0003
+ },
+ {
+  "q": "Who is the spouse of the child of Peter Andreas Heiberg?",
+  "y": "Johanne Luise Heiberg",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022987139420313163,
+  "B": 0.00022132264979857208,
+  "C": 0.7485
+ },
+ {
+  "q": "Who is the spouse of the child of Peter Andreas Heiberg?",
+  "y": "Johanne Luise Heiberg",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p16",
+   "p6"
+  ],
+  "ans": "Baroness Gyllembourg-Ehrensvärd",
+  "A": 0.03732891731026278,
+  "B": 0.029326718178513178,
+  "C": 0.9961
+ },
+ {
+  "q": "The Unwinding author volunteered for which organisation?",
+  "y": "Peace Corps",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p12"
+  ],
+  "ans": "Peace Corps",
+  "A": 0.9999865295319578,
+  "B": 0.7310475759813373,
+  "C": 0.9551
+ },
+ {
+  "q": "The Unwinding author volunteered for which organisation?",
+  "y": "Peace Corps",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006724489831687719,
+  "B": 0.9626387139287665,
+  "C": 0.0013
+ },
+ {
+  "q": "The Unwinding author volunteered for which organisation?",
+  "y": "Peace Corps",
+  "kind": "rand",
+  "S": [
+   "p7",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029322451242218217,
+  "B": 2.646376104387116e-05,
+  "C": 0.0013
+ },
+ {
+  "q": "The Unwinding author volunteered for which organisation?",
+  "y": "Peace Corps",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p12",
+   "p8"
+  ],
+  "ans": "Peace Corps",
+  "A": 0.999991297797926,
+  "B": 0.5000337360430982,
+  "C": 0.9551
+ },
+ {
+  "q": "What is the capital of the county that Pine Springs is located in?",
+  "y": "Van Horn",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733377663862525,
+  "B": 0.731036508312023,
+  "C": 0.0007
+ },
+ {
+  "q": "What is the capital of the county that Pine Springs is located in?",
+  "y": "Van Horn",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536519181737735,
+  "B": 0.017998658384502875,
+  "C": 0.0005
+ },
+ {
+  "q": "What is the capital of the county that Pine Springs is located in?",
+  "y": "Van Horn",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733377663862525,
+  "B": 8.236683614926132e-05,
+  "C": 0.0467
+ },
+ {
+  "q": "What is the capital of the county that Pine Springs is located in?",
+  "y": "Van Horn",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p6",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14805606269418348,
+  "B": 0.7772846933251186,
+  "C": 0.0373
+ },
+ {
+  "q": "What district is the headquarter of Julia's House located?",
+  "y": "East Dorset",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p10"
+  ],
+  "ans": "East Dorset",
+  "A": 0.9999772315450165,
+  "B": 0.9398938434895369,
+  "C": 0.9902
+ },
+ {
+  "q": "What district is the headquarter of Julia's House located?",
+  "y": "East Dorset",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "Corfe Mullen",
+  "A": 0.1480631591438789,
+  "B": 0.22273511240265553,
+  "C": 0.0005
+ },
+ {
+  "q": "What district is the headquarter of Julia's House located?",
+  "y": "East Dorset",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022987479728139526,
+  "B": 0.00010191355399302715,
+  "C": 0.0032
+ },
+ {
+  "q": "What district is the headquarter of Julia's House located?",
+  "y": "East Dorset",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p10",
+   "p15"
+  ],
+  "ans": "Corfe Mullen",
+  "A": 0.1480631591438789,
+  "B": 0.01799130163616336,
+  "C": 0.9902
+ },
+ {
+  "q": "Who is the spouse of Young Man Luther's author?",
+  "y": "Joan Erikson",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18245090897588778,
+  "B": 0.7772903224135327,
+  "C": 0.0316
+ },
+ {
+  "q": "Who is the spouse of Young Man Luther's author?",
+  "y": "Joan Erikson",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18245090897588778,
+  "B": 0.09540314426840535,
+  "C": 0.0004
+ },
+ {
+  "q": "Who is the spouse of Young Man Luther's author?",
+  "y": "Joan Erikson",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921154988340976,
+  "B": 0.00034391968761726677,
+  "C": 0.0141
+ },
+ {
+  "q": "Who is the spouse of Young Man Luther's author?",
+  "y": "Joan Erikson",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p19",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921154988340976,
+  "B": 0.32084458037644425,
+  "C": 0.0316
+ },
+ {
+  "q": "What record label did the performer of The Place and the Time belong to?",
+  "y": "Columbia Records",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p6"
+  ],
+  "ans": "Columbia Records",
+  "A": 0.999994397195003,
+  "B": 0.02300045319318922,
+  "C": 0.9897
+ },
+ {
+  "q": "What record label did the performer of The Place and the Time belong to?",
+  "y": "Columbia Records",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "Sundazed Records",
+  "A": 0.0004328998772973325,
+  "B": 0.023044940915632584,
+  "C": 0.004
+ },
+ {
+  "q": "What record label did the performer of The Place and the Time belong to?",
+  "y": "Columbia Records",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060097206947177906,
+  "B": 0.000453981197654274,
+  "C": 0.0015
+ },
+ {
+  "q": "What record label did the performer of The Place and the Time belong to?",
+  "y": "Columbia Records",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p6",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06010657667565922,
+  "B": 0.18244724205599672,
+  "C": 0.9897
+ },
+ {
+  "q": "Who is the child of the person who followed Tihomir of Serbia?",
+  "y": "Saint Sava",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931571089107443,
+  "B": 0.11920711369975068,
+  "C": 0.0003
+ },
+ {
+  "q": "Who is the child of the person who followed Tihomir of Serbia?",
+  "y": "Saint Sava",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060090991922537085,
+  "B": 0.03734084862102194,
+  "C": 0.0003
+ },
+ {
+  "q": "Who is the child of the person who followed Tihomir of Serbia?",
+  "y": "Saint Sava",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744510691921411,
+  "B": 0.00016054913063667797,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the child of the person who followed Tihomir of Serbia?",
+  "y": "Saint Sava",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p17",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060090991922537085,
+  "B": 0.14806013776465143,
+  "C": 0.0007
+ },
+ {
+  "q": "What team was Anna Benson's husband on?",
+  "y": "Pittsburgh Pirates",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p16"
+  ],
+  "ans": "The Pittsburgh Pirates, the New York Mets, and the Baltimore Orioles",
+  "A": 0.9626152969240281,
+  "B": 0.9046326581077765,
+  "C": 0.7798
+ },
+ {
+  "q": "What team was Anna Benson's husband on?",
+  "y": "Pittsburgh Pirates",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04743450381221792,
+  "B": 0.047445429836618036,
+  "C": 0.018
+ },
+ {
+  "q": "What team was Anna Benson's husband on?",
+  "y": "Pittsburgh Pirates",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04743450381221792,
+  "B": 0.0008166314431230504,
+  "C": 0.0008
+ },
+ {
+  "q": "What team was Anna Benson's husband on?",
+  "y": "Pittsburgh Pirates",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p16",
+   "p13"
+  ],
+  "ans": "The Pittsburgh Pirates, the New York Mets, and the Baltimore Orioles",
+  "A": 0.8807255584609849,
+  "B": 0.9706605896049105,
+  "C": 0.7798
+ },
+ {
+  "q": "What place does the administrative territorial entity that Juba is located in share a border with?",
+  "y": "Eastern Equatoria",
+  "kind": "gold",
+  "S": [
+   "p13",
+   "p14"
+  ],
+  "ans": "Eastern Equatoria",
+  "A": 0.9999716289935482,
+  "B": 0.7772769099613784,
+  "C": 0.1259
+ },
+ {
+  "q": "What place does the administrative territorial entity that Juba is located in share a border with?",
+  "y": "Eastern Equatoria",
+  "kind": "gold_m1",
+  "S": [
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1192184009870556,
+  "B": 0.4378356273162084,
+  "C": 0.0003
+ },
+ {
+  "q": "What place does the administrative territorial entity that Juba is located in share a border with?",
+  "y": "Eastern Equatoria",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.3208472116244868,
+  "B": 0.004083224070405622,
+  "C": 0.0419
+ },
+ {
+  "q": "What place does the administrative territorial entity that Juba is located in share a border with?",
+  "y": "Eastern Equatoria",
+  "kind": "gold_p1",
+  "S": [
+   "p13",
+   "p14",
+   "p3"
+  ],
+  "ans": "Eastern Equatoria",
+  "A": 0.9999800924450729,
+  "B": 0.8175549873418768,
+  "C": 0.1259
+ },
+ {
+  "q": "Where was the spouse of Frances Tupper born?",
+  "y": "Amherst",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931818247913076,
+  "B": 0.017994634312179847,
+  "C": 0.0005
+ },
+ {
+  "q": "Where was the spouse of Frances Tupper born?",
+  "y": "Amherst",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931818247913076,
+  "B": 0.02932593168954678,
+  "C": 0.0005
+ },
+ {
+  "q": "Where was the spouse of Frances Tupper born?",
+  "y": "Amherst",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586613330963277,
+  "B": 0.00012956370718442134,
+  "C": 0.0875
+ },
+ {
+  "q": "Where was the spouse of Frances Tupper born?",
+  "y": "Amherst",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p13",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586613330963277,
+  "B": 0.06012079565543671,
+  "C": 0.0022
+ },
+ {
+  "q": "Who founded the political party of Dimuthu Bandara Abayakoon?",
+  "y": "Rohana Wijeweera",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p12"
+  ],
+  "ans": "Rohana Wijeweera",
+  "A": 0.9998389741816224,
+  "B": 0.9996891987939148,
+  "C": 0.9971
+ },
+ {
+  "q": "Who founded the political party of Dimuthu Bandara Abayakoon?",
+  "y": "Rohana Wijeweera",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006701555019202998,
+  "B": 0.06009309978338684,
+  "C": 0.0007
+ },
+ {
+  "q": "Who founded the political party of Dimuthu Bandara Abayakoon?",
+  "y": "Rohana Wijeweera",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014097687012439963,
+  "B": 4.86350250724632e-05,
+  "C": 0.0004
+ },
+ {
+  "q": "Who founded the political party of Dimuthu Bandara Abayakoon?",
+  "y": "Rohana Wijeweera",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p12",
+   "p17"
+  ],
+  "ans": "Haydar Baş",
+  "A": 9.90531095380609e-05,
+  "B": 0.9241188017026841,
+  "C": 0.9971
+ },
+ {
+  "q": "Bancroft's county borders what county?",
+  "y": "Haliburton County",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p8"
+  ],
+  "ans": "Renfrew County, Hastings County and Haliburton County",
+  "A": 0.01100209932537033,
+  "B": 0.4378316734045906,
+  "C": 0.9951
+ },
+ {
+  "q": "Bancroft's county borders what county?",
+  "y": "Haliburton County",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02299351061829691,
+  "B": 0.37755545488481057,
+  "C": 0.0002
+ },
+ {
+  "q": "Bancroft's county borders what county?",
+  "y": "Haliburton County",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02299351061829691,
+  "B": 0.0005583028834241777,
+  "C": 0.0428
+ },
+ {
+  "q": "Bancroft's county borders what county?",
+  "y": "Haliburton County",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p8",
+   "p0"
+  ],
+  "ans": "Renfrew County, Hastings County and Haliburton County",
+  "A": 0.09536753735331971,
+  "B": 0.5621670197910352,
+  "C": 0.9951
+ },
+ {
+  "q": "In which county is Mark Dismore's birthplace located?",
+  "y": "Hancock County",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p13"
+  ],
+  "ans": "Hancock County",
+  "A": 0.9999622120822376,
+  "B": 0.9999108393991315,
+  "C": 0.9956
+ },
+ {
+  "q": "In which county is Mark Dismore's birthplace located?",
+  "y": "Hancock County",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09540460679769958,
+  "B": 0.43783994978098906,
+  "C": 0.0002
+ },
+ {
+  "q": "In which county is Mark Dismore's birthplace located?",
+  "y": "Hancock County",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09540460679769958,
+  "B": 0.00026242995588898754,
+  "C": 0.0005
+ },
+ {
+  "q": "In which county is Mark Dismore's birthplace located?",
+  "y": "Hancock County",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p13",
+   "p3"
+  ],
+  "ans": "Hancock County",
+  "A": 0.9999886752461923,
+  "B": 0.9996064066982885,
+  "C": 0.9956
+ },
+ {
+  "q": "Who was the sibling of Nannina de' Medici?",
+  "y": "Giuliano de' Medici",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p8"
+  ],
+  "ans": "Lorenzo de' Medici",
+  "A": 0.02300079349637818,
+  "B": 0.9947517250909194,
+  "C": 0.9927
+ },
+ {
+  "q": "Who was the sibling of Nannina de' Medici?",
+  "y": "Giuliano de' Medici",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014073237063924715,
+  "B": 0.7310260508256861,
+  "C": 0.0002
+ },
+ {
+  "q": "Who was the sibling of Nannina de' Medici?",
+  "y": "Giuliano de' Medici",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.004085825296220036,
+  "B": 0.0007495026892863077,
+  "C": 0.0003
+ },
+ {
+  "q": "Who was the sibling of Nannina de' Medici?",
+  "y": "Giuliano de' Medici",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p8",
+   "p9"
+  ],
+  "ans": "Lorenzo de' Medici",
+  "A": 0.010993237612788365,
+  "B": 0.9398802582433416,
+  "C": 0.9927
+ },
+ {
+  "q": "What county is the NRHEG High School located in?",
+  "y": "Waseca County",
+  "kind": "gold",
+  "S": [
+   "p16",
+   "p19"
+  ],
+  "ans": "Waseca County",
+  "A": 0.9999976158197796,
+  "B": 0.99953815819922,
+  "C": 0.9995
+ },
+ {
+  "q": "What county is the NRHEG High School located in?",
+  "y": "Waseca County",
+  "kind": "gold_m1",
+  "S": [
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.00860505808987333,
+  "B": 0.060105841386442815,
+  "C": 0.0009
+ },
+ {
+  "q": "What county is the NRHEG High School located in?",
+  "y": "Waseca County",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014069181296167854,
+  "B": 0.0003417753834227266,
+  "C": 0.0049
+ },
+ {
+  "q": "What county is the NRHEG High School located in?",
+  "y": "Waseca County",
+  "kind": "gold_p1",
+  "S": [
+   "p16",
+   "p19",
+   "p11"
+  ],
+  "ans": "Waseca County",
+  "A": 0.9999860527077029,
+  "B": 0.9995623359212706,
+  "C": 0.9995
+ },
+ {
+  "q": "What league does the team that occupies the Rabat Ajax Football Ground belong to?",
+  "y": "Maltese Premier League",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p13"
+  ],
+  "ans": "Maltese Premier League",
+  "A": 0.99996769532457,
+  "B": 0.32084362907656594,
+  "C": 0.8804
+ },
+ {
+  "q": "What league does the team that occupies the Rabat Ajax Football Ground belong to?",
+  "y": "Maltese Premier League",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.22272517485496057,
+  "B": 0.6224382194974182,
+  "C": 0.1967
+ },
+ {
+  "q": "What league does the team that occupies the Rabat Ajax Football Ground belong to?",
+  "y": "Maltese Premier League",
+  "kind": "rand",
+  "S": [
+   "p15",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09546254666640441,
+  "B": 0.011011077013087789,
+  "C": 0.0373
+ },
+ {
+  "q": "What league does the team that occupies the Rabat Ajax Football Ground belong to?",
+  "y": "Maltese Premier League",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p13",
+   "p1"
+  ],
+  "ans": "Maltese Premier League",
+  "A": 0.9999890328655274,
+  "B": 0.7310111491661264,
+  "C": 0.8804
+ },
+ {
+  "q": "Who was married to the star of No Escape?",
+  "y": "John Profumo",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p19"
+  ],
+  "ans": "Valerie Hobson",
+  "A": 0.3775486097890549,
+  "B": 0.9819555909018283,
+  "C": 0.9663
+ },
+ {
+  "q": "Who was married to the star of No Escape?",
+  "y": "John Profumo",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04743353149997931,
+  "B": 0.006702966692210488,
+  "C": 0.0002
+ },
+ {
+  "q": "Who was married to the star of No Escape?",
+  "y": "John Profumo",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03733112642494296,
+  "B": 0.0005110273477076932,
+  "C": 0.0017
+ },
+ {
+  "q": "Who was married to the star of No Escape?",
+  "y": "John Profumo",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p19",
+   "p1"
+  ],
+  "ans": "Valerie Hobson",
+  "A": 0.14804984214404404,
+  "B": 0.7310274669348703,
+  "C": 0.9663
+ },
+ {
+  "q": "What administrative territorial entity contains the place where KPRM is licensed to broadcast to?",
+  "y": "Hubbard County",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p16"
+  ],
+  "ans": "Park Rapids, Minnesota",
+  "A": 0.010991138459385597,
+  "B": 0.9046356843901383,
+  "C": 0.9507
+ },
+ {
+  "q": "What administrative territorial entity contains the place where KPRM is licensed to broadcast to?",
+  "y": "Hubbard County",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "Park Rapids, Minnesota",
+  "A": 0.005221261094989438,
+  "B": 0.9046292476547091,
+  "C": 0.0009
+ },
+ {
+  "q": "What administrative territorial entity contains the place where KPRM is licensed to broadcast to?",
+  "y": "Hubbard County",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04743115039537871,
+  "B": 0.006700143806730563,
+  "C": 0.083
+ },
+ {
+  "q": "What administrative territorial entity contains the place where KPRM is licensed to broadcast to?",
+  "y": "Hubbard County",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p16",
+   "p7"
+  ],
+  "ans": "Park Rapids, Minnesota",
+  "A": 0.010992537588454088,
+  "B": 0.90463470708181,
+  "C": 0.9507
+ },
+ {
+  "q": "Where are the headquarters for the publisher of In the Shadow of Greatness?",
+  "y": "Annapolis",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p5"
+  ],
+  "ans": "Annapolis, Maryland",
+  "A": 0.9999927282861518,
+  "B": 0.9993629939898313,
+  "C": 0.999
+ },
+ {
+  "q": "Where are the headquarters for the publisher of In the Shadow of Greatness?",
+  "y": "Annapolis",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0180237188383352,
+  "B": 0.880746268113753,
+  "C": 0.0005
+ },
+ {
+  "q": "Where are the headquarters for the publisher of In the Shadow of Greatness?",
+  "y": "Annapolis",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014086794427754623,
+  "B": 2.2291639482197034e-05,
+  "C": 0.0061
+ },
+ {
+  "q": "Where are the headquarters for the publisher of In the Shadow of Greatness?",
+  "y": "Annapolis",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p5",
+   "p17"
+  ],
+  "ans": "Annapolis, Maryland",
+  "A": 0.9999625696857427,
+  "B": 0.9996880074504653,
+  "C": 0.999
+ },
+ {
+  "q": "Who is part of the band that performed Full Cooperation?",
+  "y": "Erick Sermon",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p10"
+  ],
+  "ans": "Erick Sermon, Redman and Keith Murray",
+  "A": 0.7309621109078243,
+  "B": 0.7772299566197512,
+  "C": 0.998
+ },
+ {
+  "q": "Who is part of the band that performed Full Cooperation?",
+  "y": "Erick Sermon",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06010700034204175,
+  "B": 0.022992942835415753,
+  "C": 0.0057
+ },
+ {
+  "q": "Who is part of the band that performed Full Cooperation?",
+  "y": "Erick Sermon",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.037334328914982784,
+  "B": 0.0006611741406028493,
+  "C": 0.1191
+ },
+ {
+  "q": "Who is part of the band that performed Full Cooperation?",
+  "y": "Erick Sermon",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p10",
+   "p1"
+  ],
+  "ans": "Erick Sermon, Redman, and Keith Murray",
+  "A": 0.9044873275919458,
+  "B": 0.9706072425259127,
+  "C": 0.998
+ },
+ {
+  "q": "The territory containing Bansaan Island is located at which island?",
+  "y": "Panglao Island",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p17"
+  ],
+  "ans": "Bohol Island",
+  "A": 0.0011720018077049366,
+  "B": 0.00011037562031046555,
+  "C": 0.9722
+ },
+ {
+  "q": "The territory containing Bansaan Island is located at which island?",
+  "y": "Panglao Island",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0953734820464861,
+  "B": 0.43784249633382877,
+  "C": 0.0103
+ },
+ {
+  "q": "The territory containing Bansaan Island is located at which island?",
+  "y": "Panglao Island",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014066284308983823,
+  "B": 3.5761507123033276e-05,
+  "C": 0.0067
+ },
+ {
+  "q": "The territory containing Bansaan Island is located at which island?",
+  "y": "Panglao Island",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p17",
+   "p11"
+  ],
+  "ans": "Bohol Island",
+  "A": 0.0011709314600146792,
+  "B": 0.005232232172582729,
+  "C": 0.9722
+ },
+ {
+  "q": "In which county did Snappy Tomato Pizza form?",
+  "y": "Kenton County",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p8"
+  ],
+  "ans": "Kenton County",
+  "A": 0.9999849798550975,
+  "B": 0.9992504973107137,
+  "C": 0.9976
+ },
+ {
+  "q": "In which county did Snappy Tomato Pizza form?",
+  "y": "Kenton County",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.018000727117083892,
+  "B": 0.11922653824398832,
+  "C": 0.0002
+ },
+ {
+  "q": "In which county did Snappy Tomato Pizza form?",
+  "y": "Kenton County",
+  "kind": "rand",
+  "S": [
+   "p18",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03736736092013859,
+  "B": 0.0001672226655803355,
+  "C": 0.0378
+ },
+ {
+  "q": "In which county did Snappy Tomato Pizza form?",
+  "y": "Kenton County",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p8",
+   "p3"
+  ],
+  "ans": "Kenton County",
+  "A": 0.9999763971175267,
+  "B": 0.9996799063410222,
+  "C": 0.9976
+ },
+ {
+  "q": "What's the place of birth of the former member of The Sunnyboys?",
+  "y": "Kingscliff",
+  "kind": "gold",
+  "S": [
+   "p17",
+   "p18"
+  ],
+  "ans": "Kingscliff, New South Wales",
+  "A": 0.9999532721416701,
+  "B": 0.9997510337869404,
+  "C": 0.999
+ },
+ {
+  "q": "What's the place of birth of the former member of The Sunnyboys?",
+  "y": "Kingscliff",
+  "kind": "gold_m1",
+  "S": [
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006698497158374228,
+  "B": 0.004084642710892483,
+  "C": 0.0002
+ },
+ {
+  "q": "What's the place of birth of the former member of The Sunnyboys?",
+  "y": "Kingscliff",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006698497158374228,
+  "B": 0.0007134351024642438,
+  "C": 0.0026
+ },
+ {
+  "q": "What's the place of birth of the former member of The Sunnyboys?",
+  "y": "Kingscliff",
+  "kind": "gold_p1",
+  "S": [
+   "p17",
+   "p18",
+   "p0"
+  ],
+  "ans": "Kingscliff, New South Wales",
+  "A": 0.9999611392834032,
+  "B": 0.9959207962721776,
+  "C": 0.999
+ },
+ {
+  "q": "In which district was Ernie Watts born?",
+  "y": "West Berkshire",
+  "kind": "gold",
+  "S": [
+   "p14",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.004083224070405622,
+  "B": 0.8519213532821042,
+  "C": 0.9995
+ },
+ {
+  "q": "In which district was Ernie Watts born?",
+  "y": "West Berkshire",
+  "kind": "gold_m1",
+  "S": [
+   "p14"
+  ],
+  "ans": "Berkshire",
+  "A": 0.005229872502452548,
+  "B": 0.029332671969718227,
+  "C": 0.0015
+ },
+ {
+  "q": "In which district was Ernie Watts born?",
+  "y": "West Berkshire",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01408795319954348,
+  "B": 3.361589073991311e-05,
+  "C": 0.0005
+ },
+ {
+  "q": "In which district was Ernie Watts born?",
+  "y": "West Berkshire",
+  "kind": "gold_p1",
+  "S": [
+   "p14",
+   "p18",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01408795319954348,
+  "B": 0.7310495585933399,
+  "C": 0.9995
+ },
+ {
+  "q": "Which county does Lloyd Dane's birthplace belong to?",
+  "y": "Miller County",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p18"
+  ],
+  "ans": "Miller County",
+  "A": 0.9999517225672779,
+  "B": 0.9996345187358974,
+  "C": 0.9976
+ },
+ {
+  "q": "Which county does Lloyd Dane's birthplace belong to?",
+  "y": "Miller County",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.037354766503608916,
+  "B": 0.9947589207355523,
+  "C": 0.0002
+ },
+ {
+  "q": "Which county does Lloyd Dane's birthplace belong to?",
+  "y": "Miller County",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02301194518449312,
+  "B": 0.0004395697762170636,
+  "C": 0.0008
+ },
+ {
+  "q": "Which county does Lloyd Dane's birthplace belong to?",
+  "y": "Miller County",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p18",
+   "p13"
+  ],
+  "ans": "Miller County",
+  "A": 0.9999660265080288,
+  "B": 0.9994769449642947,
+  "C": 0.9976
+ },
+ {
+  "q": "Who is the spouse of the screenwriter of The Actress?",
+  "y": "Garson Kanin",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921330860092405,
+  "B": 0.6223661379654213,
+  "C": 0.0147
+ },
+ {
+  "q": "Who is the spouse of the screenwriter of The Actress?",
+  "y": "Garson Kanin",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03745903842982834,
+  "B": 0.0373500184518748,
+  "C": 0.0008
+ },
+ {
+  "q": "Who is the spouse of the screenwriter of The Actress?",
+  "y": "Garson Kanin",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07590410514571344,
+  "B": 9.333215970264153e-05,
+  "C": 0.0045
+ },
+ {
+  "q": "Who is the spouse of the screenwriter of The Actress?",
+  "y": "Garson Kanin",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p10",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03735686797522342,
+  "B": 0.047490317839020135,
+  "C": 0.0566
+ },
+ {
+  "q": "What award was received by the person who authored Missing Person?",
+  "y": "Nobel Prize in Literature",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p16"
+  ],
+  "ans": "Prix Goncourt",
+  "A": 0.9241242961258651,
+  "B": 0.9874139736101708,
+  "C": 0.9995
+ },
+ {
+  "q": "What award was received by the person who authored Missing Person?",
+  "y": "Nobel Prize in Literature",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "Prix Goncourt",
+  "A": 0.9241159512253324,
+  "B": 0.4379182175018369,
+  "C": 0.0003
+ },
+ {
+  "q": "What award was received by the person who authored Missing Person?",
+  "y": "Nobel Prize in Literature",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.004074592533967247,
+  "B": 0.0003976432139922714,
+  "C": 0.0014
+ },
+ {
+  "q": "What award was received by the person who authored Missing Person?",
+  "y": "Nobel Prize in Literature",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p16",
+   "p3"
+  ],
+  "ans": "The 2014 Nobel Prize in Literature",
+  "A": 0.9706642960042764,
+  "B": 0.9913991605155918,
+  "C": 0.9995
+ },
+ {
+  "q": "What event caused the founder of Australia's liberal party to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p17"
+  ],
+  "ans": "Lyons' death in 1939",
+  "A": 0.999737570044111,
+  "B": 0.9959111004522575,
+  "C": 0.9829
+ },
+ {
+  "q": "What event caused the founder of Australia's liberal party to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06009204585355288,
+  "B": 0.0005715201349779653,
+  "C": 0.0037
+ },
+ {
+  "q": "What event caused the founder of Australia's liberal party to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586653954424094,
+  "B": 0.0003596442505455766,
+  "C": 0.0635
+ },
+ {
+  "q": "What event caused the founder of Australia's liberal party to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p17",
+   "p19"
+  ],
+  "ans": "Lyons' death in 1939",
+  "A": 0.998478466205559,
+  "B": 0.9045806669446359,
+  "C": 0.9829
+ },
+ {
+  "q": "What event caused the Liberal Party of Australia's longest-serving leader to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p17"
+  ],
+  "ans": "Lyons' death in 1939",
+  "A": 0.9525612769319375,
+  "B": 0.985885627724093,
+  "C": 0.9829
+ },
+ {
+  "q": "What event caused the Liberal Party of Australia's longest-serving leader to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014070572397923531,
+  "B": 0.0005656855170943498,
+  "C": 0.0037
+ },
+ {
+  "q": "What event caused the Liberal Party of Australia's longest-serving leader to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "rand",
+  "S": [
+   "p8",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014070572397923531,
+  "B": 0.00045231378022869695,
+  "C": 0.0115
+ },
+ {
+  "q": "What event caused the Liberal Party of Australia's longest-serving leader to become Prime Minister?",
+  "y": "Lyons' death in 1939",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p17",
+   "p7"
+  ],
+  "ans": "Lyons' death in 1939",
+  "A": 0.9626589326217302,
+  "B": 0.6791572412627878,
+  "C": 0.9829
+ },
+ {
+  "q": "What was the average per capita GVA in 2013 of the country which created Burma's academic system?",
+  "y": "£23,755",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734173082207792,
+  "B": 0.14815132030266176,
+  "C": 0.9966
+ },
+ {
+  "q": "What was the average per capita GVA in 2013 of the country which created Burma's academic system?",
+  "y": "£23,755",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734637132976815,
+  "B": 0.006741543164650143,
+  "C": 0.0667
+ },
+ {
+  "q": "What was the average per capita GVA in 2013 of the country which created Burma's academic system?",
+  "y": "£23,755",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0140772928149977,
+  "B": 0.00016841435472803035,
+  "C": 0.0762
+ },
+ {
+  "q": "What was the average per capita GVA in 2013 of the country which created Burma's academic system?",
+  "y": "£23,755",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p15",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734637132976815,
+  "B": 0.029362098674727055,
+  "C": 0.9966
+ },
+ {
+  "q": "Who is the spouse of the creator of The Nanny Reunion: A Nosh to Remember?",
+  "y": "Peter Marc Jacobson",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791379523754144,
+  "B": 0.6224414472239672,
+  "C": 0.0011
+ },
+ {
+  "q": "Who is the spouse of the creator of The Nanny Reunion: A Nosh to Remember?",
+  "y": "Peter Marc Jacobson",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791379523754144,
+  "B": 0.0019316243786172693,
+  "C": 0.0002
+ },
+ {
+  "q": "Who is the spouse of the creator of The Nanny Reunion: A Nosh to Remember?",
+  "y": "Peter Marc Jacobson",
+  "kind": "rand",
+  "S": [
+   "p12",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.4378377047840496,
+  "B": 0.0011786618910739621,
+  "C": 0.0065
+ },
+ {
+  "q": "Who is the spouse of the creator of The Nanny Reunion: A Nosh to Remember?",
+  "y": "Peter Marc Jacobson",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p19",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.730969299784774,
+  "B": 0.731028403747069,
+  "C": 0.002
+ },
+ {
+  "q": "Who founded the publisher of The Final Testament of the Holy Bible?",
+  "y": "Larry Gagosian",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0031770537577752167,
+  "B": 0.7772332689726658,
+  "C": 0.9365
+ },
+ {
+  "q": "Who founded the publisher of The Final Testament of the Holy Bible?",
+  "y": "Larry Gagosian",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006756949653371147,
+  "B": 0.00016829519460681563,
+  "C": 0.0029
+ },
+ {
+  "q": "Who founded the publisher of The Final Testament of the Holy Bible?",
+  "y": "Larry Gagosian",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.003250962926731993,
+  "B": 1.5496967509021076e-05,
+  "C": 0.0003
+ },
+ {
+  "q": "Who founded the publisher of The Final Testament of the Holy Bible?",
+  "y": "Larry Gagosian",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p8",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0011773536452295286,
+  "B": 0.5621075466533711,
+  "C": 0.9365
+ },
+ {
+  "q": "During which era was the company that makes Nirbhay founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921359734525494,
+  "B": 0.09536451107161181,
+  "C": 0.9507
+ },
+ {
+  "q": "During which era was the company that makes Nirbhay founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14805252079467224,
+  "B": 0.0009283737128819025,
+  "C": 0.0864
+ },
+ {
+  "q": "During which era was the company that makes Nirbhay founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "rand",
+  "S": [
+   "p0",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11923929521160626,
+  "B": 0.00030150857953004095,
+  "C": 0.1052
+ },
+ {
+  "q": "During which era was the company that makes Nirbhay founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p7",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11923929521160626,
+  "B": 0.060115634691339515,
+  "C": 0.9507
+ },
+ {
+  "q": "During what era was the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold",
+  "S": [
+   "p15",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0758927034310124,
+  "B": 0.06010679025956189,
+  "C": 0.9507
+ },
+ {
+  "q": "During what era was the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_m1",
+  "S": [
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.148092496432911,
+  "B": 0.006705318705199748,
+  "C": 0.0265
+ },
+ {
+  "q": "During what era was the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.148092496432911,
+  "B": 0.0001467251018389959,
+  "C": 0.0008
+ },
+ {
+  "q": "During what era was the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_p1",
+  "S": [
+   "p15",
+   "p16",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.148092496432911,
+  "B": 0.006715904313600474,
+  "C": 0.9507
+ },
+ {
+  "q": "In what era was the company known as the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806117874525904,
+  "B": 0.06009941633476845,
+  "C": 0.9507
+ },
+ {
+  "q": "In what era was the company known as the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806117874525904,
+  "B": 0.0031926893688889457,
+  "C": 0.0263
+ },
+ {
+  "q": "In what era was the company known as the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1192249632969008,
+  "B": 0.00034534921149376174,
+  "C": 0.163
+ },
+ {
+  "q": "In what era was the company known as the manufacturer of Agni-V founded?",
+  "y": "From the 1950s to the 1970s",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p6",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14808202347943455,
+  "B": 0.00670837700756588,
+  "C": 0.9507
+ },
+ {
+  "q": "What city is located in the county containing Qiantong?",
+  "y": "Ningbo",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p13"
+  ],
+  "ans": "Ningbo",
+  "A": 0.9999398029324065,
+  "B": 0.8519318137110691,
+  "C": 0.9995
+ },
+ {
+  "q": "What city is located in the county containing Qiantong?",
+  "y": "Ningbo",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "Ninghai County",
+  "A": 0.07586623658963487,
+  "B": 0.5621524105950989,
+  "C": 0.0029
+ },
+ {
+  "q": "What city is located in the county containing Qiantong?",
+  "y": "Ningbo",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689710733804841,
+  "B": 0.0001631708885748706,
+  "C": 0.0036
+ },
+ {
+  "q": "What city is located in the county containing Qiantong?",
+  "y": "Ningbo",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p13",
+   "p15"
+  ],
+  "ans": "Ninghai",
+  "A": 0.047431583323930604,
+  "B": 0.6791720372024496,
+  "C": 0.9995
+ },
+ {
+  "q": "What is the performer of Heartbeat named after?",
+  "y": "Natalie Albino",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005245443720493181,
+  "B": 0.437831941467274,
+  "C": 0.9971
+ },
+ {
+  "q": "What is the performer of Heartbeat named after?",
+  "y": "Natalie Albino",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.003181791882813423,
+  "B": 0.0474578673961763,
+  "C": 0.0045
+ },
+ {
+  "q": "What is the performer of Heartbeat named after?",
+  "y": "Natalie Albino",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008594278404650768,
+  "B": 0.0024868241209468067,
+  "C": 0.0023
+ },
+ {
+  "q": "What is the performer of Heartbeat named after?",
+  "y": "Natalie Albino",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p12",
+   "p16"
+  ],
+  "ans": "Nicole and Natalie Albino",
+  "A": 0.7310219114453378,
+  "B": 0.22272156116975228,
+  "C": 0.9971
+ },
+ {
+  "q": "The Move Ya Body song's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586715233848162,
+  "B": 0.7310430007433909,
+  "C": 0.9863
+ },
+ {
+  "q": "The Move Ya Body song's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060099626418896546,
+  "B": 0.2227179011381214,
+  "C": 0.0403
+ },
+ {
+  "q": "The Move Ya Body song's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014077987901292666,
+  "B": 0.00021500731796930683,
+  "C": 0.0004
+ },
+ {
+  "q": "The Move Ya Body song's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p9",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536294737642825,
+  "B": 0.6791636170385774,
+  "C": 0.9863
+ },
+ {
+  "q": "When did the spacecraft that detected storms on Neptune leave our solar system?",
+  "y": "August 30, 2007",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536255645221003,
+  "B": 0.2689594175850989,
+  "C": 0.0472
+ },
+ {
+  "q": "When did the spacecraft that detected storms on Neptune leave our solar system?",
+  "y": "August 30, 2007",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029318968974375914,
+  "B": 0.0007167681908549772,
+  "C": 0.01
+ },
+ {
+  "q": "When did the spacecraft that detected storms on Neptune leave our solar system?",
+  "y": "August 30, 2007",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029318968974375914,
+  "B": 9.714612989653038e-05,
+  "C": 0.0678
+ },
+ {
+  "q": "When did the spacecraft that detected storms on Neptune leave our solar system?",
+  "y": "August 30, 2007",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p10",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029328179057476755,
+  "B": 0.43783934664836366,
+  "C": 0.0472
+ },
+ {
+  "q": "The Nicole and Natalie album's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p19"
+  ],
+  "ans": "Nicole and Natalie Albino",
+  "A": 0.4378435350560168,
+  "B": 0.7310280987383143,
+  "C": 0.9927
+ },
+ {
+  "q": "The Nicole and Natalie album's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006717550933100003,
+  "B": 0.2227253138425177,
+  "C": 0.9927
+ },
+ {
+  "q": "The Nicole and Natalie album's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "rand",
+  "S": [
+   "p18",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006717550933100003,
+  "B": 0.0015144029046141316,
+  "C": 0.0014
+ },
+ {
+  "q": "The Nicole and Natalie album's band is named after who?",
+  "y": "Natalie Albino",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p19",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006717550933100003,
+  "B": 0.4378485611040088,
+  "C": 0.9927
+ },
+ {
+  "q": "Where was the founder of the National Women's Party born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p11"
+  ],
+  "ans": "Mount Laurel Township, New Jersey",
+  "A": 0.9998839036292196,
+  "B": 0.9996459545792723,
+  "C": 0.9932
+ },
+ {
+  "q": "Where was the founder of the National Women's Party born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "Mount Laurel Township, New Jersey",
+  "A": 0.9998613788093218,
+  "B": 0.9932244694493512,
+  "C": 0.0007
+ },
+ {
+  "q": "Where was the founder of the National Women's Party born?",
+  "y": "Mount Laurel Township",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0067513046437388535,
+  "B": 2.217243648072742e-05,
+  "C": 0.0011
+ },
+ {
+  "q": "Where was the founder of the National Women's Party born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p11",
+   "p10"
+  ],
+  "ans": "Mount Laurel Township, New Jersey",
+  "A": 0.9998278914121209,
+  "B": 0.9992377612133292,
+  "C": 0.9932
+ },
+ {
+  "q": "What is the place of birth of the person who submitted the first version of the equal rights amendment to congress in 1923?",
+  "y": "Mount Laurel Township",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014072426278994743,
+  "B": 0.7772729488151154,
+  "C": 0.025
+ },
+ {
+  "q": "What is the place of birth of the person who submitted the first version of the equal rights amendment to congress in 1923?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014072426278994743,
+  "B": 0.0019326932140051323,
+  "C": 0.0002
+ },
+ {
+  "q": "What is the place of birth of the person who submitted the first version of the equal rights amendment to congress in 1923?",
+  "y": "Mount Laurel Township",
+  "kind": "rand",
+  "S": [
+   "p15",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006696850507288299,
+  "B": 0.00021655636970996373,
+  "C": 0.0005
+ },
+ {
+  "q": "What is the place of birth of the person who submitted the first version of the equal rights amendment to congress in 1923?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p18",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014072426278994743,
+  "B": 0.9398263428582919,
+  "C": 0.025
+ },
+ {
+  "q": "The Directory of Public Worship was approved by a parliament whose modern equivalent has been based where since 2004?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold",
+  "S": [
+   "p13",
+   "p16"
+  ],
+  "ans": "Holyrood area of Edinburgh",
+  "A": 0.9769784973668701,
+  "B": 0.9524799401454302,
+  "C": 0.9985
+ },
+ {
+  "q": "The Directory of Public Worship was approved by a parliament whose modern equivalent has been based where since 2004?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold_m1",
+  "S": [
+   "p13"
+  ],
+  "ans": "Holyrood area of Edinburgh",
+  "A": 0.9706558725541852,
+  "B": 0.9626086699792424,
+  "C": 0.0998
+ },
+ {
+  "q": "The Directory of Public Worship was approved by a parliament whose modern equivalent has been based where since 2004?",
+  "y": "Scottish Parliament Building",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.023026053852940764,
+  "B": 0.003189727930698383,
+  "C": 0.0591
+ },
+ {
+  "q": "The Directory of Public Worship was approved by a parliament whose modern equivalent has been based where since 2004?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold_p1",
+  "S": [
+   "p13",
+   "p16",
+   "p4"
+  ],
+  "ans": "Holyrood area of Edinburgh",
+  "A": 0.98898320962041,
+  "B": 0.9819720285753185,
+  "C": 0.9985
+ },
+ {
+  "q": "Where was the person featured on the Chester Arthur coin born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold",
+  "S": [
+   "p14",
+   "p19"
+  ],
+  "ans": "Mount Laurel Township, New Jersey",
+  "A": 0.9990829302521989,
+  "B": 0.996801743568886,
+  "C": 0.9971
+ },
+ {
+  "q": "Where was the person featured on the Chester Arthur coin born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_m1",
+  "S": [
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014070108697556427,
+  "B": 0.014080769159781181,
+  "C": 0.0003
+ },
+ {
+  "q": "Where was the person featured on the Chester Arthur coin born?",
+  "y": "Mount Laurel Township",
+  "kind": "rand",
+  "S": [
+   "p0",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.018003600654401875,
+  "B": 0.0005599698913414386,
+  "C": 0.0003
+ },
+ {
+  "q": "Where was the person featured on the Chester Arthur coin born?",
+  "y": "Mount Laurel Township",
+  "kind": "gold_p1",
+  "S": [
+   "p14",
+   "p19",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0040770755228317634,
+  "B": 0.9819496136342347,
+  "C": 0.9971
+ },
+ {
+  "q": "Since 2004, what is the location of the body to which, if a matter is not specifically reserved, it is devolved?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p7"
+  ],
+  "ans": "Holyrood area of Edinburgh",
+  "A": 0.9046390005062663,
+  "B": 0.5000419608614366,
+  "C": 0.999
+ },
+ {
+  "q": "Since 2004, what is the location of the body to which, if a matter is not specifically reserved, it is devolved?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "The Holyrood area of Edinburgh",
+  "A": 0.851937361345056,
+  "B": 0.622337797333507,
+  "C": 0.2085
+ },
+ {
+  "q": "Since 2004, what is the location of the body to which, if a matter is not specifically reserved, it is devolved?",
+  "y": "Scottish Parliament Building",
+  "kind": "rand",
+  "S": [
+   "p12",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047437967222931254,
+  "B": 0.04748328493365139,
+  "C": 0.0076
+ },
+ {
+  "q": "Since 2004, what is the location of the body to which, if a matter is not specifically reserved, it is devolved?",
+  "y": "Scottish Parliament Building",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p7",
+   "p8"
+  ],
+  "ans": "Holyrood area of Edinburgh",
+  "A": 0.7310316063466762,
+  "B": 0.5621409178476836,
+  "C": 0.999
+ },
+ {
+  "q": "The city which contains Broadhurst Park shares a border with what town?",
+  "y": "Middleton",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p11"
+  ],
+  "ans": "Middleton",
+  "A": 0.9999743706604208,
+  "B": 0.9398854192132259,
+  "C": 0.5259
+ },
+ {
+  "q": "The city which contains Broadhurst Park shares a border with what town?",
+  "y": "Middleton",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022998631568220795,
+  "B": 0.8519184969979752,
+  "C": 0.0001
+ },
+ {
+  "q": "The city which contains Broadhurst Park shares a border with what town?",
+  "y": "Middleton",
+  "kind": "rand",
+  "S": [
+   "p0",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005242022844605954,
+  "B": 0.000955859237373069,
+  "C": 0.0019
+ },
+ {
+  "q": "The city which contains Broadhurst Park shares a border with what town?",
+  "y": "Middleton",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p11",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022998631568220795,
+  "B": 0.9241236833377013,
+  "C": 0.5259
+ },
+ {
+  "q": "What is the record label of the Metalworks Studio founder?",
+  "y": "TML Entertainment",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p9"
+  ],
+  "ans": "TML Entertainment",
+  "A": 0.999897252153674,
+  "B": 0.6791166198682954,
+  "C": 0.0041
+ },
+ {
+  "q": "What is the record label of the Metalworks Studio founder?",
+  "y": "TML Entertainment",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014294861193557717,
+  "B": 0.060096468149217874,
+  "C": 0.0004
+ },
+ {
+  "q": "What is the record label of the Metalworks Studio founder?",
+  "y": "TML Entertainment",
+  "kind": "rand",
+  "S": [
+   "p4",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.018006589416949548,
+  "B": 2.0384373384252363e-05,
+  "C": 0.0033
+ },
+ {
+  "q": "What is the record label of the Metalworks Studio founder?",
+  "y": "TML Entertainment",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p9",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014294861193557717,
+  "B": 0.7772691498400027,
+  "C": 0.0052
+ },
+ {
+  "q": "What is the mouth of watercourse for the body of water where Bartram's Covered Bridge is located?",
+  "y": "Delaware River",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p18"
+  ],
+  "ans": "The mouth of the watercourse (Crum Creek) is the Delaware River.",
+  "A": 0.9819090394111029,
+  "B": 0.9947484218933463,
+  "C": 0.9893
+ },
+ {
+  "q": "What is the mouth of watercourse for the body of water where Bartram's Covered Bridge is located?",
+  "y": "Delaware River",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744553629288106,
+  "B": 0.8175170640409024,
+  "C": 0.0003
+ },
+ {
+  "q": "What is the mouth of watercourse for the body of water where Bartram's Covered Bridge is located?",
+  "y": "Delaware River",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008625092758353992,
+  "B": 0.0019363743491478402,
+  "C": 0.0084
+ },
+ {
+  "q": "What is the mouth of watercourse for the body of water where Bartram's Covered Bridge is located?",
+  "y": "Delaware River",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p18",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744553629288106,
+  "B": 0.9819985833063575,
+  "C": 0.9893
+ },
+ {
+  "q": "What is the ruler of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p17"
+  ],
+  "ans": "The ruler of the underworld in ancient Egypt is Osiris, who is part of the Four sons of Horus (specifically mentioned in relation to Hapi, one of the sons, protecting the throne of Osiris).",
+  "A": 0.017996933522794523,
+  "B": 0.8807857595427119,
+  "C": 0.9995
+ },
+ {
+  "q": "What is the ruler of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "The ruler of the underworld in ancient Egypt is a part of wall paintings.",
+  "A": 7.855275137902407e-05,
+  "B": 0.9947163377662579,
+  "C": 0.9995
+ },
+ {
+  "q": "What is the ruler of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.268973491662416,
+  "B": 0.0005754495167005214,
+  "C": 0.1201
+ },
+ {
+  "q": "What is the ruler of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p17",
+   "p16"
+  ],
+  "ans": "The ruler of the underworld in ancient Egypt is Osiris, who is part of the Four sons of Horus (specifically mentioned in the context of Hapi protecting the throne of Osiris, though Osiris himself is the ruler). However, based strictly on the provided passages, Osiris is associated with the underworld and is protected by Hapi, one of the Four sons of Horus. The",
+  "A": 0.02306917565401434,
+  "B": 0.8175296480957719,
+  "C": 0.9995
+ },
+ {
+  "q": "What pantheon is the God of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p11"
+  ],
+  "ans": "The passages provided do not explicitly name the specific pantheon to which the God of the underworld (Osiris) belongs. While they mention Osiris is an Egyptian god and part of the \"Four sons of Horus\" (Hapi, and by extension the others), they do not define the overarching name of the pantheon.\n\nINSUFFICIENT",
+  "A": 0.02308089429369864,
+  "B": 0.9988199110287318,
+  "C": 0.9985
+ },
+ {
+  "q": "What pantheon is the God of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.5000290871728811,
+  "B": 0.9240967072906551,
+  "C": 0.9985
+ },
+ {
+  "q": "What pantheon is the God of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791329329016896,
+  "B": 0.0015571865498095194,
+  "C": 0.1099
+ },
+ {
+  "q": "What pantheon is the God of the underworld in ancient Egypt a part of?",
+  "y": "ancient Egyptian religion",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p11",
+   "p0"
+  ],
+  "ans": "The passages provided do not explicitly name the specific pantheon to which the God of the underworld in ancient Egypt (Osiris) belongs. While Passage [2] details Osiris's role as the god of the afterlife and underworld in ancient Egypt and mentions his family connections (Geb, Ra, Nut, Isis, Horus), it does not use the term \"pantheon\" or list the collective",
+  "A": 0.09563339274313054,
+  "B": 0.9993627558394959,
+  "C": 0.9985
+ },
+ {
+  "q": "In which district was Alhandra born?",
+  "y": "Lisbon District",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p19"
+  ],
+  "ans": "Lisbon District",
+  "A": 0.9999847414437658,
+  "B": 0.9998426684993716,
+  "C": 0.9956
+ },
+ {
+  "q": "In which district was Alhandra born?",
+  "y": "Lisbon District",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022990780889886264,
+  "B": 0.622433099689637,
+  "C": 0.0002
+ },
+ {
+  "q": "In which district was Alhandra born?",
+  "y": "Lisbon District",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02297917399952487,
+  "B": 0.0008574518063612091,
+  "C": 0.0016
+ },
+ {
+  "q": "In which district was Alhandra born?",
+  "y": "Lisbon District",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p19",
+   "p4"
+  ],
+  "ans": "Lisbon",
+  "A": 0.9984899945435153,
+  "B": 0.999881162465012,
+  "C": 0.9956
+ },
+ {
+  "q": "In which state is Vera Barbosa's place of birth located?",
+  "y": "Lisbon District",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.023018658337452647,
+  "B": 0.9991358839192174,
+  "C": 0.9956
+ },
+ {
+  "q": "In which state is Vera Barbosa's place of birth located?",
+  "y": "Lisbon District",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008585373880767189,
+  "B": 0.18245959500289788,
+  "C": 0.0001
+ },
+ {
+  "q": "In which state is Vera Barbosa's place of birth located?",
+  "y": "Lisbon District",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01099638587399776,
+  "B": 0.00027374877632879713,
+  "C": 0.0041
+ },
+ {
+  "q": "In which state is Vera Barbosa's place of birth located?",
+  "y": "Lisbon District",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p6",
+   "p18"
+  ],
+  "ans": "Portugal",
+  "A": 0.002475674122147886,
+  "B": 0.7310283383880395,
+  "C": 0.9956
+ },
+ {
+  "q": "In which state is Póvoa de Santa Iria's municipality located?",
+  "y": "Lisbon District",
+  "kind": "gold",
+  "S": [
+   "p13",
+   "p17"
+  ],
+  "ans": "Lisbon District",
+  "A": 0.9999560137072835,
+  "B": 0.9977961579583079,
+  "C": 0.9956
+ },
+ {
+  "q": "In which state is Póvoa de Santa Iria's municipality located?",
+  "y": "Lisbon District",
+  "kind": "gold_m1",
+  "S": [
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0601102636171994,
+  "B": 0.6224472349134865,
+  "C": 0.0004
+ },
+ {
+  "q": "In which state is Póvoa de Santa Iria's municipality located?",
+  "y": "Lisbon District",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18247210613065967,
+  "B": 0.0009145709134004143,
+  "C": 0.0058
+ },
+ {
+  "q": "In which state is Póvoa de Santa Iria's municipality located?",
+  "y": "Lisbon District",
+  "kind": "gold_p1",
+  "S": [
+   "p13",
+   "p17",
+   "p4"
+  ],
+  "ans": "Lisbon District",
+  "A": 0.999958755287689,
+  "B": 0.9982186159529403,
+  "C": 0.9956
+ },
+ {
+  "q": "How old was Mary when engaged to the person from whom São José dos Campos takes it's name?",
+  "y": "12–14 years old",
+  "kind": "gold",
+  "S": [
+   "p18",
+   "p19"
+  ],
+  "ans": "According to the passages, São José dos Campos takes its name from Saint Joseph. Passage [1] states that some apocryphal accounts state that at the time of Mary's betrothal to Joseph, she was 12–14 years old, but it also notes that such accounts are unreliable. Therefore, based strictly on the provided text, the answer is that some unreliable accounts say",
+  "A": 0.437888533339145,
+  "B": 0.8175408801069931,
+  "C": 0.9902
+ },
+ {
+  "q": "How old was Mary when engaged to the person from whom São José dos Campos takes it's name?",
+  "y": "12–14 years old",
+  "kind": "gold_m1",
+  "S": [
+   "p18"
+  ],
+  "ans": "12–14 years old",
+  "A": 0.9999229967324447,
+  "B": 0.7772779987010225,
+  "C": 0.0003
+ },
+ {
+  "q": "How old was Mary when engaged to the person from whom São José dos Campos takes it's name?",
+  "y": "12–14 years old",
+  "kind": "rand",
+  "S": [
+   "p8",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744510691921411,
+  "B": 9.941066554242095e-05,
+  "C": 0.0299
+ },
+ {
+  "q": "How old was Mary when engaged to the person from whom São José dos Campos takes it's name?",
+  "y": "12–14 years old",
+  "kind": "gold_p1",
+  "S": [
+   "p18",
+   "p19",
+   "p1"
+  ],
+  "ans": "12–14 years old",
+  "A": 0.9999229967324447,
+  "B": 0.22270342299597334,
+  "C": 0.9907
+ },
+ {
+  "q": "Where was Mary's betrothed born?",
+  "y": "Nazareth",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.3775627451072675,
+  "B": 0.00043587750585338814,
+  "C": 0.0008
+ },
+ {
+  "q": "Where was Mary's betrothed born?",
+  "y": "Nazareth",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1480583985625058,
+  "B": 0.005224564382265262,
+  "C": 0.0008
+ },
+ {
+  "q": "Where was Mary's betrothed born?",
+  "y": "Nazareth",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689508117851349,
+  "B": 0.00012813356917984464,
+  "C": 0.0177
+ },
+ {
+  "q": "Where was Mary's betrothed born?",
+  "y": "Nazareth",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p11",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.22271069684829725,
+  "B": 0.00020475962402455306,
+  "C": 0.5127
+ },
+ {
+  "q": "Where is the country with ISO code ISO 3166-2:CV located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p13"
+  ],
+  "ans": "The country with ISO code ISO 3166-2:CV is located 570 kilometres (350 mi) west of the Cape Verde Peninsula off the coast of Northwest Africa.",
+  "A": 0.880746176244763,
+  "B": 0.9971688305394183,
+  "C": 0.998
+ },
+ {
+  "q": "Where is the country with ISO code ISO 3166-2:CV located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806489833630598,
+  "B": 0.9991383830023769,
+  "C": 0.0125
+ },
+ {
+  "q": "Where is the country with ISO code ISO 3166-2:CV located?",
+  "y": "central Atlantic Ocean",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0953904599289832,
+  "B": 0.0031803703316216625,
+  "C": 0.0019
+ },
+ {
+  "q": "Where is the country with ISO code ISO 3166-2:CV located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p13",
+   "p12"
+  ],
+  "ans": "570 kilometres (350 mi) west of the Cape Verde Peninsula off the coast of Northwest Africa",
+  "A": 0.9045216564838929,
+  "B": 0.9967987823881181,
+  "C": 0.998
+ },
+ {
+  "q": "Where is Assomada located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008595567356479483,
+  "B": 0.010995102806786172,
+  "C": 0.0051
+ },
+ {
+  "q": "Where is Assomada located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.002478520858193445,
+  "B": 0.0015071530504843222,
+  "C": 0.0051
+ },
+ {
+  "q": "Where is Assomada located?",
+  "y": "central Atlantic Ocean",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.002478520858193445,
+  "B": 0.003177527455247131,
+  "C": 0.0009
+ },
+ {
+  "q": "Where is Assomada located?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p11",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008595567356479483,
+  "B": 0.0024746064488773145,
+  "C": 0.0751
+ },
+ {
+  "q": "Where is Amílcar Cabral International Airport?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold",
+  "S": [
+   "p17",
+   "p19"
+  ],
+  "ans": "It is located two km west-southwest from Espargos on Sal Island.",
+  "A": 0.029438239477934225,
+  "B": 0.0601046824294148,
+  "C": 0.9854
+ },
+ {
+  "q": "Where is Amílcar Cabral International Airport?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_m1",
+  "S": [
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047468360240953134,
+  "B": 0.029317846184417684,
+  "C": 0.0029
+ },
+ {
+  "q": "Where is Amílcar Cabral International Airport?",
+  "y": "central Atlantic Ocean",
+  "kind": "rand",
+  "S": [
+   "p13",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047468360240953134,
+  "B": 0.0005619942070760331,
+  "C": 0.0635
+ },
+ {
+  "q": "Where is Amílcar Cabral International Airport?",
+  "y": "central Atlantic Ocean",
+  "kind": "gold_p1",
+  "S": [
+   "p17",
+   "p19",
+   "p18"
+  ],
+  "ans": "It is located two km west-southwest from Espargos on Sal Island.",
+  "A": 0.11922210213581974,
+  "B": 0.022999313995554882,
+  "C": 0.9854
+ },
+ {
+  "q": "Where was the person who wrote about the rioting being a dividing factor in Birmingham educated?",
+  "y": "University of Glasgow",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p14"
+  ],
+  "ans": "University of Glasgow",
+  "A": 0.9998800898331569,
+  "B": 0.029330200418555608,
+  "C": 0.9961
+ },
+ {
+  "q": "Where was the person who wrote about the rioting being a dividing factor in Birmingham educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008591935019454322,
+  "B": 0.0007209344920851013,
+  "C": 0.0002
+ },
+ {
+  "q": "Where was the person who wrote about the rioting being a dividing factor in Birmingham educated?",
+  "y": "University of Glasgow",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0179990022590093,
+  "B": 0.00010954133434204483,
+  "C": 0.0004
+ },
+ {
+  "q": "Where was the person who wrote about the rioting being a dividing factor in Birmingham educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p14",
+   "p13"
+  ],
+  "ans": "University of Glasgow",
+  "A": 0.9999274068115732,
+  "B": 0.023007961673440214,
+  "C": 0.9961
+ },
+ {
+  "q": "Where was the designer of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold",
+  "S": [
+   "p14",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244947144779078,
+  "B": 0.5000204449274787,
+  "C": 0.1245
+ },
+ {
+  "q": "Where was the designer of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_m1",
+  "S": [
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244947144779078,
+  "B": 0.008591700495965804,
+  "C": 0.0004
+ },
+ {
+  "q": "Where was the designer of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587417534458463,
+  "B": 0.7310283383880395,
+  "C": 0.0015
+ },
+ {
+  "q": "Where was the designer of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_p1",
+  "S": [
+   "p14",
+   "p16",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07587417534458463,
+  "B": 0.8519379580034945,
+  "C": 0.1245
+ },
+ {
+  "q": "Where was the creator of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921931971337729,
+  "B": 0.5621546555615293,
+  "C": 0.9961
+ },
+ {
+  "q": "Where was the creator of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1480618642683792,
+  "B": 0.0031770537577752167,
+  "C": 0.0004
+ },
+ {
+  "q": "Where was the creator of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921931971337729,
+  "B": 0.0005187680057073818,
+  "C": 0.0061
+ },
+ {
+  "q": "Where was the creator of the Lap Engine educated?",
+  "y": "University of Glasgow",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p18",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921931971337729,
+  "B": 0.8175391258564603,
+  "C": 0.9961
+ },
+ {
+  "q": "The 1967 Federation Cup is an instance of this tournament which is named after what organization?",
+  "y": "International Tennis Federation",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p16"
+  ],
+  "ans": "International Tennis Federation",
+  "A": 0.9999889136593714,
+  "B": 0.9993521598357789,
+  "C": 0.9834
+ },
+ {
+  "q": "The 1967 Federation Cup is an instance of this tournament which is named after what organization?",
+  "y": "International Tennis Federation",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "The International Tennis Federation (ITF)",
+  "A": 0.9999732978321718,
+  "B": 0.9974764057811999,
+  "C": 0.2542
+ },
+ {
+  "q": "The 1967 Federation Cup is an instance of this tournament which is named after what organization?",
+  "y": "International Tennis Federation",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.004079203727822445,
+  "B": 0.0017143848990713861,
+  "C": 0.1597
+ },
+ {
+  "q": "The 1967 Federation Cup is an instance of this tournament which is named after what organization?",
+  "y": "International Tennis Federation",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p16",
+   "p2"
+  ],
+  "ans": "International Tennis Federation",
+  "A": 0.9999855758836753,
+  "B": 0.9992571631057484,
+  "C": 0.9834
+ },
+ {
+  "q": "What is the competition that the 1965 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p16"
+  ],
+  "ans": "Federation",
+  "A": 0.0007162920443606335,
+  "B": 0.7310104520199009,
+  "C": 0.9775
+ },
+ {
+  "q": "What is the competition that the 1965 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005235063398771778,
+  "B": 0.04744953903973692,
+  "C": 0.0085
+ },
+ {
+  "q": "What is the competition that the 1965 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0005599698913414386,
+  "B": 0.0004401652986639748,
+  "C": 0.4023
+ },
+ {
+  "q": "What is the competition that the 1965 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p16",
+   "p1"
+  ],
+  "ans": "Federation",
+  "A": 0.0024823168032870324,
+  "B": 0.5000101932426801,
+  "C": 0.9775
+ },
+ {
+  "q": "What is the competition the 1972 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005222558601228111,
+  "B": 0.8519473903402854,
+  "C": 0.9966
+ },
+ {
+  "q": "What is the competition the 1972 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006718021329236601,
+  "B": 0.09536031200472239,
+  "C": 0.7021
+ },
+ {
+  "q": "What is the competition the 1972 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "rand",
+  "S": [
+   "p8",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006713669347036544,
+  "B": 0.0031804889296842553,
+  "C": 0.0559
+ },
+ {
+  "q": "What is the competition the 1972 Federation Cup is part of named after?",
+  "y": "International Tennis Federation",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p19",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006718021329236601,
+  "B": 0.9706729437218282,
+  "C": 0.9966
+ },
+ {
+  "q": "What is the capital of the county which contains Hickory Grove Estates, Mississippi?",
+  "y": "Starkville",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p15"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017992796037290648,
+  "B": 0.7310416063908527,
+  "C": 0.0008
+ },
+ {
+  "q": "What is the capital of the county which contains Hickory Grove Estates, Mississippi?",
+  "y": "Starkville",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734294653684245,
+  "B": 0.8175461428811769,
+  "C": 0.0008
+ },
+ {
+  "q": "What is the capital of the county which contains Hickory Grove Estates, Mississippi?",
+  "y": "Starkville",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017992796037290648,
+  "B": 0.0002396724297791808,
+  "C": 0.1882
+ },
+ {
+  "q": "What is the capital of the county which contains Hickory Grove Estates, Mississippi?",
+  "y": "Starkville",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p15",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017992796037290648,
+  "B": 0.2689591561445668,
+  "C": 0.2627
+ },
+ {
+  "q": "Who is the father of the performer of Je dis aime?",
+  "y": "Louis Chedid",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p16"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999799732399826,
+  "B": 0.999841715121049,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the father of the performer of Je dis aime?",
+  "y": "Louis Chedid",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999799732399826,
+  "B": 0.9959140564453245,
+  "C": 0.0431
+ },
+ {
+  "q": "Who is the father of the performer of Je dis aime?",
+  "y": "Louis Chedid",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744618567582792,
+  "B": 0.0001601916183193719,
+  "C": 0.0047
+ },
+ {
+  "q": "Who is the father of the performer of Je dis aime?",
+  "y": "Louis Chedid",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p16",
+   "p10"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999829533624089,
+  "B": 0.999921924012059,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the father of the Labo M performer?",
+  "y": "Louis Chedid",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p13"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999936819476216,
+  "B": 0.999776770847438,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the father of the Labo M performer?",
+  "y": "Louis Chedid",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999957084838798,
+  "B": 0.9706329601996262,
+  "C": 0.4924
+ },
+ {
+  "q": "Who is the father of the Labo M performer?",
+  "y": "Louis Chedid",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0373335578797207,
+  "B": 0.0004394506484122207,
+  "C": 0.0086
+ },
+ {
+  "q": "Who is the father of the Labo M performer?",
+  "y": "Louis Chedid",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p13",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047435369666076754,
+  "B": 0.9987861365786957,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the father of the performer of Qui de noux deux?",
+  "y": "Louis Chedid",
+  "kind": "gold",
+  "S": [
+   "p16",
+   "p19"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999856950894335,
+  "B": 0.9994343144829057,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the father of the performer of Qui de noux deux?",
+  "y": "Louis Chedid",
+  "kind": "gold_m1",
+  "S": [
+   "p16"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999872447683118,
+  "B": 0.9889913711879156,
+  "C": 0.0954
+ },
+ {
+  "q": "Who is the father of the performer of Qui de noux deux?",
+  "y": "Louis Chedid",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931818247913076,
+  "B": 0.0005668762950087336,
+  "C": 0.0027
+ },
+ {
+  "q": "Who is the father of the performer of Qui de noux deux?",
+  "y": "Louis Chedid",
+  "kind": "gold_p1",
+  "S": [
+   "p16",
+   "p19",
+   "p5"
+  ],
+  "ans": "Louis Chedid",
+  "A": 0.9999685297375228,
+  "B": 0.999061869319987,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the child of the cast member of Green Ice?",
+  "y": "Tatum O'Neal",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p5"
+  ],
+  "ans": "Tatum O'Neal",
+  "A": 0.9999640000901282,
+  "B": 0.07587061565110265,
+  "C": 0.0024
+ },
+ {
+  "q": "Who is the child of the cast member of Green Ice?",
+  "y": "Tatum O'Neal",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06010036521437401,
+  "B": 0.047435263208677525,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the child of the cast member of Green Ice?",
+  "y": "Tatum O'Neal",
+  "kind": "rand",
+  "S": [
+   "p18",
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060129639955422864,
+  "B": 9.738450345997407e-05,
+  "C": 0.0013
+ },
+ {
+  "q": "Who is the child of the cast member of Green Ice?",
+  "y": "Tatum O'Neal",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p5",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060099840004378624,
+  "B": 0.09536324393951556,
+  "C": 0.005
+ },
+ {
+  "q": "Who is the sibling of the actress who played Susan Walker in Miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p19"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9999337240286982,
+  "B": 0.851938046867553,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the sibling of the actress who played Susan Walker in Miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047442509381829034,
+  "B": 0.4378308021999868,
+  "C": 0.0008
+ },
+ {
+  "q": "Who is the sibling of the actress who played Susan Walker in Miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "rand",
+  "S": [
+   "p13",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535855957938932,
+  "B": 0.0007311716023202797,
+  "C": 0.0029
+ },
+ {
+  "q": "Who is the sibling of the actress who played Susan Walker in Miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p19",
+   "p10"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9995535222317562,
+  "B": 0.8519295667391613,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the sibling of the actress that played the little girl in Miracle on 34th street 1947?",
+  "y": "Lana Wood",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p17"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9999169180254854,
+  "B": 0.9525419161455944,
+  "C": 0.5503
+ },
+ {
+  "q": "Who is the sibling of the actress that played the little girl in Miracle on 34th street 1947?",
+  "y": "Lana Wood",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921072302246916,
+  "B": 0.04745559635605112,
+  "C": 0.0006
+ },
+ {
+  "q": "Who is the sibling of the actress that played the little girl in Miracle on 34th street 1947?",
+  "y": "Lana Wood",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060089412774517514,
+  "B": 0.0007195060578771839,
+  "C": 0.003
+ },
+ {
+  "q": "Who is the sibling of the actress that played the little girl in Miracle on 34th street 1947?",
+  "y": "Lana Wood",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p17",
+   "p3"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9998976097084851,
+  "B": 0.9706756394822734,
+  "C": 0.5503
+ },
+ {
+  "q": "Whose sister played Susie in miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p11"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9999703177676235,
+  "B": 0.07586908711313645,
+  "C": 0.999
+ },
+ {
+  "q": "Whose sister played Susie in miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07592477383750162,
+  "B": 0.006713787293452289,
+  "C": 0.0006
+ },
+ {
+  "q": "Whose sister played Susie in miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04744445753553195,
+  "B": 0.0009251610689978707,
+  "C": 0.0012
+ },
+ {
+  "q": "Whose sister played Susie in miracle on 34th street?",
+  "y": "Lana Wood",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p11",
+   "p17"
+  ],
+  "ans": "Lana Wood",
+  "A": 0.9999665033109116,
+  "B": 0.3208359376669091,
+  "C": 0.999
+ },
+ {
+  "q": "What company did the company that initiated a successful price war among PC manufacturers in 1994 merge with in 2002?",
+  "y": "Hewlett Packard",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p10"
+  ],
+  "ans": "Hewlett Packard",
+  "A": 0.9999790196052284,
+  "B": 0.9994097857565011,
+  "C": 0.9951
+ },
+ {
+  "q": "What company did the company that initiated a successful price war among PC manufacturers in 1994 merge with in 2002?",
+  "y": "Hewlett Packard",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029335143514587658,
+  "B": 0.03733764256647443,
+  "C": 0.3687
+ },
+ {
+  "q": "What company did the company that initiated a successful price war among PC manufacturers in 1994 merge with in 2002?",
+  "y": "Hewlett Packard",
+  "kind": "rand",
+  "S": [
+   "p12",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.018002911079376904,
+  "B": 0.0015252179571390023,
+  "C": 0.0664
+ },
+ {
+  "q": "What company did the company that initiated a successful price war among PC manufacturers in 1994 merge with in 2002?",
+  "y": "Hewlett Packard",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p10",
+   "p4"
+  ],
+  "ans": "Hewlett Packard",
+  "A": 0.9999506497906105,
+  "B": 0.9984872609421348,
+  "C": 0.9951
+ },
+ {
+  "q": "What company merged in 2002 with the CEMM developer?",
+  "y": "Hewlett Packard",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017998084040643736,
+  "B": 0.7772756127416658,
+  "C": 0.8979
+ },
+ {
+  "q": "What company merged in 2002 with the CEMM developer?",
+  "y": "Hewlett Packard",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006704377900672354,
+  "B": 0.04743342504237458,
+  "C": 0.0033
+ },
+ {
+  "q": "What company merged in 2002 with the CEMM developer?",
+  "y": "Hewlett Packard",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005234237470891023,
+  "B": 4.6251065166424965e-05,
+  "C": 0.0378
+ },
+ {
+  "q": "What company merged in 2002 with the CEMM developer?",
+  "y": "Hewlett Packard",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p12",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005253819142318039,
+  "B": 0.5000301599929218,
+  "C": 0.8979
+ },
+ {
+  "q": "In 2002, what company merged with the top PC manufacturer from 1994?",
+  "y": "Hewlett Packard",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734990728119869,
+  "B": 0.8175298917386296,
+  "C": 0.957
+ },
+ {
+  "q": "In 2002, what company merged with the top PC manufacturer from 1994?",
+  "y": "Hewlett Packard",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03734990728119869,
+  "B": 0.02934423954103038,
+  "C": 0.4019
+ },
+ {
+  "q": "In 2002, what company merged with the top PC manufacturer from 1994?",
+  "y": "Hewlett Packard",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008599199680196512,
+  "B": 0.005226097667120455,
+  "C": 0.0458
+ },
+ {
+  "q": "In 2002, what company merged with the top PC manufacturer from 1994?",
+  "y": "Hewlett Packard",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p16",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.029330424612190487,
+  "B": 0.8807531189425797,
+  "C": 0.957
+ },
+ {
+  "q": "What body of water includes the terrain feature where Coffee Swamp is located?",
+  "y": "Lake Superior",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p14"
+  ],
+  "ans": "Lake Superior",
+  "A": 0.9999772315450165,
+  "B": 0.26894980958412296,
+  "C": 0.0003
+ },
+ {
+  "q": "What body of water includes the terrain feature where Coffee Swamp is located?",
+  "y": "Lake Superior",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060093730039865845,
+  "B": 0.6224454169795712,
+  "C": 0.0003
+ },
+ {
+  "q": "What body of water includes the terrain feature where Coffee Swamp is located?",
+  "y": "Lake Superior",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060093730039865845,
+  "B": 0.0005552068546074151,
+  "C": 0.0228
+ },
+ {
+  "q": "What body of water includes the terrain feature where Coffee Swamp is located?",
+  "y": "Lake Superior",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p14",
+   "p6"
+  ],
+  "ans": "Lake Superior",
+  "A": 0.999921924012059,
+  "B": 0.1824374472790372,
+  "C": 0.006
+ },
+ {
+  "q": "Who has played for both West Ham Ajax and the team that Adam Hammill is on?",
+  "y": "Mido",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p10"
+  ],
+  "ans": "Mido",
+  "A": 0.9999605432821229,
+  "B": 0.962652965230079,
+  "C": 0.833
+ },
+ {
+  "q": "Who has played for both West Ham Ajax and the team that Adam Hammill is on?",
+  "y": "Mido",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931986756701399,
+  "B": 0.6224386275998506,
+  "C": 0.0044
+ },
+ {
+  "q": "Who has played for both West Ham Ajax and the team that Adam Hammill is on?",
+  "y": "Mido",
+  "kind": "rand",
+  "S": [
+   "p14",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931986756701399,
+  "B": 0.0024883662706096654,
+  "C": 0.0324
+ },
+ {
+  "q": "Who has played for both West Ham Ajax and the team that Adam Hammill is on?",
+  "y": "Mido",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p10",
+   "p3"
+  ],
+  "ans": "Mido",
+  "A": 0.9999541065280364,
+  "B": 0.9706518280946799,
+  "C": 0.833
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team that David Currie plays for?",
+  "y": "Mido",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p9"
+  ],
+  "ans": "Mido",
+  "A": 0.9999295522725348,
+  "B": 0.9240809268747572,
+  "C": 0.9961
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team that David Currie plays for?",
+  "y": "Mido",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04746349174567688,
+  "B": 0.0031769351593039508,
+  "C": 0.0014
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team that David Currie plays for?",
+  "y": "Mido",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07588771857918097,
+  "B": 0.002478520858193445,
+  "C": 0.0017
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team that David Currie plays for?",
+  "y": "Mido",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p9",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06012005687601829,
+  "B": 0.9859181877555324,
+  "C": 0.9961
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team from the city where Malcolm Graham died?",
+  "y": "Mido",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244931307589674,
+  "B": 0.7772880754062731,
+  "C": 0.0002
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team from the city where Malcolm Graham died?",
+  "y": "Mido",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536480089412902,
+  "B": 0.003190438815919183,
+  "C": 0.0001
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team from the city where Malcolm Graham died?",
+  "y": "Mido",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824321843653398,
+  "B": 0.0009195685177977309,
+  "C": 0.002
+ },
+ {
+  "q": "Who has played for West Ham Ajax and the team from the city where Malcolm Graham died?",
+  "y": "Mido",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p16",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806437784843363,
+  "B": 0.7310420421257352,
+  "C": 0.0009
+ },
+ {
+  "q": "Who is the employer of the person Mach's principle was named after?",
+  "y": "Charles University",
+  "kind": "gold",
+  "S": [
+   "p6",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536684986927702,
+  "B": 0.09537495136371932,
+  "C": 0.011
+ },
+ {
+  "q": "Who is the employer of the person Mach's principle was named after?",
+  "y": "Charles University",
+  "kind": "gold_m1",
+  "S": [
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824311488343504,
+  "B": 0.018028315288923125,
+  "C": 0.0008
+ },
+ {
+  "q": "Who is the employer of the person Mach's principle was named after?",
+  "y": "Charles University",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586399885367245,
+  "B": 0.0010497268460765152,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the employer of the person Mach's principle was named after?",
+  "y": "Charles University",
+  "kind": "gold_p1",
+  "S": [
+   "p6",
+   "p10",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824311488343504,
+  "B": 0.06011247647545215,
+  "C": 0.011
+ },
+ {
+  "q": "Who is the employer of the physicist who Mach number is named after?",
+  "y": "Charles University",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536684986927702,
+  "B": 0.5000181204359808,
+  "C": 0.0111
+ },
+ {
+  "q": "Who is the employer of the physicist who Mach number is named after?",
+  "y": "Charles University",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535690151229492,
+  "B": 0.006760124812654977,
+  "C": 0.0006
+ },
+ {
+  "q": "Who is the employer of the physicist who Mach number is named after?",
+  "y": "Charles University",
+  "kind": "rand",
+  "S": [
+   "p18",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535690151229492,
+  "B": 0.0001073960326840595,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the employer of the physicist who Mach number is named after?",
+  "y": "Charles University",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p5",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535690151229492,
+  "B": 0.7310118463130169,
+  "C": 0.0111
+ },
+ {
+  "q": "Which university employed the person that Mach bands are named after?",
+  "y": "Charles University",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.060094573882600866,
+  "B": 0.5621405492794974,
+  "C": 0.0111
+ },
+ {
+  "q": "Which university employed the person that Mach bands are named after?",
+  "y": "Charles University",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02298486281250056,
+  "B": 0.037360070379629406,
+  "C": 0.0005
+ },
+ {
+  "q": "Which university employed the person that Mach bands are named after?",
+  "y": "Charles University",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03739221576154461,
+  "B": 0.001518087209862129,
+  "C": 0.004
+ },
+ {
+  "q": "Which university employed the person that Mach bands are named after?",
+  "y": "Charles University",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p19",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14807181698635308,
+  "B": 0.8807756798073031,
+  "C": 0.0111
+ },
+ {
+  "q": "Who is the spouse of a cast member from King of the Mountain?",
+  "y": "Lisa Rinna",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p18"
+  ],
+  "ans": "Lisa Rinna",
+  "A": 0.9999514841747886,
+  "B": 0.4378332147632744,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the spouse of a cast member from King of the Mountain?",
+  "y": "Lisa Rinna",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005226805478788066,
+  "B": 0.037387353142158464,
+  "C": 0.0023
+ },
+ {
+  "q": "Who is the spouse of a cast member from King of the Mountain?",
+  "y": "Lisa Rinna",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005226805478788066,
+  "B": 0.0001631708885748706,
+  "C": 0.0036
+ },
+ {
+  "q": "Who is the spouse of a cast member from King of the Mountain?",
+  "y": "Lisa Rinna",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p18",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014069181296167854,
+  "B": 0.26894819734482933,
+  "C": 0.999
+ },
+ {
+  "q": "What is the birthplace of the person after whom São José dos Campos was named?",
+  "y": "Nazareth",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535719133725007,
+  "B": 0.008589122580577646,
+  "C": 0.0014
+ },
+ {
+  "q": "What is the birthplace of the person after whom São José dos Campos was named?",
+  "y": "Nazareth",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18243497420112587,
+  "B": 0.002481604948555871,
+  "C": 0.0014
+ },
+ {
+  "q": "What is the birthplace of the person after whom São José dos Campos was named?",
+  "y": "Nazareth",
+  "kind": "rand",
+  "S": [
+   "p9",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18243497420112587,
+  "B": 6.568000783291339e-05,
+  "C": 0.0264
+ },
+ {
+  "q": "What is the birthplace of the person after whom São José dos Campos was named?",
+  "y": "Nazareth",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p17",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18243553460367257,
+  "B": 0.006696615072963263,
+  "C": 0.0038
+ },
+ {
+  "q": "What year did the author of Prince Prigio die?",
+  "y": "1912",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p3"
+  ],
+  "ans": "1912",
+  "A": 0.9999834301824576,
+  "B": 0.9997018272905177,
+  "C": 0.9976
+ },
+ {
+  "q": "What year did the author of Prince Prigio die?",
+  "y": "1912",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.06010563130370383,
+  "B": 0.9998075140497616,
+  "C": 0.0013
+ },
+ {
+  "q": "What year did the author of Prince Prigio die?",
+  "y": "1912",
+  "kind": "rand",
+  "S": [
+   "p8",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02298930137390054,
+  "B": 0.00027458277980707546,
+  "C": 0.0007
+ },
+ {
+  "q": "What year did the author of Prince Prigio die?",
+  "y": "1912",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p3",
+   "p5"
+  ],
+  "ans": "1912",
+  "A": 0.9999645960934689,
+  "B": 0.999732327593137,
+  "C": 0.9976
+ },
+ {
+  "q": "When did military instruction start at the place where Larry Alcala was educated?",
+  "y": "1912",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p17"
+  ],
+  "ans": "1912",
+  "A": 0.999923235110867,
+  "B": 0.9398920542873799,
+  "C": 0.999
+ },
+ {
+  "q": "When did military instruction start at the place where Larry Alcala was educated?",
+  "y": "1912",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11921238986833227,
+  "B": 0.22272042609849518,
+  "C": 0.0002
+ },
+ {
+  "q": "When did military instruction start at the place where Larry Alcala was educated?",
+  "y": "1912",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586562379478701,
+  "B": 1.7285048439563688e-05,
+  "C": 0.0134
+ },
+ {
+  "q": "When did military instruction start at the place where Larry Alcala was educated?",
+  "y": "1912",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p17",
+   "p18"
+  ],
+  "ans": "1912",
+  "A": 0.999923235110867,
+  "B": 0.8518521450393023,
+  "C": 0.999
+ },
+ {
+  "q": "When did the military instruction start in the university that Paulo Manalo attended?",
+  "y": "1912",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p7"
+  ],
+  "ans": "1912",
+  "A": 0.9999905825550351,
+  "B": 0.6224413730231689,
+  "C": 0.8623
+ },
+ {
+  "q": "When did the military instruction start in the university that Paulo Manalo attended?",
+  "y": "1912",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.037342171922302714,
+  "B": 0.0008329362108119298,
+  "C": 0.0021
+ },
+ {
+  "q": "When did the military instruction start in the university that Paulo Manalo attended?",
+  "y": "1912",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.03765967577850038,
+  "B": 5.960109322600271e-05,
+  "C": 0.0179
+ },
+ {
+  "q": "When did the military instruction start in the university that Paulo Manalo attended?",
+  "y": "1912",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p7",
+   "p4"
+  ],
+  "ans": "1912",
+  "A": 0.9999486234366107,
+  "B": 0.731034460375836,
+  "C": 0.8623
+ },
+ {
+  "q": "What county shares a border with Cedar Springs?",
+  "y": "Bell County",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p6"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005229282815658487,
+  "B": 0.5000116237229453,
+  "C": 0.9956
+ },
+ {
+  "q": "What county shares a border with Cedar Springs?",
+  "y": "Bell County",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02934131963723985,
+  "B": 0.014078799599859693,
+  "C": 0.0003
+ },
+ {
+  "q": "What county shares a border with Cedar Springs?",
+  "y": "Bell County",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014102205430234882,
+  "B": 0.0001742536052004029,
+  "C": 0.2136
+ },
+ {
+  "q": "What county shares a border with Cedar Springs?",
+  "y": "Bell County",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p6",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.011005830597495936,
+  "B": 0.43784477481869666,
+  "C": 0.9956
+ },
+ {
+  "q": "Who is the father of Empress Wang's husband?",
+  "y": "Yang Xingmi",
+  "kind": "gold",
+  "S": [
+   "p3",
+   "p18"
+  ],
+  "ans": "Yang Xingmi",
+  "A": 0.9990860240065534,
+  "B": 0.991410056585321,
+  "C": 0.9985
+ },
+ {
+  "q": "Who is the father of Empress Wang's husband?",
+  "y": "Yang Xingmi",
+  "kind": "gold_m1",
+  "S": [
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806263865494396,
+  "B": 0.9959111004522575,
+  "C": 0.0035
+ },
+ {
+  "q": "Who is the father of Empress Wang's husband?",
+  "y": "Yang Xingmi",
+  "kind": "rand",
+  "S": [
+   "p7",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806263865494396,
+  "B": 0.0002602853314142006,
+  "C": 0.0033
+ },
+ {
+  "q": "Who is the father of Empress Wang's husband?",
+  "y": "Yang Xingmi",
+  "kind": "gold_p1",
+  "S": [
+   "p3",
+   "p18",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806263865494396,
+  "B": 0.9241030209094891,
+  "C": 0.9985
+ },
+ {
+  "q": "In which county was James Finch born?",
+  "y": "Bay County",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p19"
+  ],
+  "ans": "Bay County",
+  "A": 0.9999728210205924,
+  "B": 0.8519034413652435,
+  "C": 0.999
+ },
+ {
+  "q": "In which county was James Finch born?",
+  "y": "Bay County",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01407682911779129,
+  "B": 0.07588832447420935,
+  "C": 0.0005
+ },
+ {
+  "q": "In which county was James Finch born?",
+  "y": "Bay County",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0085808034024627,
+  "B": 9.857636314980489e-05,
+  "C": 0.0008
+ },
+ {
+  "q": "In which county was James Finch born?",
+  "y": "Bay County",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p19",
+   "p7"
+  ],
+  "ans": "Bay County",
+  "A": 0.9999629272857378,
+  "B": 0.9989471802269575,
+  "C": 0.999
+ },
+ {
+  "q": "Who is the other child of Chian Hsiao-chang's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014074395851648047,
+  "B": 0.9770066022103262,
+  "C": 0.9961
+ },
+ {
+  "q": "Who is the other child of Chian Hsiao-chang's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017990381581461823,
+  "B": 0.7310408874288643,
+  "C": 0.9897
+ },
+ {
+  "q": "Who is the other child of Chian Hsiao-chang's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.017990381581461823,
+  "B": 0.000566638127904473,
+  "C": 0.0426
+ },
+ {
+  "q": "Who is the other child of Chian Hsiao-chang's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p12",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02298509029153739,
+  "B": 0.9525373705341417,
+  "C": 0.9961
+ },
+ {
+  "q": "Who is the uncle of Liu Bin?",
+  "y": "Liu Yin",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022983497937167696,
+  "B": 0.09536490199498537,
+  "C": 0.0006
+ },
+ {
+  "q": "Who is the uncle of Liu Bin?",
+  "y": "Liu Yin",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02931548669404116,
+  "B": 0.0019472990445339455,
+  "C": 0.0006
+ },
+ {
+  "q": "Who is the uncle of Liu Bin?",
+  "y": "Liu Yin",
+  "kind": "rand",
+  "S": [
+   "p19",
+   "p4"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022983497937167696,
+  "B": 0.004078612895164979,
+  "C": 0.0012
+ },
+ {
+  "q": "Who is the uncle of Liu Bin?",
+  "y": "Liu Yin",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p13",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0373335578797207,
+  "B": 0.004083697105379036,
+  "C": 0.0091
+ },
+ {
+  "q": "Who is the child of Chiang Hsiao-wen's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold",
+  "S": [
+   "p4",
+   "p6"
+  ],
+  "ans": "Chiang Hsiao-wu, Hsiao-chang, Hsiao-yung, Winston Chang, and John Chiang",
+  "A": 0.9914060733797713,
+  "B": 0.9819855930182749,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the child of Chiang Hsiao-wen's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold_m1",
+  "S": [
+   "p4"
+  ],
+  "ans": "Chiang Ching-kuo",
+  "A": 0.006694380525540944,
+  "B": 0.500010133639247,
+  "C": 0.9966
+ },
+ {
+  "q": "Who is the child of Chiang Hsiao-wen's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.022992600709674127,
+  "B": 0.0015060834106633836,
+  "C": 0.0033
+ },
+ {
+  "q": "Who is the child of Chiang Hsiao-wen's father?",
+  "y": "Chiang Hsiao-wu",
+  "kind": "gold_p1",
+  "S": [
+   "p4",
+   "p6",
+   "p14"
+  ],
+  "ans": "Based on the passages provided, the children of Chiang Hsiao-wen's father (Chiang Ching-kuo) are:\n*   Chiang Hsiao-wen\n*   Chiang Hsiao-chang\n*   Chiang Hsiao-wu\n*   Chiang Hsiao-yung\n*   Winston Chang\n*   John Chiang",
+  "A": 0.3775508358447146,
+  "B": 0.970672157233773,
+  "C": 0.998
+ },
+ {
+  "q": "What is the movie starring Preity Zinta, Madhuri Dixit and the spouse of Kajol?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p12"
+  ],
+  "ans": "Yeh Raaste Hain Pyaar Ke",
+  "A": 0.9998404042309772,
+  "B": 0.9889095255322113,
+  "C": 0.7974
+ },
+ {
+  "q": "What is the movie starring Preity Zinta, Madhuri Dixit and the spouse of Kajol?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586226374390426,
+  "B": 0.029423977543056257,
+  "C": 0.0105
+ },
+ {
+  "q": "What is the movie starring Preity Zinta, Madhuri Dixit and the spouse of Kajol?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "rand",
+  "S": [
+   "p15",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.07586226374390426,
+  "B": 0.002554312769368572,
+  "C": 0.0148
+ },
+ {
+  "q": "What is the movie starring Preity Zinta, Madhuri Dixit and the spouse of Kajol?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p12",
+   "p17"
+  ],
+  "ans": "Yeh Raaste Hain Pyaar Ke",
+  "A": 0.9998404042309772,
+  "B": 0.981956165218929,
+  "C": 0.7974
+ },
+ {
+  "q": "What film features Anil Devgan's sibling?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p9"
+  ],
+  "ans": "Raju Chacha and Blackmail (2005 film)",
+  "A": 0.005235653082139136,
+  "B": 0.5000940482356028,
+  "C": 0.7983
+ },
+ {
+  "q": "What film features Anil Devgan's sibling?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689893083361591,
+  "B": 0.22275829951985293,
+  "C": 0.0008
+ },
+ {
+  "q": "What film features Anil Devgan's sibling?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "rand",
+  "S": [
+   "p12",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689893083361591,
+  "B": 4.493988097586943e-05,
+  "C": 0.0027
+ },
+ {
+  "q": "What film features Anil Devgan's sibling?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p9",
+   "p17"
+  ],
+  "ans": "Yeh Raaste Hain Pyaar Ke",
+  "A": 0.9999660265080288,
+  "B": 0.7772227528799793,
+  "C": 0.7983
+ },
+ {
+  "q": "What preity zinta and madhuri dixit movie had a cast member from U Me Aur Hum ?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold",
+  "S": [
+   "p13",
+   "p17"
+  ],
+  "ans": "Yeh Raaste Hain Pyaar Ke",
+  "A": 0.9998796131114907,
+  "B": 0.9397970739010593,
+  "C": 0.7974
+ },
+ {
+  "q": "What preity zinta and madhuri dixit movie had a cast member from U Me Aur Hum ?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_m1",
+  "S": [
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824325011157335,
+  "B": 0.2690096777906008,
+  "C": 0.0052
+ },
+ {
+  "q": "What preity zinta and madhuri dixit movie had a cast member from U Me Aur Hum ?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.182432025990097,
+  "B": 0.0015633661135000532,
+  "C": 0.0007
+ },
+ {
+  "q": "What preity zinta and madhuri dixit movie had a cast member from U Me Aur Hum ?",
+  "y": "Yeh Raaste Hain Pyaar Ke",
+  "kind": "gold_p1",
+  "S": [
+   "p13",
+   "p17",
+   "p0"
+  ],
+  "ans": "Yeh Raaste Hain Pyaar Ke",
+  "A": 0.9997795114417571,
+  "B": 0.6224273677808918,
+  "C": 0.7974
+ },
+ {
+  "q": "What is the record label for the band which performed Pythons?",
+  "y": "Kanine Records",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p17"
+  ],
+  "ans": "Sire Records",
+  "A": 0.001929130696039394,
+  "B": 0.0008288898359931629,
+  "C": 0.9976
+ },
+ {
+  "q": "What is the record label for the band which performed Pythons?",
+  "y": "Kanine Records",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "Sire Records",
+  "A": 0.001929130696039394,
+  "B": 0.00040752961606593807,
+  "C": 0.0014
+ },
+ {
+  "q": "What is the record label for the band which performed Pythons?",
+  "y": "Kanine Records",
+  "kind": "rand",
+  "S": [
+   "p11",
+   "p19"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.22272042609849518,
+  "B": 0.0002694595713406134,
+  "C": 0.0009
+ },
+ {
+  "q": "What is the record label for the band which performed Pythons?",
+  "y": "Kanine Records",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p17",
+   "p11"
+  ],
+  "ans": "Sire Records",
+  "A": 0.001929130696039394,
+  "B": 0.0032545159690504644,
+  "C": 0.9976
+ },
+ {
+  "q": "Who is the child of the actor who is a cast member of Love in Pawn?",
+  "y": "Kim Braden",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p12"
+  ],
+  "ans": "Kim Braden",
+  "A": 0.9999669801176596,
+  "B": 0.9819693855793208,
+  "C": 0.9966
+ },
+ {
+  "q": "Who is the child of the actor who is a cast member of Love in Pawn?",
+  "y": "Kim Braden",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14807717414100363,
+  "B": 0.0474363455250153,
+  "C": 0.0007
+ },
+ {
+  "q": "Who is the child of the actor who is a cast member of Love in Pawn?",
+  "y": "Kim Braden",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14807717414100363,
+  "B": 0.0015349632836376692,
+  "C": 0.0008
+ },
+ {
+  "q": "Who is the child of the actor who is a cast member of Love in Pawn?",
+  "y": "Kim Braden",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p12",
+   "p4"
+  ],
+  "ans": "Kim Braden",
+  "A": 0.9999669801176596,
+  "B": 0.9984810808708728,
+  "C": 0.9966
+ },
+ {
+  "q": "Who is the creator of Mickey Mouse's spouse?",
+  "y": "Walt Disney",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2227117161087906,
+  "B": 0.001933049453483271,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the creator of Mickey Mouse's spouse?",
+  "y": "Walt Disney",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14936393291148709,
+  "B": 0.07587458157565774,
+  "C": 0.9321
+ },
+ {
+  "q": "Who is the creator of Mickey Mouse's spouse?",
+  "y": "Walt Disney",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14806367963249578,
+  "B": 0.0009236141764689121,
+  "C": 0.1102
+ },
+ {
+  "q": "Who is the creator of Mickey Mouse's spouse?",
+  "y": "Walt Disney",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p8",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11928127902973451,
+  "B": 0.011043373724982875,
+  "C": 0.998
+ },
+ {
+  "q": "Who was the US physicist who directed the project that developed the first atomic bomb at the same place where Feynman worked on Water Boiler?",
+  "y": "Robert Oppenheimer",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p13"
+  ],
+  "ans": "Robert Oppenheimer",
+  "A": 0.9999911785905904,
+  "B": 0.9990080906481895,
+  "C": 0.999
+ },
+ {
+  "q": "Who was the US physicist who directed the project that developed the first atomic bomb at the same place where Feynman worked on Water Boiler?",
+  "y": "Robert Oppenheimer",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.2689528597568437,
+  "B": 0.5000356432594005,
+  "C": 0.0005
+ },
+ {
+  "q": "Who was the US physicist who directed the project that developed the first atomic bomb at the same place where Feynman worked on Water Boiler?",
+  "y": "Robert Oppenheimer",
+  "kind": "rand",
+  "S": [
+   "p10",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.5621647747752282,
+  "B": 0.1824454877762125,
+  "C": 0.2113
+ },
+ {
+  "q": "Who was the US physicist who directed the project that developed the first atomic bomb at the same place where Feynman worked on Water Boiler?",
+  "y": "Robert Oppenheimer",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p13",
+   "p2"
+  ],
+  "ans": "Robert Oppenheimer",
+  "A": 0.9999917746265009,
+  "B": 0.9994547956895017,
+  "C": 0.999
+ },
+ {
+  "q": "What political party does the person that Adversary in the House is based on a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold",
+  "S": [
+   "p5",
+   "p12"
+  ],
+  "ans": "Socialist Party of America",
+  "A": 0.9525335878638642,
+  "B": 0.9993527551472414,
+  "C": 0.9043
+ },
+ {
+  "q": "What political party does the person that Adversary in the House is based on a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold_m1",
+  "S": [
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.023007166425113357,
+  "B": 0.9626509784985186,
+  "C": 0.1566
+ },
+ {
+  "q": "What political party does the person that Adversary in the House is based on a member of?",
+  "y": "Socialist Party of America",
+  "kind": "rand",
+  "S": [
+   "p2",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.023007166425113357,
+  "B": 0.00028256536595461235,
+  "C": 0.0028
+ },
+ {
+  "q": "What political party does the person that Adversary in the House is based on a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold_p1",
+  "S": [
+   "p5",
+   "p12",
+   "p1"
+  ],
+  "ans": "Socialist Party of America",
+  "A": 0.8519184081359559,
+  "B": 0.9980629131746508,
+  "C": 0.9043
+ },
+ {
+  "q": "What political party was the socialist candidate part of who ran for president in 1912?",
+  "y": "Socialist Party of America",
+  "kind": "gold",
+  "S": [
+   "p1",
+   "p15"
+  ],
+  "ans": "Socialist Party",
+  "A": 0.9933003265978725,
+  "B": 0.9996919389154221,
+  "C": 0.9795
+ },
+ {
+  "q": "What political party was the socialist candidate part of who ran for president in 1912?",
+  "y": "Socialist Party of America",
+  "kind": "gold_m1",
+  "S": [
+   "p1"
+  ],
+  "ans": "Socialist Party of America",
+  "A": 0.9992798987900375,
+  "B": 0.9997099287521741,
+  "C": 0.9028
+ },
+ {
+  "q": "What political party was the socialist candidate part of who ran for president in 1912?",
+  "y": "Socialist Party of America",
+  "kind": "rand",
+  "S": [
+   "p3",
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006696497587051375,
+  "B": 0.0007201012099624648,
+  "C": 0.0046
+ },
+ {
+  "q": "What political party was the socialist candidate part of who ran for president in 1912?",
+  "y": "Socialist Party of America",
+  "kind": "gold_p1",
+  "S": [
+   "p1",
+   "p15",
+   "p5"
+  ],
+  "ans": "Socialist Party",
+  "A": 0.9975230210744366,
+  "B": 0.9995594774054927,
+  "C": 0.9795
+ },
+ {
+  "q": "What political party was the candidate who garnered a million votes during the 1920 election despite being in prison, a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p19"
+  ],
+  "ans": "Socialist Party",
+  "A": 0.9992850173887515,
+  "B": 0.9999452859281749,
+  "C": 0.0005
+ },
+ {
+  "q": "What political party was the candidate who garnered a million votes during the 1920 election despite being in prison, a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0373481393071069,
+  "B": 0.9984878552734222,
+  "C": 0.0001
+ },
+ {
+  "q": "What political party was the candidate who garnered a million votes during the 1920 election despite being in prison, a member of?",
+  "y": "Socialist Party of America",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0373481393071069,
+  "B": 4.8515825211370434e-05,
+  "C": 0.1915
+ },
+ {
+  "q": "What political party was the candidate who garnered a million votes during the 1920 election despite being in prison, a member of?",
+  "y": "Socialist Party of America",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p19",
+   "p0"
+  ],
+  "ans": "Socialist Party of America",
+  "A": 0.9997631872423239,
+  "B": 0.999022724532692,
+  "C": 0.0005
+ },
+ {
+  "q": "What is the river that the Kettle Generating Station is located on a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold",
+  "S": [
+   "p9",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.04748155686066158,
+  "B": 0.18243943304554122,
+  "C": 0.3569
+ },
+ {
+  "q": "What is the river that the Kettle Generating Station is located on a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold_m1",
+  "S": [
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047452353017484405,
+  "B": 0.06013237796016324,
+  "C": 0.0096
+ },
+ {
+  "q": "What is the river that the Kettle Generating Station is located on a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.037340407520190855,
+  "B": 0.0005571120952949649,
+  "C": 0.0938
+ },
+ {
+  "q": "What is the river that the Kettle Generating Station is located on a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold_p1",
+  "S": [
+   "p9",
+   "p10",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09536928976126147,
+  "B": 0.18243879955000253,
+  "C": 0.3569
+ },
+ {
+  "q": "What is the river where Long Spruce Generating Station is located a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold",
+  "S": [
+   "p2",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11925659294458046,
+  "B": 0.9398975304471882,
+  "C": 0.981
+ },
+ {
+  "q": "What is the river where Long Spruce Generating Station is located a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold_m1",
+  "S": [
+   "p2"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.11925659294458046,
+  "B": 0.2227360389740537,
+  "C": 0.0018
+ },
+ {
+  "q": "What is the river where Long Spruce Generating Station is located a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14808557795080513,
+  "B": 0.004079440246292032,
+  "C": 0.0005
+ },
+ {
+  "q": "What is the river where Long Spruce Generating Station is located a tributary of?",
+  "y": "Hudson's Bay",
+  "kind": "gold_p1",
+  "S": [
+   "p2",
+   "p10",
+   "p13"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.14808557795080513,
+  "B": 0.9398975304471882,
+  "C": 0.981
+ },
+ {
+  "q": "Of which river is the river Kichi Sipi Bridge crosses a tributary?",
+  "y": "Hudson's Bay",
+  "kind": "gold",
+  "S": [
+   "p17",
+   "p18"
+  ],
+  "ans": "Nelson River",
+  "A": 0.0015023990611224836,
+  "B": 0.06009120200854812,
+  "C": 0.3569
+ },
+ {
+  "q": "Of which river is the river Kichi Sipi Bridge crosses a tributary?",
+  "y": "Hudson's Bay",
+  "kind": "gold_m1",
+  "S": [
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.00408180496413757,
+  "B": 0.014104986620406379,
+  "C": 0.0013
+ },
+ {
+  "q": "Of which river is the river Kichi Sipi Bridge crosses a tributary?",
+  "y": "Hudson's Bay",
+  "kind": "rand",
+  "S": [
+   "p16",
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.00408180496413757,
+  "B": 0.002486112501683957,
+  "C": 0.0013
+ },
+ {
+  "q": "Of which river is the river Kichi Sipi Bridge crosses a tributary?",
+  "y": "Hudson's Bay",
+  "kind": "gold_p1",
+  "S": [
+   "p17",
+   "p18",
+   "p16"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006704377900672354,
+  "B": 0.014093862730842788,
+  "C": 0.3569
+ },
+ {
+  "q": "Who married the publisher of abolitionist newspaper The North Star?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p19"
+  ],
+  "ans": "Helen Pitts Douglass",
+  "A": 0.9999787811971367,
+  "B": 0.9947572693550577,
+  "C": 0.9976
+ },
+ {
+  "q": "Who married the publisher of abolitionist newspaper The North Star?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.010992770622925696,
+  "B": 0.8807483023581296,
+  "C": 0.0021
+ },
+ {
+  "q": "Who married the publisher of abolitionist newspaper The North Star?",
+  "y": "Helen Pitts Douglass",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p1"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0031796596713107306,
+  "B": 0.00012336639377397152,
+  "C": 0.0043
+ },
+ {
+  "q": "Who married the publisher of abolitionist newspaper The North Star?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p19",
+   "p2"
+  ],
+  "ans": "Helen Pitts Douglass",
+  "A": 0.9999918938339075,
+  "B": 0.9525167150663486,
+  "C": 0.9976
+ },
+ {
+  "q": "Who is the spouse of the first nominated African American presidential candidate?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p18"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005231995927886701,
+  "B": 0.62242805412317,
+  "C": 0.9951
+ },
+ {
+  "q": "Who is the spouse of the first nominated African American presidential candidate?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.005271748635499063,
+  "B": 0.022992487880945878,
+  "C": 0.3745
+ },
+ {
+  "q": "Who is the spouse of the first nominated African American presidential candidate?",
+  "y": "Helen Pitts Douglass",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p3"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006706142024064832,
+  "B": 0.00013147055952533737,
+  "C": 0.0273
+ },
+ {
+  "q": "Who is the spouse of the first nominated African American presidential candidate?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p18",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.006706142024064832,
+  "B": 0.6224309107991615,
+  "C": 0.9951
+ },
+ {
+  "q": "Who was the spouse of a leading speaker against slavery and publisher of an antislavery newspaper?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold",
+  "S": [
+   "p17",
+   "p19"
+  ],
+  "ans": "Helen Pitts Douglass",
+  "A": 0.9999711521845835,
+  "B": 0.9819599586466878,
+  "C": 0.9976
+ },
+ {
+  "q": "Who was the spouse of a leading speaker against slavery and publisher of an antislavery newspaper?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_m1",
+  "S": [
+   "p17"
+  ],
+  "ans": "Helen Pitts Douglass",
+  "A": 0.9999903441405488,
+  "B": 0.7772743850178605,
+  "C": 0.144
+ },
+ {
+  "q": "Who was the spouse of a leading speaker against slavery and publisher of an antislavery newspaper?",
+  "y": "Helen Pitts Douglass",
+  "kind": "rand",
+  "S": [
+   "p6",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.014070108697556427,
+  "B": 3.075505082061891e-05,
+  "C": 0.0149
+ },
+ {
+  "q": "Who was the spouse of a leading speaker against slavery and publisher of an antislavery newspaper?",
+  "y": "Helen Pitts Douglass",
+  "kind": "gold_p1",
+  "S": [
+   "p17",
+   "p19",
+   "p18"
+  ],
+  "ans": "Helen Pitts Douglass",
+  "A": 0.9999903441405488,
+  "B": 0.9947539661390743,
+  "C": 0.9976
+ },
+ {
+  "q": "Who is the spouse of the producer of Dolores Claiborne?",
+  "y": "Helen Mirren",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01799233509618181,
+  "B": 0.0019373243173033128,
+  "C": 0.0003
+ },
+ {
+  "q": "Who is the spouse of the producer of Dolores Claiborne?",
+  "y": "Helen Mirren",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.008586779183194393,
+  "B": 0.0005675907378065448,
+  "C": 0.0002
+ },
+ {
+  "q": "Who is the spouse of the producer of Dolores Claiborne?",
+  "y": "Helen Mirren",
+  "kind": "rand",
+  "S": [
+   "p15",
+   "p17"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.01799221986087074,
+  "B": 0.00017604112581903752,
+  "C": 0.001
+ },
+ {
+  "q": "Who is the spouse of the producer of Dolores Claiborne?",
+  "y": "Helen Mirren",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p10",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.02932705627817178,
+  "B": 0.00041836870158473705,
+  "C": 0.0013
+ },
+ {
+  "q": "Who is the city that AvtoVAZ's headquarters is located in named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold",
+  "S": [
+   "p8",
+   "p17"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.9995653135445046,
+  "B": 0.9932779800813307,
+  "C": 0.0009
+ },
+ {
+  "q": "Who is the city that AvtoVAZ's headquarters is located in named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_m1",
+  "S": [
+   "p8"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791476271108857,
+  "B": 0.9959038881256977,
+  "C": 0.0002
+ },
+ {
+  "q": "Who is the city that AvtoVAZ's headquarters is located in named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "rand",
+  "S": [
+   "p7",
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.5621645737294739,
+  "B": 0.0011898410383266445,
+  "C": 0.0076
+ },
+ {
+  "q": "Who is the city that AvtoVAZ's headquarters is located in named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_p1",
+  "S": [
+   "p8",
+   "p17",
+   "p0"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.9995653135445046,
+  "B": 0.9947571512339772,
+  "C": 0.0032
+ },
+ {
+  "q": "Who is the city where Lesnoye Sanatorium is located named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold",
+  "S": [
+   "p7",
+   "p16"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.9994376485988037,
+  "B": 0.9975076009263905,
+  "C": 0.998
+ },
+ {
+  "q": "Who is the city where Lesnoye Sanatorium is located named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_m1",
+  "S": [
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.1824311488343504,
+  "B": 0.4378579094337529,
+  "C": 0.0002
+ },
+ {
+  "q": "Who is the city where Lesnoye Sanatorium is located named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "rand",
+  "S": [
+   "p5",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.18244022491427436,
+  "B": 0.0002663618039707716,
+  "C": 0.144
+ },
+ {
+  "q": "Who is the city where Lesnoye Sanatorium is located named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_p1",
+  "S": [
+   "p7",
+   "p16",
+   "p18"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.9994376485988037,
+  "B": 0.9980617257154454,
+  "C": 0.998
+ },
+ {
+  "q": "Whom is the birth place of Ravil Aryapov named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold",
+  "S": [
+   "p12",
+   "p17"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.9999899865198352,
+  "B": 0.9858850483542348,
+  "C": 0.9653
+ },
+ {
+  "q": "Whom is the birth place of Ravil Aryapov named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_m1",
+  "S": [
+   "p12"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535572873129561,
+  "B": 0.0953663645861087,
+  "C": 0.0002
+ },
+ {
+  "q": "Whom is the birth place of Ravil Aryapov named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "rand",
+  "S": [
+   "p8",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09535572873129561,
+  "B": 2.9563030256141154e-05,
+  "C": 0.3833
+ },
+ {
+  "q": "Whom is the birth place of Ravil Aryapov named after?",
+  "y": "Palmiro Togliatti",
+  "kind": "gold_p1",
+  "S": [
+   "p12",
+   "p17",
+   "p2"
+  ],
+  "ans": "Palmiro Togliatti",
+  "A": 0.999977350747961,
+  "B": 0.9859045148170256,
+  "C": 0.9653
+ },
+ {
+  "q": "When did the person who first brought a postal service into Umayyad lands become caliph?",
+  "y": "661",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p7"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047443481684903754,
+  "B": 0.7772650960760612,
+  "C": 0.9956
+ },
+ {
+  "q": "When did the person who first brought a postal service into Umayyad lands become caliph?",
+  "y": "661",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047443481684903754,
+  "B": 0.014082275939330313,
+  "C": 0.0033
+ },
+ {
+  "q": "When did the person who first brought a postal service into Umayyad lands become caliph?",
+  "y": "661",
+  "kind": "rand",
+  "S": [
+   "p17",
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047443481684903754,
+  "B": 0.0007240294840297201,
+  "C": 0.3225
+ },
+ {
+  "q": "When did the person who first brought a postal service into Umayyad lands become caliph?",
+  "y": "661",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p7",
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047443481684903754,
+  "B": 0.22271509819085233,
+  "C": 0.9956
+ },
+ {
+  "q": "What university did the author of 1967: The Last Good Year attend?",
+  "y": "University of British Columbia",
+  "kind": "gold",
+  "S": [
+   "p0",
+   "p2"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999864103261001,
+  "B": 0.9998878366430157,
+  "C": 0.9941
+ },
+ {
+  "q": "What university did the author of 1967: The Last Good Year attend?",
+  "y": "University of British Columbia",
+  "kind": "gold_m1",
+  "S": [
+   "p0"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.0601046824294148,
+  "B": 0.014089111969970536,
+  "C": 0.0025
+ },
+ {
+  "q": "What university did the author of 1967: The Last Good Year attend?",
+  "y": "University of British Columbia",
+  "kind": "rand",
+  "S": [
+   "p15",
+   "p14"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.018118888229356145,
+  "B": 0.0024827910631555206,
+  "C": 0.0003
+ },
+ {
+  "q": "What university did the author of 1967: The Last Good Year attend?",
+  "y": "University of British Columbia",
+  "kind": "gold_p1",
+  "S": [
+   "p0",
+   "p2",
+   "p14"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999864103261001,
+  "B": 0.9999583976891858,
+  "C": 0.9941
+ },
+ {
+  "q": "Where did the author of The National Dream go to university?",
+  "y": "University of British Columbia",
+  "kind": "gold",
+  "S": [
+   "p11",
+   "p17"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999780659713836,
+  "B": 0.9999350351575294,
+  "C": 0.998
+ },
+ {
+  "q": "Where did the author of The National Dream go to university?",
+  "y": "University of British Columbia",
+  "kind": "gold_m1",
+  "S": [
+   "p11"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.047456029273492684,
+  "B": 0.011052934049385899,
+  "C": 0.0036
+ },
+ {
+  "q": "Where did the author of The National Dream go to university?",
+  "y": "University of British Columbia",
+  "kind": "rand",
+  "S": [
+   "p1",
+   "p5"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.09537660939773118,
+  "B": 4.9231013251382905e-05,
+  "C": 0.0036
+ },
+ {
+  "q": "Where did the author of The National Dream go to university?",
+  "y": "University of British Columbia",
+  "kind": "gold_p1",
+  "S": [
+   "p11",
+   "p17",
+   "p4"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999746090656421,
+  "B": 0.9999797348316635,
+  "C": 0.998
+ },
+ {
+  "q": "What university did the author of The Secret World of Og go to?",
+  "y": "University of British Columbia",
+  "kind": "gold",
+  "S": [
+   "p10",
+   "p15"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999753242852847,
+  "B": 0.9997625914681413,
+  "C": 0.998
+ },
+ {
+  "q": "What university did the author of The Secret World of Og go to?",
+  "y": "University of British Columbia",
+  "kind": "gold_m1",
+  "S": [
+   "p10"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.26897675959826284,
+  "B": 0.00034677873332600306,
+  "C": 0.01
+ },
+ {
+  "q": "What university did the author of The Secret World of Og go to?",
+  "y": "University of British Columbia",
+  "kind": "rand",
+  "S": [
+   "p7",
+   "p9"
+  ],
+  "ans": "INSUFFICIENT",
+  "A": 0.6791082003914701,
+  "B": 0.0002474172551791831,
+  "C": 0.0071
+ },
+ {
+  "q": "What university did the author of The Secret World of Og go to?",
+  "y": "University of British Columbia",
+  "kind": "gold_p1",
+  "S": [
+   "p10",
+   "p15",
+   "p11"
+  ],
+  "ans": "University of British Columbia",
+  "A": 0.9999861719135179,
+  "B": 0.9998618555222942,
+  "C": 0.998
+ }
+]
